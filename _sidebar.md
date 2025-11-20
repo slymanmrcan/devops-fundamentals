@@ -3,6 +3,7 @@
     * [Introduction](01-Linux/01-Basic/01-Introduction.md)
     * [Basic Commands](01-Linux/01-Basic/02-Basic-Commands.md)
     * [Permissions](01-Linux/01-Basic/03-Permissions.md)
+    * [Distros & Architectures](01-Linux/01-Basic/04-Distros-Architectures.md)
   * 02-Intermediate
     * [Bash Scripting](01-Linux/02-Intermediate/01-Bash-Scripting.md)
     * [Processes](01-Linux/02-Intermediate/02-Processes.md)
@@ -11,14 +12,27 @@
     * [System Admin](01-Linux/03-Advanced/01-System-Admin.md)
     * [Advanced Scripting](01-Linux/03-Advanced/02-Advanced-Scripting.md)
     * [Security](01-Linux/03-Advanced/03-Security.md)
+    * [User Management](01-Linux/03-Advanced/04-User-Management.md)
+    * [Cheat Sheet (Komut Parametreleri)](01-Linux/03-Advanced/05-Cheat-Sheet.md)
 * 02-Docker
-  * [Docker Fundamentals](02-Docker/01-Docker-Fundamentals.md)
+  * [Introduction & Alternatives](02-Docker/01-Introduction.md)
+  * [Installation](02-Docker/02-Installation.md)
+  * [Dockerfile & Best Practices](02-Docker/03-Dockerfile.md)
+  * [CLI Commands](02-Docker/04-Commands-CLI.md)
+  * [Networking](02-Docker/05-Networking.md)
+  * [Docker Compose](02-Docker/06-Docker-Compose.md)
+  * [Advanced (Remote/Security)](02-Docker/07-Advanced.md)
 * 03-Git-Github
   * [Basic](03-Git-Github/01-Basic.md)
   * [Branching & Merging](03-Git-Github/02-Branching-Merging.md)
   * [Remote & Github](03-Git-Github/03-Remote-Github.md)
   * [Advanced](03-Git-Github/04-Advanced.md)
   * [GHCR & Actions](03-Git-Github/05-GHCR-Actions.md)
+* 04-CICD
+  * [Introduction](04-CICD/01-Introduction.md)
+  * [Workflow Syntax](04-CICD/02-Workflow-Syntax.md)
+  * [Secrets & Variables](04-CICD/03-Secrets-Variables.md)
+  * [Real World Examples](04-CICD/04-Real-World-Examples.md)
 * 05-AWS
   * [EC2 Fundamentals](05-AWS/01-EC2-Fundamentals.md)
   * [S3 Fundamentals](05-AWS/02-S3-Fundamentals.md)
@@ -26,6 +40,9 @@
   * [VPC Fundamentals](05-AWS/04-VPC-Fundamentals.md)
 * 06-Kubernetes
   * [Deployments](06-Kubernetes/01-Deployments.md)
+  * [Services & Networking](06-Kubernetes/02-Services-Networking.md)
+  * [ConfigMaps & Secrets](06-Kubernetes/03-ConfigMaps-Secrets.md)
+  * [Helm](06-Kubernetes/04-Helm.md)
 * 07-Terraform
   * [Fundamentals](07-Terraform/01-Fundamentals.md)
 * 08-Network
@@ -35,3 +52,11 @@
   * [LoadBalancing Proxy](08-Network/04-LoadBalancing-Proxy.md)
   * [Firewalls Security](08-Network/05-Firewalls-Security.md)
   * [Troubleshooting Tools](08-Network/06-Troubleshooting-Tools.md)
+* 09-Monitoring
+  * [Introduction](09-Monitoring/01-Introduction.md)
+  * [Prometheus](09-Monitoring/02-Prometheus.md)
+  * [Grafana](09-Monitoring/03-Grafana.md)
+* 10-Ansible
+  * [Introduction](10-Ansible/01-Introduction.md)
+  * [Inventory](10-Ansible/02-Inventory.md)
+  * [Playbooks](10-Ansible/03-Playbooks.md)
