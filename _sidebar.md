@@ -14,6 +14,7 @@
     * [Security](01-Linux/03-Advanced/03-Security.md)
     * [User Management](01-Linux/03-Advanced/04-User-Management.md)
     * [Cheat Sheet (Komut Parametreleri)](01-Linux/03-Advanced/05-Cheat-Sheet.md)
+    * [Useful Tools (Fail2Ban, htop...)](01-Linux/03-Advanced/06-Useful-Tools.md)
 * 02-Docker
   * [Introduction & Alternatives](02-Docker/01-Introduction.md)
   * [Installation](02-Docker/02-Installation.md)
@@ -33,6 +34,7 @@
   * [Workflow Syntax](04-CICD/02-Workflow-Syntax.md)
   * [Secrets & Variables](04-CICD/03-Secrets-Variables.md)
   * [Real World Examples](04-CICD/04-Real-World-Examples.md)
+  * [Security & Quality Scans](04-CICD/05-Security-Quality-Scans.md)
 * 05-AWS
   * [EC2 Fundamentals](05-AWS/01-EC2-Fundamentals.md)
   * [S3 Fundamentals](05-AWS/02-S3-Fundamentals.md)
