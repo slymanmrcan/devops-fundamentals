@@ -48,3 +48,48 @@ sudo systemctl status nginx      # Servis durumunu gör
 sudo systemctl enable nginx      # Başlangıçta otomatik çalışmasını sağla
 sudo systemctl disable nginx     # Başlangıçta çalışmasını engelle
 ```
+
+## Arka Planda Çalıştırma (Advanced)
+
+### `nohup` (No Hang Up)
+Normalde bir terminali kapattığınızda, o terminalde çalışan tüm işlemler de kapanır. `nohup` komutu, oturum kapansa bile işlemin çalışmaya devam etmesini sağlar.
+
+```bash
+nohup python script.py &
+# Çıktılar varsayılan olarak 'nohup.out' dosyasına yazılır.
+```
+
+### `disown`
+Bir işlemi başlattıktan sonra onu terminalden bağımsız hale getirmek için kullanılır.
+```bash
+sleep 100 &
+disown %1  # 1 numaralı işi terminalden kopar
+```
+
+## Zamanlanmış Görevler (Cron Jobs)
+
+Linux'ta belirli zamanlarda otomatik çalışacak görevler `cron` servisi ile yönetilir.
+
+### `crontab`
+Kullanıcının zamanlanmış görevlerini düzenler.
+
+```bash
+crontab -e    # Cron dosyasını düzenle
+crontab -l    # Mevcut görevleri listele
+```
+
+**Cron Formatı:**
+`* * * * * komut`
+(Dakika - Saat - Gün - Ay - Haftanın Günü)
+
+Örnekler:
+```bash
+# Her dakika çalışır
+* * * * * /home/user/script.sh
+
+# Her gün saat 03:30'da çalışır
+30 3 * * * /usr/bin/python3 /home/user/backup.py
+
+# Her Pazartesi saat 08:00'de çalışır
+0 8 * * 1 /home/user/report.sh
+```

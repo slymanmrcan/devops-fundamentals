@@ -15,6 +15,10 @@
     * [User Management](01-Linux/03-Advanced/04-User-Management.md)
     * [Cheat Sheet (Komut Parametreleri)](01-Linux/03-Advanced/05-Cheat-Sheet.md)
     * [Useful Tools (Fail2Ban, htop...)](01-Linux/03-Advanced/06-Useful-Tools.md)
+    * [Backup & Restore](01-Linux/03-Advanced/07-Backup-Restore.md)
+    * [Text Processing (grep, awk, sed)](01-Linux/03-Advanced/08-Text-Processing.md)
+    * [SSH & Remote Access](01-Linux/03-Advanced/09-SSH-Remote-Access.md)
+    * [Troubleshooting](01-Linux/03-Advanced/10-Troubleshooting.md)
 * 02-Docker
   * [Introduction & Alternatives](02-Docker/01-Introduction.md)
   * [Installation](02-Docker/02-Installation.md)
@@ -40,13 +44,21 @@
   * [S3 Fundamentals](05-AWS/02-S3-Fundamentals.md)
   * [IAM Fundamentals](05-AWS/03-IAM-Fundamentals.md)
   * [VPC Fundamentals](05-AWS/04-VPC-Fundamentals.md)
+  * [Lambda Fundamentals](05-AWS/05-Lambda-Fundamentals.md)
 * 06-Kubernetes
   * [Deployments](06-Kubernetes/01-Deployments.md)
   * [Services & Networking](06-Kubernetes/02-Services-Networking.md)
   * [ConfigMaps & Secrets](06-Kubernetes/03-ConfigMaps-Secrets.md)
   * [Helm](06-Kubernetes/04-Helm.md)
 * 07-Terraform
-  * [Fundamentals](07-Terraform/01-Fundamentals.md)
+  * [Introduction](07-Terraform/01-Introduction.md)
+  * [Project Structure](07-Terraform/02-Project-Structure.md)
+  * [State Management](07-Terraform/03-State-Management.md)
+  * [AWS Infrastructure](07-Terraform/04-AWS-Infrastructure.md)
+  * [Modules](07-Terraform/05-Modules.md)
+  * [GitHub Management](07-Terraform/06-GitHub-Management.md)
+  * [Advanced Workflows](07-Terraform/07-Advanced-Workflows.md)
+  * [Cloudflare R2](07-Terraform/08-Cloudflare-R2.md)
 * 08-Network
   * [OSI TCP IP](08-Network/01-OSI-TCP-IP.md)
   * [DNS HTTP HTTPS](08-Network/02-DNS-HTTP-HTTPS.md)
