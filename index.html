@@ -34,9 +34,19 @@
         }
 
         /* Fix Sidebar Scrolling */
+        /* Fix Sidebar Scrolling */
         .sidebar {
-            position: fixed;
+            position: fixed !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
             z-index: 10;
+        }
+
+        /* Ensure content doesn't hide behind sidebar */
+        .content {
+            padding-top: 20px;
         }
 
         /* Improve Scrollbar */
