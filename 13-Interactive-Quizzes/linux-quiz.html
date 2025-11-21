@@ -142,7 +142,7 @@
             <!-- Sorular buraya JS ile gelecek -->
         </div>
         <div id="score-section">
-            <button id="show-score-btn" onclick="calculateScore()">Skoru Göster</button>
+            <button id="show-score-btn">Skoru Göster</button>
             <div id="final-score"></div>
         </div>
     </div>
@@ -157,7 +157,7 @@
                     "find . -s > 100",
                     "find . -type f --big 100"
                 ],
-                answer: 1 // B
+                answer: 1
             },
             {
                 text: "2. Bir '.tar.gz' sıkıştırılmış arşiv dosyasını çıkarmak (extract) için hangi parametre kombinasyonu gereklidir?",
@@ -167,7 +167,7 @@
                     "tar -xzvf dosya.tar.gz",
                     "tar -uzvf dosya.tar.gz"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "3. Bir dosyanın izinlerini 'rwxr-xr-x' (755) yapmak ne anlama gelir?",
@@ -177,7 +177,7 @@
                     "Sahibi sadece okur, diğerleri yazar.",
                     "Sadece root kullanıcısı erişebilir."
                 ],
-                answer: 0 // A
+                answer: 0
             },
             {
                 text: "4. 'grep' komutu ile bir kelimeyi İÇERMEYEN satırları bulmak için hangi parametre kullanılır?",
@@ -187,7 +187,7 @@
                     "grep -v",
                     "grep -n"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "5. Sistemdeki tüm dinleyen (listening) TCP ve UDP portlarını sayısal olarak görmek için hangi komut kullanılır?",
@@ -197,7 +197,7 @@
                     "ps aux",
                     "top"
                 ],
-                answer: 1 // B
+                answer: 1
             },
             {
                 text: "6. Bir servisin (örn: nginx) sistem açılışında otomatik başlamasını sağlamak için hangi komut kullanılır?",
@@ -207,7 +207,7 @@
                     "systemctl enable nginx",
                     "service nginx run"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "7. 'chmod' komutunda 'SetUID' bitini ayarlamak için hangi sayısal değer kullanılır?",
@@ -217,7 +217,7 @@
                     "4000",
                     "7777"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "8. Bir dizinin toplam boyutunu insan tarafından okunabilir formatta (human-readable) görmek için hangi komut kullanılır?",
@@ -227,7 +227,7 @@
                     "ls -la",
                     "fdisk -l"
                 ],
-                answer: 1 // B
+                answer: 1
             },
             {
                 text: "9. 'cron' zamanlayıcısında '0 2 * * *' ifadesi ne anlama gelir?",
@@ -237,7 +237,7 @@
                     "Her gün saat 02:00'de",
                     "Haftada iki kez"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "10. Bir metin dosyasındaki 'eski' kelimelerinin hepsini 'yeni' ile değiştirmek için hangi 'sed' komutu doğrudur?",
@@ -247,7 +247,7 @@
                     "sed 's/eski/yeni/g' dosya.txt",
                     "sed -i 'change eski yeni' dosya.txt"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "11. 'kill -9 <PID>' komutundaki '-9' sinyali ne anlama gelir?",
@@ -257,7 +257,7 @@
                     "SIGKILL (Zorla/Derhal öldür)",
                     "SIGHUP (Yeniden başlat)"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "12. Sembolik link (soft link) oluşturmak için hangi komut kullanılır?",
@@ -267,7 +267,7 @@
                     "link -soft hedef link_ismi",
                     "cp -l hedef link_ismi"
                 ],
-                answer: 0 // A
+                answer: 0
             },
             {
                 text: "13. '/etc/fstab' dosyasının temel amacı nedir?",
@@ -277,7 +277,7 @@
                     "Disk bölümlerinin (partitions) otomatik bağlanmasını (mount) tanımlamak",
                     "Sistem loglarını tutmak"
                 ],
-                answer: 2 // C
+                answer: 2
             },
             {
                 text: "14. 'awk' komutu ile bir dosyanın sadece 2. sütununu yazdırmak için hangisi kullanılır?",
@@ -287,7 +287,7 @@
                     "awk -f 2",
                     "cut -c 2"
                 ],
-                answer: 1 // B
+                answer: 1
             },
             {
                 text: "15. SSH anahtar tabanlı kimlik doğrulama için, public key'i karşı sunucuya kopyalayan komut hangisidir?",
@@ -297,20 +297,17 @@
                     "ssh-copy-id",
                     "scp id_rsa.pub server:"
                 ],
-                answer: 2 // C
+                answer: 2
             }
         ];
 
         let score = 0;
-        // Moved inside initQuiz to ensure DOM is ready
 
         function initQuiz() {
-            console.log("initQuiz started");
             const quizContainer = document.getElementById('quiz-container');
 
             if (!quizContainer) {
                 console.error("quiz-container element not found!");
-                alert("Hata: Test alanı bulunamadı (quiz-container missing).");
                 return;
             }
 
@@ -337,7 +334,6 @@
                 card.appendChild(optionsList);
                 quizContainer.appendChild(card);
             });
-            console.log("initQuiz finished, questions rendered: " + questions.length);
         }
 
         function checkAnswer(selectedOption, questionIndex, optionIndex) {
@@ -345,11 +341,9 @@
             const options = card.querySelectorAll('.option');
             const correctAnswerIndex = questions[questionIndex].answer;
 
-            // Prevent changing answer
             if (card.getAttribute('data-answered') === 'true') return;
             card.setAttribute('data-answered', 'true');
 
-            // Disable all options
             options.forEach(opt => opt.classList.add('disabled'));
 
             if (optionIndex === correctAnswerIndex) {
@@ -357,7 +351,6 @@
                 score++;
             } else {
                 selectedOption.classList.add('wrong');
-                // Highlight correct answer
                 options[correctAnswerIndex].classList.add('correct');
             }
         }
@@ -374,36 +367,19 @@
 
             resultDiv.innerHTML = `Skorunuz: ${score} / ${questions.length}<br><span style="font-size: 1.5rem; color: #636e72;">(%${percentage}) - ${message}</span>`;
 
-            // Scroll to bottom
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Error handling
-        window.onerror = function (msg, url, lineNo, columnNo, error) {
-            const errorDiv = document.createElement('div');
-            errorDiv.style.color = 'red';
-            errorDiv.style.padding = '20px';
-            errorDiv.style.textAlign = 'center';
-            errorDiv.innerHTML = `<h3>Bir hata oluştu:</h3><p>${msg}</p>`;
-            document.body.prepend(errorDiv);
-            return false;
-        };
+        // DOM yüklendiğinde testi başlat
+        document.addEventListener('DOMContentLoaded', function () {
+            initQuiz();
 
-        // Robust Initialization
-        function start() {
-            try {
-                initQuiz();
-            } catch (e) {
-                console.error(e);
-                alert("Test başlatılamadı: " + e.message);
+            // Butona event listener ekle
+            const btn = document.getElementById('show-score-btn');
+            if (btn) {
+                btn.addEventListener('click', calculateScore);
             }
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', start);
-        } else {
-            start();
-        }
+        });
     </script>
 
 </body>
