@@ -1,62 +1,62 @@
-# Remote Repositories & GitHub
+# Uzak Depolar (Remote Repositories) & GitHub
 
-## 1. Working with Remotes
+## 1. Uzak Depolarla Çalışmak
 
-### Cloning a Repository
-Download a repository from a remote server (like GitHub).
+### Depoyu Klonlama (Cloning)
+Uzak bir sunucudan (GitHub gibi) bir depoyu indirin.
 ```bash
-git clone https://github.com/username/repo.git
+git clone https://github.com/kullaniciadi/repo.git
 ```
 
-### Adding a Remote
-Link a local repository to a remote one.
+### Uzak Depo Ekleme (Adding Remote)
+Yerel bir depoyu uzak bir depoya bağlayın.
 ```bash
-git remote add origin https://github.com/username/repo.git
+git remote add origin https://github.com/kullaniciadi/repo.git
 ```
 
-### Verifying Remotes
+### Uzak Depoları Doğrulama
 ```bash
 git remote -v
 ```
 
-## 2. Syncing Changes
+## 2. Değişiklikleri Eşitleme (Syncing)
 
-### Push
-Upload your local branch commits to the remote repository.
+### Push (Gönderme)
+Yerel branch commit'lerinizi uzak depoya yükleyin.
 ```bash
 git push -u origin main
 ```
 
-### Pull
-Fetch and merge changes from the remote to your local branch.
+### Pull (Çekme)
+Uzak depodaki değişiklikleri indirip yerel branch'inizle birleştirin.
 ```bash
 git pull origin main
 ```
 
-### Fetch
-Download objects and refs from another repository (doesn't merge automatically).
+### Fetch (Getirme)
+Başka bir depodan nesneleri ve referansları indirin (otomatik olarak birleştirmez).
 ```bash
 git fetch origin
 ```
 
-## 3. GitHub Workflow
+## 3. GitHub İş Akışı
 
-### Forking
-Creating a copy of someone else's repository under your GitHub account.
+### Forking (Çatallama)
+Başkasının deposunun bir kopyasını kendi GitHub hesabınız altında oluşturmaktır.
 
 ### Pull Requests (PR)
-Proposing changes to a repository.
-1. Fork the repo.
-2. Clone your fork.
-3. Create a feature branch.
-4. Make changes and commit.
-5. Push to your fork.
-6. Open a Pull Request on the original repository on GitHub.
+Bir depoya değişiklik önermektir.
+1. Repoyu Fork'layın.
+2. Fork'unuzu klonlayın.
+3. Bir özellik (feature) branch'i oluşturun.
+4. Değişiklik yapın ve commit edin.
+5. Fork'unuza push'layın.
+6. GitHub üzerindeki orijinal depoda bir Pull Request açın.
 
 ### .gitignore
-A file that specifies intentionally untracked files that Git should ignore (e.g., build artifacts, logs, secrets).
+Git'in görmezden gelmesi gereken dosyaları (örn: build çıktıları, loglar, gizli anahtarlar) belirten dosyadır.
 ```text
-# .gitignore example
+# .gitignore örneği
 node_modules/
 .env
 *.log

@@ -1,12 +1,12 @@
-# AWS EC2 – The Backbone of the Cloud
+# AWS EC2 – Bulutun Omurgası
 
-## 1. What It Solves
-Before Cloud: You had to buy physical servers, wait weeks for delivery, rack them, and guess your capacity needs.
-**With EC2 (Elastic Compute Cloud):** You rent virtual servers (Instances) on-demand. You pay only for what you use, scale up/down instantly, and have total control over the OS.
+## 1. Hangi Sorunu Çözer?
+Buluttan Önce: Fiziksel sunucular satın almanız, teslimat için haftalarca beklemeniz, onları raflara yerleştirmeniz ve kapasite ihtiyaçlarınızı tahmin etmeniz gerekirdi.
+**EC2 (Elastic Compute Cloud) ile:** İhtiyacınız olduğunda sanal sunucular (Instance) kiralarsınız. Sadece kullandığınız kadar ödersiniz, anında ölçeklendirirsiniz (büyütüp/küçültebilirsiniz) ve İşletim Sistemi üzerinde tam kontrole sahip olursunuz.
 
-## 2. Architecture & Key Components
+## 2. Mimari ve Temel Bileşenler
 
-### Architecture Diagram
+### Mimari Diyagramı
 ```mermaid
 graph TD
     User --> IGW[Internet Gateway]
@@ -25,38 +25,38 @@ graph TD
     EC2 -- Auth --> KP[Key Pair]
 ```
 
-### Key Components
-1.  **AMI (Amazon Machine Image):** The blueprint (OS + App Server + Applications).
-2.  **Instance Type:** Hardware configuration (CPU, RAM, Network).
-    *   `t3.micro`: General Purpose (Burstable).
-    *   `c5.large`: Compute Optimized (High CPU).
-    *   `r5.large`: Memory Optimized (High RAM).
-3.  **EBS (Elastic Block Store):** The virtual hard drive. Persists data even if the instance stops.
-4.  **Security Groups:** Virtual Firewall. Stateful (Return traffic allowed automatically).
-5.  **Key Pairs:** SSH keys for login (PEM/PPK).
-6.  **User Data:** Script that runs *only once* upon first boot (bootstrapping).
+### Temel Bileşenler
+1.  **AMI (Amazon Machine Image):** Şablon (İşletim Sistemi + Uygulama Sunucusu + Uygulamalar).
+2.  **Instance Type:** Donanım yapılandırması (CPU, RAM, Ağ).
+    *   `t3.micro`: Genel Amaçlı (Burstable - Ani performans artışlı).
+    *   `c5.large`: İşlemci Odaklı (Yüksek CPU).
+    *   `r5.large`: Bellek Odaklı (Yüksek RAM).
+3.  **EBS (Elastic Block Store):** Sanal sabit disk. Instance dursa bile veriler kalıcıdır.
+4.  **Security Groups:** Sanal Güvenlik Duvarı. Durum bilgisi tutar (Stateful - Giden trafiğin dönüşüne otomatik izin verir).
+5.  **Key Pairs:** Giriş yapmak için SSH anahtarları (PEM/PPK).
+6.  **User Data:** İlk açılışta *sadece bir kez* çalışan script (bootstrapping).
 
-## 3. Real Deployment Patterns
+## 3. Gerçek Dağıtım Senaryoları
 
-### Pattern A: The Bastion Host (Jump Box)
-*   **Goal:** Securely access private instances.
-*   **Setup:** Public EC2 instance (Bastion) allows SSH only from your IP. Private instances allow SSH only from Bastion SG.
+### Senaryo A: Bastion Host (Jump Box)
+*   **Amaç:** Özel (Private) instance'lara güvenli erişim sağlamak.
+*   **Kurulum:** Public EC2 instance (Bastion) sadece sizin IP'nizden gelen SSH'a izin verir. Private instance'lar ise sadece Bastion'ın Security Group'undan gelen SSH'a izin verir.
 
-### Pattern B: Auto Scaling Group (ASG) + Load Balancer (ALB)
-*   **Goal:** High Availability and Elasticity.
-*   **Setup:** ALB distributes traffic to EC2 instances across multiple Availability Zones (AZs). ASG adds/removes instances based on CPU load.
+### Senaryo B: Auto Scaling Group (ASG) + Load Balancer (ALB)
+*   **Amaç:** Yüksek Erişilebilirlik ve Esneklik.
+*   **Kurulum:** ALB, trafiği birden fazla Availability Zone (AZ) üzerindeki EC2 instance'larına dağıtır. ASG, CPU yüküne göre otomatik olarak instance ekler veya çıkarır.
 
-## 4. Security Best Practices
-1.  **Least Privilege:** Open ports only to specific IPs (e.g., SSH port 22 only to your VPN/Office IP).
-2.  **IAM Roles:** NEVER store AWS Access Keys on the instance. Attach an IAM Role instead.
-3.  **Private Subnets:** Put backend servers/DBs in private subnets (no public IP).
-4.  **Regular Patching:** Use Systems Manager (SSM) Patch Manager.
+## 4. Güvenlik En İyi Uygulamaları (Best Practices)
+1.  **En Az Yetki (Least Privilege):** Portları sadece belirli IP'lere açın (örn: SSH port 22 sadece VPN/Ofis IP'nize).
+2.  **IAM Rolleri:** AWS Access Key'lerini ASLA instance içinde saklamayın. Bunun yerine bir IAM Rolü atayın.
+3.  **Private Subnet:** Backend sunucularını/Veritabanlarını private subnet'lere koyun (Public IP olmasın).
+4.  **Düzenli Yama (Patching):** Systems Manager (SSM) Patch Manager kullanın.
 
-## 5. Cost Optimization
-*   **On-Demand:** Pay by the second. Good for short-term, irregular workloads.
-*   **Reserved Instances (RI):** Commit to 1 or 3 years. Up to 72% discount. Good for steady-state.
-*   **Savings Plans:** Flexible commitment (e.g., $10/hour). Applies to EC2, Fargate, Lambda.
-*   **Spot Instances:** Bid on unused capacity. Up to 90% discount. Can be interrupted with 2-minute warning. Good for batch jobs, CI/CD.
+## 5. Maliyet Optimizasyonu
+*   **On-Demand:** Saniye bazlı ödeme. Kısa vadeli, düzensiz iş yükleri için iyidir.
+*   **Reserved Instances (RI):** 1 veya 3 yıllık taahhüt. %72'ye varan indirim. Sürekli çalışan sistemler için iyidir.
+*   **Savings Plans:** Esnek taahhüt (örn: saatlik $10 harcama sözü). EC2, Fargate, Lambda için geçerlidir.
+*   **Spot Instances:** Kullanılmayan kapasiteye teklif verin. %90'a varan indirim. 2 dakika uyarı ile kesilebilir. Batch işleri, CI/CD için iyidir.
 
 ## 6. Infrastructure as Code (Terraform)
 
@@ -73,7 +73,7 @@ resource "aws_instance" "web" {
               yum update -y
               yum install -y httpd
               systemctl start httpd
-              echo "Hello from Terraform" > /var/www/html/index.html
+              echo "Terraform'dan Merhaba" > /var/www/html/index.html
               EOF
 
   tags = {
@@ -82,33 +82,33 @@ resource "aws_instance" "web" {
 }
 ```
 
-## 7. AWS CLI Examples
+## 7. AWS CLI Örnekleri
 
-| Action | Command |
+| İşlem | Komut |
 | :--- | :--- |
-| **Launch Instance** | `aws ec2 run-instances --image-id ami-xxx --count 1 --instance-type t2.micro --key-name MyKey` |
-| **List Instances** | `aws ec2 describe-instances --filters "Name=instance-type,Values=t2.micro"` |
-| **Stop Instance** | `aws ec2 stop-instances --instance-ids i-1234567890abcdef0` |
-| **Create Key Pair** | `aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem` |
+| **Instance Başlat** | `aws ec2 run-instances --image-id ami-xxx --count 1 --instance-type t2.micro --key-name MyKey` |
+| **Instance Listele** | `aws ec2 describe-instances --filters "Name=instance-type,Values=t2.micro"` |
+| **Instance Durdur** | `aws ec2 stop-instances --instance-ids i-1234567890abcdef0` |
+| **Key Pair Oluştur** | `aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem` |
 
-## 8. Common Exam Questions (SAA-C03 / DVA-C02)
+## 8. Sık Karşılaşılan Sınav Soruları (SAA-C03 / DVA-C02)
 
-**Q1: You need a high-performance database on EC2. Which EBS volume type do you choose?**
+**S1: EC2 üzerinde yüksek performanslı bir veritabanına ihtiyacınız var. Hangi EBS disk tipini seçersiniz?**
 *   A) Cold HDD (sc1)
 *   B) General Purpose SSD (gp3)
 *   C) Provisioned IOPS SSD (io2) ✅
 *   D) Throughput Optimized HDD (st1)
-*   *Reason: Databases need high IOPS and low latency.*
+*   *Sebep: Veritabanları yüksek IOPS ve düşük gecikme süresine ihtiyaç duyar.*
 
-**Q2: How do you securely pass database credentials to an EC2 application?**
-*   A) Hardcode in source code.
-*   B) Store in User Data.
-*   C) Use AWS Systems Manager Parameter Store. ✅
-*   D) Save in a text file on S3.
-*   *Reason: Parameter Store (or Secrets Manager) is secure and supports encryption.*
+**S2: Veritabanı şifrelerini bir EC2 uygulamasına güvenli bir şekilde nasıl iletirsiniz?**
+*   A) Kaynak kodun içine gömerek.
+*   B) User Data içinde saklayarak.
+*   C) AWS Systems Manager Parameter Store kullanarak. ✅
+*   D) S3 üzerindeki bir metin dosyasına kaydederek.
+*   *Sebep: Parameter Store (veya Secrets Manager) güvenlidir ve şifrelemeyi destekler.*
 
-**Q3: Your Spot Instance is about to be reclaimed. How much notice do you get?**
-*   A) 30 seconds
-*   B) 2 minutes ✅
-*   C) 5 minutes
-*   D) No notice
+**S3: Spot Instance'ınız geri alınmak üzere. Ne kadar süre önce uyarı alırsınız?**
+*   A) 30 saniye
+*   B) 2 dakika ✅
+*   C) 5 dakika
+*   D) Uyarı verilmez

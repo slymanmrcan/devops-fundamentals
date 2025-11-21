@@ -1,12 +1,12 @@
-# AWS VPC – Virtual Private Cloud
+# AWS VPC – Sanal Özel Bulut (Virtual Private Cloud)
 
-## 1. What It Solves
-Before Cloud: You physically cabled switches and routers to isolate networks.
-**With VPC:** You provision a logically isolated section of the AWS Cloud. You have complete control over your virtual networking environment, including IP ranges, subnets, and route tables.
+## 1. Hangi Sorunu Çözer?
+Buluttan Önce: Ağları izole etmek için fiziksel olarak switch ve router kablolamanız gerekirdi.
+**VPC ile:** AWS Bulutu içinde mantıksal olarak izole edilmiş bir bölüm oluşturursunuz. IP aralıkları, alt ağlar (subnet) ve yönlendirme tabloları (route table) dahil olmak üzere sanal ağ ortamınız üzerinde tam kontrole sahip olursunuz.
 
-## 2. Architecture & Key Components
+## 2. Mimari ve Temel Bileşenler
 
-### Architecture Diagram
+### Mimari Diyagramı
 ```mermaid
 graph TD
     Internet((Internet)) <--> IGW[Internet Gateway]
@@ -22,42 +22,42 @@ graph TD
     end
 ```
 
-### Key Components
-1.  **CIDR Block:** The IP range for the VPC (e.g., `10.0.0.0/16` = 65,536 IPs).
-2.  **Subnets:** Segments of the VPC IP range. Must live in a specific Availability Zone (AZ).
-    *   **Public Subnet:** Has a route to an Internet Gateway (IGW).
-    *   **Private Subnet:** No direct route to IGW. Uses NAT Gateway for outbound access.
-3.  **Internet Gateway (IGW):** The door to the internet. One per VPC.
-4.  **Route Tables:** Rules (routes) that determine where network traffic is directed.
-5.  **NAT Gateway:** Allows private instances to talk to the internet (for updates) but prevents internet from talking to them.
-6.  **NACL (Network ACL):** Stateless firewall at the subnet level.
-7.  **Security Group:** Stateful firewall at the instance level.
+### Temel Bileşenler
+1.  **CIDR Block:** VPC için IP aralığı (örn: `10.0.0.0/16` = 65,536 IP).
+2.  **Subnets (Alt Ağlar):** VPC IP aralığının bölümleri. Belirli bir Availability Zone (AZ) içinde bulunmalıdır.
+    *   **Public Subnet:** Internet Gateway'e (IGW) rotası vardır.
+    *   **Private Subnet:** IGW'ye doğrudan rotası yoktur. Dışarı çıkmak için NAT Gateway kullanır.
+3.  **Internet Gateway (IGW):** İnternete açılan kapı. VPC başına bir tane olur.
+4.  **Route Tables:** Ağ trafiğinin nereye yönlendirileceğini belirleyen kurallar (rotalar).
+5.  **NAT Gateway:** Özel (private) instance'ların internete konuşmasını (güncellemeler için) sağlar ancak internetin onlara ulaşmasını engeller.
+6.  **NACL (Network ACL):** Subnet seviyesinde durumsuz (stateless) güvenlik duvarı.
+7.  **Security Group:** Instance seviyesinde durumlu (stateful) güvenlik duvarı.
 
-## 3. Real Deployment Patterns
+## 3. Gerçek Dağıtım Senaryoları
 
-### Pattern A: Public & Private Subnets (The Standard)
-*   **Goal:** Host a web app securely.
-*   **Setup:**
+### Senaryo A: Public & Private Subnetler (Standart)
+*   **Amaç:** Bir web uygulamasını güvenli bir şekilde barındırmak.
+*   **Kurulum:**
     *   **Public Subnet:** Load Balancer (ALB), Bastion Host.
-    *   **Private Subnet:** Web Servers (EC2), Database (RDS).
-    *   **Flow:** User -> ALB -> Web Server -> DB.
+    *   **Private Subnet:** Web Sunucuları (EC2), Veritabanı (RDS).
+    *   **Akış:** Kullanıcı -> ALB -> Web Sunucusu -> DB.
 
-### Pattern B: VPC Peering
-*   **Goal:** Connect two VPCs (e.g., Shared Services VPC <-> Prod VPC).
-*   **Setup:** Create a Peering Connection. Update Route Tables in *both* VPCs to point to the Peering ID (`pcx-xxxx`).
-*   **Note:** Peering is non-transitive (A <-> B and B <-> C does NOT mean A <-> C).
+### Senaryo B: VPC Peering
+*   **Amaç:** İki VPC'yi birbirine bağlamak (örn: Ortak Servisler VPC <-> Prod VPC).
+*   **Kurulum:** Bir Peering Bağlantısı oluşturun. *Her iki* VPC'deki Route Table'ları Peering ID'sine (`pcx-xxxx`) yönlendirecek şekilde güncelleyin.
+*   **Not:** Peering geçişli (transitive) değildir (A <-> B ve B <-> C varsa, A <-> C konuşamaz).
 
-## 4. Security Best Practices
-1.  **Security Groups over NACLs:** Use SGs for primary filtering. They are easier to manage (Stateful). Use NACLs only for explicit blocking (e.g., block a specific malicious IP).
-2.  **No Public IPs for Backends:** Databases and App servers should NEVER have public IPs.
-3.  **Flow Logs:** Enable VPC Flow Logs to monitor traffic (accepted/rejected) for auditing.
-4.  **Bastion Hosts:** If you need SSH access, use a Bastion in the public subnet or, better yet, **SSM Session Manager** (no ports needed).
+## 4. Güvenlik En İyi Uygulamaları
+1.  **NACL yerine Security Group:** Birincil filtreleme için SG kullanın. Yönetimi daha kolaydır (Stateful). NACL'leri sadece açıkça engelleme (explicit blocking) için kullanın (örn: belirli bir saldırgan IP'yi engellemek).
+2.  **Backend İçin Public IP Yok:** Veritabanları ve Uygulama sunucuları ASLA public IP'ye sahip olmamalıdır.
+3.  **Flow Logs:** Denetim (audit) için trafiği (kabul edilen/reddedilen) izlemek üzere VPC Flow Logs'u etkinleştirin.
+4.  **Bastion Host:** SSH erişimine ihtiyacınız varsa, public subnet'te bir Bastion kullanın veya daha iyisi **SSM Session Manager** kullanın (port açmaya gerek kalmaz).
 
-## 5. Cost Optimization
-*   **NAT Gateways:** Expensive (~$0.045/hr + data processing).
-    *   *Tip:* Use VPC Endpoints (Gateway type) for S3 and DynamoDB to avoid NAT costs for AWS services.
-*   **Data Transfer:** Transfer between AZs costs money. Keep chatty services in the same AZ if HA isn't critical.
-*   **Public IPs:** AWS now charges for public IPv4 addresses. Use private IPs where possible.
+## 5. Maliyet Optimizasyonu
+*   **NAT Gateway:** Pahalıdır (~$0.045/saat + veri işleme).
+    *   *İpucu:* AWS servisleri (S3, DynamoDB) için NAT maliyetinden kaçınmak adına VPC Endpoints (Gateway tipi) kullanın.
+*   **Veri Transferi:** AZ'ler arası transfer ücretlidir. Yüksek erişilebilirlik (HA) kritik değilse, çok konuşan servisleri aynı AZ'de tutun.
+*   **Public IP:** AWS artık public IPv4 adresleri için ücret almaktadır. Mümkün olduğunca private IP kullanın.
 
 ## 6. Infrastructure as Code (Terraform)
 
@@ -86,34 +86,34 @@ resource "aws_route_table" "public_rt" {
 }
 ```
 
-## 7. AWS CLI Examples
+## 7. AWS CLI Örnekleri
 
-| Action | Command |
+| İşlem | Komut |
 | :--- | :--- |
-| **Create VPC** | `aws ec2 create-vpc --cidr-block 10.0.0.0/16` |
-| **Create Subnet** | `aws ec2 create-subnet --vpc-id vpc-xxx --cidr-block 10.0.1.0/24` |
-| **Create IGW** | `aws ec2 create-internet-gateway` |
-| **Attach IGW** | `aws ec2 attach-internet-gateway --vpc-id vpc-xxx --internet-gateway-id igw-xxx` |
+| **VPC Oluştur** | `aws ec2 create-vpc --cidr-block 10.0.0.0/16` |
+| **Subnet Oluştur** | `aws ec2 create-subnet --vpc-id vpc-xxx --cidr-block 10.0.1.0/24` |
+| **IGW Oluştur** | `aws ec2 create-internet-gateway` |
+| **IGW Bağla** | `aws ec2 attach-internet-gateway --vpc-id vpc-xxx --internet-gateway-id igw-xxx` |
 
-## 8. Common Exam Questions (SAA-C03 / DVA-C02)
+## 8. Sık Karşılaşılan Sınav Soruları (SAA-C03 / DVA-C02)
 
-**Q1: You have an EC2 instance in a private subnet that needs to download updates from the internet. What do you need?**
+**S1: Private subnet'teki bir EC2 instance'ının internetten güncelleme indirmesi gerekiyor. Neye ihtiyacınız var?**
 *   A) Internet Gateway
 *   B) NAT Gateway ✅
 *   C) VPC Peering
 *   D) Egress-Only Internet Gateway
-*   *Reason: NAT Gateway allows outbound traffic for private subnets. Egress-Only is for IPv6.*
+*   *Sebep: NAT Gateway, private subnet'ler için giden trafiğe izin verir. Egress-Only IPv6 içindir.*
 
-**Q2: You blocked an IP in the Security Group, but the traffic is still getting through. Why?**
-*   A) Security Groups are stateless.
-*   B) Security Groups cannot block (deny) traffic. ✅
-*   C) You need to restart the instance.
-*   D) The rule takes 24 hours to apply.
-*   *Reason: Security Groups are "Allow Only". To explicitly DENY an IP, you must use a Network ACL (NACL).*
+**S2: Security Group'ta bir IP'yi engellediniz ama trafik hala geçiyor. Neden?**
+*   A) Security Group'lar stateless'tır.
+*   B) Security Group'lar trafiği engelleyemez (deny). ✅
+*   C) Instance'ı yeniden başlatmanız gerekir.
+*   D) Kuralın uygulanması 24 saat sürer.
+*   *Sebep: Security Group'lar "Sadece İzin Ver" (Allow Only) mantığıyla çalışır. Bir IP'yi açıkça REDDETMEK (DENY) için Network ACL (NACL) kullanmalısınız.*
 
-**Q3: Can you peer two VPCs with overlapping CIDR blocks (e.g., both are 10.0.0.0/16)?**
-*   A) Yes.
-*   B) No. ✅
-*   C) Only if they are in different regions.
-*   D) Only if you use a Transit Gateway.
-*   *Reason: Overlapping CIDRs break routing. You cannot peer them.*
+**S3: Çakışan CIDR bloklarına sahip iki VPC'yi (örn: ikisi de 10.0.0.0/16) peer edebilir misiniz?**
+*   A) Evet.
+*   B) Hayır. ✅
+*   C) Sadece farklı bölgelerdelerse.
+*   D) Sadece Transit Gateway kullanırsanız.
+*   *Sebep: Çakışan CIDR'lar yönlendirmeyi bozar. Onları peer edemezsiniz.*

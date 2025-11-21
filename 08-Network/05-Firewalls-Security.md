@@ -1,43 +1,43 @@
-# Firewalls & Security: Network Defense
+# Güvenlik Duvarları & Güvenlik: Ağ Savunması
 
-## 1. Firewalls
-Devices or software that control network traffic based on rules.
+## 1. Güvenlik Duvarları (Firewalls)
+Ağ trafiğini kurallara göre kontrol eden cihazlar veya yazılımlardır.
 
 ### Stateful vs Stateless
-- **Stateless (ACLs)**: Checks packets individually. If you allow inbound request, you MUST explicitly allow outbound reply.
-    - *Example*: AWS Network ACLs (NACL).
-- **Stateful**: Remembers connections. If you allow inbound request (port 80), it automatically allows the return traffic.
-    - *Example*: AWS Security Groups, `iptables`.
+- **Stateless (Durumsuz - ACL'ler)**: Paketleri tek tek kontrol eder. Gelen isteğe izin verirseniz, giden yanıtı da açıkça (explicitly) izin vermelisiniz.
+    - *Örnek*: AWS Network ACLs (NACL).
+- **Stateful (Durumlu)**: Bağlantıları hatırlar. Gelen isteğe (port 80) izin verirseniz, dönüş trafiğine otomatik olarak izin verir.
+    - *Örnek*: AWS Security Groups, `iptables`.
 
 ---
 
-## 2. Cloud Security (AWS Context)
-Understanding the difference is critical for DevOps.
+## 2. Bulut Güvenliği (AWS Bağlamı)
+Aradaki farkı anlamak DevOps için kritiktir.
 
-| Feature | Security Group (SG) | Network ACL (NACL) |
+| Özellik | Security Group (SG) | Network ACL (NACL) |
 | :--- | :--- | :--- |
-| **Level** | Instance (EC2) | Subnet |
-| **Type** | Stateful | Stateless |
-| **Rules** | Allow only (Implicit Deny) | Allow and Deny |
-| **Order** | All rules evaluated | Numbered order (100, 200) |
-| **Use Case**| Primary firewall for apps | Optional extra layer (blocking IPs) |
+| **Seviye** | Instance (EC2) | Subnet |
+| **Tür** | Stateful | Stateless |
+| **Kurallar** | Sadece İzin Ver (Varsayılan Red) | İzin Ver ve Reddet |
+| **Sıra** | Tüm kurallar değerlendirilir | Numaralı sıra (100, 200) |
+| **Kullanım**| Uygulamalar için birincil duvar | Ekstra katman (IP engelleme) |
 
 ---
 
-## 3. VPN (Virtual Private Network)
-Extending a private network across a public one.
+## 3. VPN (Sanal Özel Ağ)
+Özel bir ağı genel bir ağ üzerinden genişletmek.
 
-- **Site-to-Site**: Connects an Office Router to a Cloud VPC. Servers talk to servers privately.
-- **Client-to-Site**: Remote developer connects laptop to Office/Cloud network.
+- **Site-to-Site**: Bir Ofis Router'ını Bulut VPC'sine bağlar. Sunucular sunucularla özel olarak konuşur.
+- **Client-to-Site**: Uzaktan çalışan geliştirici laptopunu Ofis/Bulut ağına bağlar.
 
 ---
 
-## 4. DDOS (Distributed Denial of Service)
-- **Volumetric**: Flooding bandwidth (UDP floods).
-- **Protocol**: Exhausting server resources (SYN Flood).
-- **Application**: Complex requests (Search queries) to kill CPU.
+## 4. DDOS (Dağıtık Hizmet Reddi)
+- **Hacimsel (Volumetric)**: Bant genişliğini doldurma (UDP selleri).
+- **Protokol**: Sunucu kaynaklarını tüketme (SYN Flood).
+- **Uygulama**: CPU'yu öldürmek için karmaşık istekler (Arama sorguları).
 
-**Mitigation**:
-- **CDN**: Cloudflare/CloudFront absorbs traffic.
-- **WAF (Web Application Firewall)**: Blocks malicious HTTP patterns (SQL Injection).
-- **Autoscaling**: Absorbs load (expensive).
+**Azaltma (Mitigation)**:
+- **CDN**: Cloudflare/CloudFront trafiği emer.
+- **WAF (Web Application Firewall)**: Zararlı HTTP desenlerini engeller (SQL Injection).
+- **Autoscaling**: Yükü karşılar (pahalıdır).

@@ -66,6 +66,7 @@
   * [LoadBalancing Proxy](08-Network/04-LoadBalancing-Proxy.md)
   * [Firewalls Security](08-Network/05-Firewalls-Security.md)
   * [Troubleshooting Tools](08-Network/06-Troubleshooting-Tools.md)
+  * [Network Protocols](08-Network/07-Network-Protocols.md)
 * 09-Monitoring
   * [Introduction](09-Monitoring/01-Introduction.md)
   * [Prometheus](09-Monitoring/02-Prometheus.md)
@@ -74,3 +75,13 @@
   * [Introduction](10-Ansible/01-Introduction.md)
   * [Inventory](10-Ansible/02-Inventory.md)
   * [Playbooks](10-Ansible/03-Playbooks.md)
+* 11-Cloud-Dictionary
+  * [Service Map (AWS/Azure/GCP/OCI)](11-Cloud-Dictionary/01-Service-Map.md)
+  * [Compute Concepts](11-Cloud-Dictionary/02-Compute.md)
+  * [Storage Concepts](11-Cloud-Dictionary/03-Storage.md)
+  * [Database Concepts](11-Cloud-Dictionary/04-Database.md)
+  * [Networking Concepts](11-Cloud-Dictionary/05-Networking.md)
+* 12-Certifications
+  * [Practice Questions](12-Certifications/01-Practice-Questions.md)
+* 13-Interactive-Quizzes
+  * [Linux Quiz (HTML)](13-Interactive-Quizzes/linux-quiz.html)

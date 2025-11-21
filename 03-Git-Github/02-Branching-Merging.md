@@ -1,67 +1,67 @@
-# Branching & Merging
+# Dallanma ve Birleştirme (Branching & Merging)
 
-## 1. What is a Branch?
-A branch represents an independent line of development. The default branch is usually called `main` or `master`.
+## 1. Branch (Dal) Nedir?
+Bir branch, bağımsız bir geliştirme hattını temsil eder. Varsayılan branch genellikle `main` veya `master` olarak adlandırılır.
 
-## 2. Managing Branches
+## 2. Branch Yönetimi
 
-### List Branches
+### Branch'leri Listeleme
 ```bash
 git branch
 ```
 
-### Create a Branch
+### Branch Oluşturma
 ```bash
 git branch feature-login
 ```
 
-### Switch to a Branch
+### Branch Değiştirme (Switch)
 ```bash
 git checkout feature-login
-# OR (newer command)
+# VEYA (yeni komut)
 git switch feature-login
 ```
 
-### Create and Switch in One Command
+### Tek Komutla Oluştur ve Geç
 ```bash
 git checkout -b feature-login
 ```
 
-### Delete a Branch
+### Branch Silme
 ```bash
 git branch -d feature-login
 ```
 
-## 3. Merging
-Merging is the way you combine the work of different branches together.
+## 3. Birleştirme (Merging)
+Merging, farklı branch'lerdeki çalışmaları birleştirmenin yoludur.
 
-1. Switch to the branch you want to merge *into* (usually `main`).
+1. Birleştirme yapmak istediğiniz *hedef* branch'e geçin (genellikle `main`).
    ```bash
    git checkout main
    ```
-2. Merge the feature branch.
+2. Özellik (feature) branch'ini birleştirin.
    ```bash
    git merge feature-login
    ```
 
-## 4. Merge Conflicts
-Conflicts happen when you merge branches that have competing commits, and Git needs your help to decide which changes to incorporate.
+## 4. Merge Çakışmaları (Conflicts)
+Çakışmalar, çelişen commit'lere sahip branch'leri birleştirdiğinizde ortaya çıkar ve Git, hangi değişikliklerin dahil edileceğine karar vermek için yardımınıza ihtiyaç duyar.
 
-1. Git will mark the file as conflicted.
-2. Open the file and look for conflict markers:
+1. Git, dosyayı çakışmalı (conflicted) olarak işaretler.
+2. Dosyayı açın ve çakışma işaretlerini bulun:
    ```text
    <<<<<<< HEAD
-   code in main
+   main branch'indeki kod
    =======
-   code in feature-login
+   feature-login branch'indeki kod
    >>>>>>> feature-login
    ```
-3. Edit the file to resolve the conflict (remove markers and keep the correct code).
-4. Add the resolved file.
+3. Çakışmayı çözmek için dosyayı düzenleyin (işaretleri kaldırın ve doğru kodu tutun).
+4. Çözülen dosyayı ekleyin (add).
    ```bash
-   git add filename.txt
+   git add dosya.txt
    ```
-5. Commit the merge.
+5. Birleştirmeyi commit edin.
    ```bash
-   git commit -m "Resolved merge conflict"
+   git commit -m "Merge çakışması çözüldü"
    ```

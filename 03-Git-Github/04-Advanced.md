@@ -1,60 +1,60 @@
-# Advanced Git
+# İleri Seviye Git (Advanced Git)
 
-## 1. Stashing
-Temporarily shelve (stash) changes you've made to your working copy so you can work on something else, and then come back and re-apply them later.
+## 1. Stashing (Zulalama)
+Çalışma kopyanızda yaptığınız değişiklikleri geçici olarak rafa kaldırın (stash), böylece başka bir şey üzerinde çalışabilir ve daha sonra geri gelip bunları tekrar uygulayabilirsiniz.
 
 ```bash
-# Stash changes
+# Değişiklikleri zulala
 git stash
 
-# List stashes
+# Zulaları listele
 git stash list
 
-# Apply the latest stash
+# En son zulayı uygula ve listeden sil
 git stash pop
 ```
 
 ## 2. Reset vs Revert
 
 ### Reset
-Moves the current branch pointer backward. **Dangerous** if commits are already pushed.
+Mevcut branch işaretçisini geriye taşır. Commit'ler zaten push'lanmışsa **tehlikelidir**.
 ```bash
-# Soft: Keeps changes in staging
+# Soft: Değişiklikleri staging (hazırlama) alanında tutar
 git reset --soft HEAD~1
 
-# Hard: Destroys changes
+# Hard: Değişiklikleri tamamen yok eder
 git reset --hard HEAD~1
 ```
 
 ### Revert
-Creates a *new* commit that undoes the changes of a previous commit. Safe for public history.
+Önceki bir commit'in değişikliklerini geri alan *yeni* bir commit oluşturur. Genel (public) tarihçe için güvenlidir.
 ```bash
 git revert <commit-hash>
 ```
 
 ## 3. Rebase
-Re-applying commits on top of another base tip. It creates a linear history.
+Commit'leri başka bir temel ucun (base tip) üzerine yeniden uygular. Doğrusal bir tarihçe oluşturur.
 
 ```bash
-# Switch to feature branch
+# Özellik branch'ine geç
 git checkout feature
-# Rebase onto main
+# Main üzerine rebase et
 git rebase main
 ```
-> **Warning:** Never rebase public branches (like main) that others are working on.
+> **Uyarı:** Başkalarının üzerinde çalıştığı genel branch'leri (main gibi) asla rebase etmeyin.
 
 ## 4. Cherry Pick
-Apply the changes introduced by some existing commits.
+Mevcut commit'lerden bazılarının değişikliklerini seçip uygular.
 ```bash
 git cherry-pick <commit-hash>
 ```
 
-## 5. Tags
-Marking specific points in history as being important (e.g., releases).
+## 5. Tags (Etiketler)
+Tarihçedeki belirli noktaları önemli olarak işaretlemek (örn: sürümler).
 ```bash
-# Create a tag
+# Etiket oluştur
 git tag v1.0.0
 
-# Push tags
+# Etiketleri push'la
 git push origin --tags
 ```

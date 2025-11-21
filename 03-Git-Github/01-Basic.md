@@ -1,71 +1,71 @@
-# Git Fundamentals - Basic
+# Git Temelleri - Başlangıç
 
-## 1. What is Git?
-Git is a distributed version control system that tracks changes in any set of files, usually used for coordinating work among programmers collaboratively developing source code during software development.
+## 1. Git Nedir?
+Git, herhangi bir dosya kümesindeki değişiklikleri izleyen dağıtık bir sürüm kontrol sistemidir. Genellikle yazılım geliştirme sırasında kaynak kodu üzerinde işbirliği yapan programcılar arasındaki çalışmayı koordine etmek için kullanılır.
 
-## 2. Configuration
-Before you start, configure your user information for all your local repositories.
+## 2. Yapılandırma (Configuration)
+Başlamadan önce, tüm yerel depolarınız (repository) için kullanıcı bilgilerinizi yapılandırın.
 
 ```bash
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
+git config --global user.name "Adınız Soyadınız"
+git config --global user.email "email@adresiniz.com"
 ```
 
-Check your configuration:
+Yapılandırmanızı kontrol edin:
 ```bash
 git config --list
 ```
 
-## 3. Initialization
-Initialize a new Git repository in your project folder.
+## 3. Başlatma (Initialization)
+Proje klasörünüzde yeni bir Git deposu başlatın.
 
 ```bash
-mkdir my-project
-cd my-project
+mkdir projem
+cd projem
 git init
 ```
 
-## 4. The Three States
-Git has three main states that your files can reside in:
-1. **Modified**: You have changed the file but have not committed it to your database yet.
-2. **Staged**: You have marked a modified file in its current version to go into your next commit snapshot.
-3. **Committed**: The data is safely stored in your local database.
+## 4. Üç Durum (The Three States)
+Git'te dosyalarınızın bulunabileceği üç ana durum vardır:
+1. **Modified (Değiştirilmiş):** Dosyayı değiştirdiniz ancak henüz veritabanına işlemediniz (commit etmediniz).
+2. **Staged (Hazırlanmış):** Değiştirilmiş bir dosyayı, bir sonraki commit anlık görüntüsüne (snapshot) dahil etmek üzere işaretlediniz.
+3. **Committed (İşlenmiş):** Veriler yerel veritabanınızda güvenli bir şekilde saklandı.
 
-## 5. Basic Commands
+## 5. Temel Komutlar
 
-### Checking Status
-See which files are staged, modified, or untracked.
+### Durumu Kontrol Etme (Status)
+Hangi dosyaların hazırlandığını (staged), değiştirildiğini veya izlenmediğini (untracked) görün.
 ```bash
 git status
 ```
 
-### Adding Files (Staging)
-Add files to the staging area.
+### Dosya Ekleme (Staging)
+Dosyaları hazırlama alanına (staging area) ekleyin.
 ```bash
-# Add a specific file
-git add filename.txt
+# Belirli bir dosyayı ekle
+git add dosya.txt
 
-# Add all files in the current directory
+# Mevcut dizindeki tüm dosyaları ekle
 git add .
 ```
 
-### Committing
-Record changes to the repository.
+### İşleme (Committing)
+Değişiklikleri depoya kaydedin.
 ```bash
-git commit -m "Initial commit"
+git commit -m "İlk commit"
 ```
 
-### Viewing History
-Show the commit history.
+### Geçmişi Görüntüleme (History)
+Commit geçmişini gösterin.
 ```bash
 git log
 
-# Compact view
+# Özet görünüm
 git log --oneline
 ```
 
-### Diff
-See changes that are not yet staged.
+### Farkları Görme (Diff)
+Henüz hazırlanmamış (staged olmamış) değişiklikleri görün.
 ```bash
 git diff
 ```

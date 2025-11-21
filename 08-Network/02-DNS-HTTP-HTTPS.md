@@ -1,67 +1,67 @@
-# DNS, HTTP & HTTPS: The Web Layer
+# DNS, HTTP & HTTPS: Web Katmanı
 
 ## 1. DNS (Domain Name System)
-The "Phonebook of the Internet". Translates human-readable names (`google.com`) to IP addresses (`142.250.1.1`).
+"İnternetin Telefon Rehberi". İnsanların okuyabildiği isimleri (`google.com`) IP adreslerine (`142.250.1.1`) çevirir.
 
-### How it Works (Simplified)
-1.  **Browser**: Checks local cache.
-2.  **OS**: Checks `/etc/hosts`.
-3.  **Resolver**: Asks ISP's DNS server.
-4.  **Root Server**: Directs to TLD server (`.com`).
-5.  **TLD Server**: Directs to Authoritative Name Server (e.g., AWS Route53).
-6.  **Authoritative Server**: Returns the IP.
+### Nasıl Çalışır (Basitleştirilmiş)
+1.  **Tarayıcı**: Yerel önbelleği (cache) kontrol eder.
+2.  **İşletim Sistemi**: `/etc/hosts` dosyasını kontrol eder.
+3.  **Resolver**: İSS'nin (ISP) DNS sunucusuna sorar.
+4.  **Root Server**: TLD sunucusuna yönlendirir (`.com`).
+5.  **TLD Server**: Yetkili İsim Sunucusuna (Authoritative Name Server) yönlendirir (örn: AWS Route53).
+6.  **Authoritative Server**: IP adresini döndürür.
 
-### Common Record Types
-- **A**: Maps Hostname -> IPv4 (`1.2.3.4`).
-- **AAAA**: Maps Hostname -> IPv6.
-- **CNAME**: Maps Hostname -> Hostname (Alias). *Cannot be used at root domain (@).*
-- **MX**: Mail Exchange (Email).
-- **TXT**: Text notes (SPF, verification).
-- **NS**: Name Server (Who manages this zone?).
+### Yaygın Kayıt Türleri
+- **A**: Hostname -> IPv4 (`1.2.3.4`).
+- **AAAA**: Hostname -> IPv6.
+- **CNAME**: Hostname -> Hostname (Takma Ad). *Kök domainde (@) kullanılamaz.*
+- **MX**: Mail Exchange (E-posta).
+- **TXT**: Metin notları (SPF, doğrulama).
+- **NS**: Name Server (Bu bölgeyi kim yönetiyor?).
 
 ---
 
 ## 2. HTTP (HyperText Transfer Protocol)
-The protocol of the web. Request/Response model.
+Web'in protokolü. İstek/Yanıt (Request/Response) modeli.
 
-### HTTP Methods (Verbs)
-- **GET**: Retrieve data. (Idempotent).
-- **POST**: Create new data.
-- **PUT**: Update/Replace data. (Idempotent).
-- **PATCH**: Partial update.
-- **DELETE**: Remove data.
+### HTTP Metotları (Fiiller)
+- **GET**: Veri getir. (Idempotent - Tekrarlanabilir).
+- **POST**: Yeni veri oluştur.
+- **PUT**: Veriyi güncelle/değiştir. (Idempotent).
+- **PATCH**: Kısmi güncelleme.
+- **DELETE**: Veriyi sil.
 
-### HTTP Status Codes
-- **2xx (Success)**:
-    - `200 OK`: Standard success.
-    - `201 Created`: Resource created.
-- **3xx (Redirection)**:
-    - `301 Moved Permanently`: SEO friendly.
-    - `302 Found`: Temporary redirect.
-- **4xx (Client Error)**:
-    - `400 Bad Request`: Invalid syntax.
-    - `401 Unauthorized`: Authentication required.
-    - `403 Forbidden`: Authenticated but no permission.
-    - `404 Not Found`: Resource doesn't exist.
-- **5xx (Server Error)**:
-    - `500 Internal Server Error`: App crashed.
-    - `502 Bad Gateway`: Upstream server failed (Nginx -> App).
-    - `503 Service Unavailable`: Overloaded or maintenance.
-    - `504 Gateway Timeout`: Upstream took too long.
+### HTTP Durum Kodları
+- **2xx (Başarılı)**:
+    - `200 OK`: Standart başarı.
+    - `201 Created`: Kaynak oluşturuldu.
+- **3xx (Yönlendirme)**:
+    - `301 Moved Permanently`: SEO dostu kalıcı yönlendirme.
+    - `302 Found`: Geçici yönlendirme.
+- **4xx (İstemci Hatası)**:
+    - `400 Bad Request`: Geçersiz sözdizimi.
+    - `401 Unauthorized`: Kimlik doğrulama gerekli.
+    - `403 Forbidden`: Kimlik doğrulandı ama yetki yok.
+    - `404 Not Found`: Kaynak bulunamadı.
+- **5xx (Sunucu Hatası)**:
+    - `500 Internal Server Error`: Uygulama çöktü.
+    - `502 Bad Gateway`: Üst sunucu (upstream) başarısız oldu (Nginx -> App).
+    - `503 Service Unavailable`: Aşırı yüklenme veya bakım.
+    - `504 Gateway Timeout`: Üst sunucu çok uzun sürdü.
 
 ---
 
-## 3. HTTPS (Secure)
-HTTP over SSL/TLS. Encrypts data in transit.
+## 3. HTTPS (Güvenli)
+SSL/TLS üzerinden HTTP. Veriyi iletim sırasında şifreler.
 
-### TLS Handshake (Simplified)
-1.  **Client Hello**: "I support TLS 1.2/1.3".
-2.  **Server Hello**: "Let's use TLS 1.3. Here is my Certificate."
-3.  **Verification**: Client checks if Certificate is valid (issued by trusted CA, not expired).
-4.  **Key Exchange**: They agree on a symmetric session key.
-5.  **Secure Session**: All future data is encrypted with the session key.
+### TLS El Sıkışma (Basitleştirilmiş)
+1.  **Client Hello**: "Ben TLS 1.2/1.3 destekliyorum".
+2.  **Server Hello**: "Hadi TLS 1.3 kullanalım. İşte Sertifikam."
+3.  **Doğrulama (Verification)**: İstemci sertifikanın geçerli olup olmadığını kontrol eder (güvenilir CA tarafından verilmiş mi, süresi dolmuş mu).
+4.  **Anahtar Değişimi (Key Exchange)**: Simetrik bir oturum anahtarı üzerinde anlaşırlar.
+5.  **Güvenli Oturum**: Gelecekteki tüm veriler oturum anahtarı ile şifrelenir.
 
-### Certificates
-- **CA (Certificate Authority)**: Trusted entity (e.g., Let's Encrypt, DigiCert).
-- **Self-Signed**: Good for dev, triggers browser warnings.
-- **Wildcard**: `*.example.com` covers `api.example.com`, `www.example.com`.
+### Sertifikalar
+- **CA (Certificate Authority)**: Güvenilir otorite (örn: Let's Encrypt, DigiCert).
+- **Self-Signed**: Geliştirme için iyidir, tarayıcı uyarılarını tetikler.
+- **Wildcard**: `*.ornek.com`, `api.ornek.com` ve `www.ornek.com` adreslerini kapsar.

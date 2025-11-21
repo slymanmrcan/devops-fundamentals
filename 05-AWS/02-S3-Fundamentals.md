@@ -1,65 +1,65 @@
-# AWS S3 – Infinite Storage for the Cloud
+# AWS S3 – Bulut İçin Sonsuz Depolama
 
-## 1. What It Solves
-Before Cloud: You had to manage SAN/NAS, worry about running out of disk space, and handle complex backups.
-**With S3 (Simple Storage Service):** You get infinite, durable object storage. You don't manage servers or file systems. You just upload files (objects) and pay for what you store.
+## 1. Hangi Sorunu Çözer?
+Buluttan Önce: SAN/NAS yönetmek, disk alanının bitmesinden endişe etmek ve karmaşık yedeklemelerle uğraşmak zorundaydınız.
+**S3 (Simple Storage Service) ile:** Sonsuz, dayanıklı nesne depolama alanı elde edersiniz. Sunucu veya dosya sistemi yönetmezsiniz. Sadece dosyaları (nesneleri) yüklersiniz ve sakladığınız kadar ödersiniz.
 
-## 2. Architecture & Key Components
+## 2. Mimari ve Temel Bileşenler
 
-### Architecture Diagram
+### Mimari Diyagramı
 ```mermaid
 graph TD
     User -->|HTTPS| API[S3 API Endpoint]
     API --> Bucket[S3 Bucket]
-    Bucket -->|Contains| Obj1[Object: image.jpg]
-    Bucket -->|Contains| Obj2[Object: data.csv]
-    Bucket -->|Replicates| DR[Cross-Region Replication]
-    Bucket -->|Lifecycle| Glacier[Glacier Archive]
+    Bucket -->|İçerir| Obj1[Object: image.jpg]
+    Bucket -->|İçerir| Obj2[Object: data.csv]
+    Bucket -->|Replike Eder| DR[Cross-Region Replication]
+    Bucket -->|Yaşam Döngüsü| Glacier[Glacier Archive]
 ```
 
-### Key Components
-1.  **Bucket:** A container for objects. Must have a **globally unique name** (DNS compliant). Region-specific.
-2.  **Object:** The file itself. Consists of:
-    *   **Key:** The name (e.g., `photos/2023/beach.jpg`).
-    *   **Value:** The data (bytes).
-    *   **Metadata:** System (date, size) & User-defined tags.
-3.  **Region:** Buckets live in a specific AWS region (e.g., `us-east-1`), but the namespace is global.
-4.  **Consistency:** Strong consistency for all PUTs and DELETEs (read-after-write).
+### Temel Bileşenler
+1.  **Bucket:** Nesneler için bir kap. **Global olarak benzersiz bir isme** sahip olmalıdır (DNS uyumlu). Bölgeye (Region) özgüdür.
+2.  **Object (Nesne):** Dosyanın kendisi. Şunlardan oluşur:
+    *   **Key:** İsim (örn: `photos/2023/beach.jpg`).
+    *   **Value:** Veri (bytes).
+    *   **Metadata:** Sistem (tarih, boyut) ve Kullanıcı tanımlı etiketler.
+3.  **Region:** Bucket'lar belirli bir AWS bölgesinde (örn: `us-east-1`) yaşar, ancak isim alanı globaldir.
+4.  **Tutarlılık (Consistency):** Tüm PUT ve DELETE işlemleri için güçlü tutarlılık (strong consistency) sağlar (yazdıktan hemen sonra okuyabilirsiniz).
 
-## 3. Real Deployment Patterns
+## 3. Gerçek Dağıtım Senaryoları
 
-### Pattern A: Static Website Hosting
-*   **Goal:** Host a React/Vue/Angular app cheaply.
-*   **Setup:** Enable "Static Website Hosting" on the bucket. Point Route53 to the bucket endpoint. Use CloudFront for HTTPS and caching.
+### Senaryo A: Statik Web Sitesi Barındırma
+*   **Amaç:** React/Vue/Angular uygulamasını ucuza barındırmak.
+*   **Kurulum:** Bucket üzerinde "Static Website Hosting"i açın. Route53'ü bucket endpoint'ine yönlendirin. HTTPS ve önbellekleme (caching) için CloudFront kullanın.
 
-### Pattern B: Data Lake
-*   **Goal:** Store raw data from logs, IoT, and DB dumps for analytics.
-*   **Setup:** Ingest data into S3. Use Athena to query it directly using SQL. Use Glue for ETL.
+### Senaryo B: Veri Gölü (Data Lake)
+*   **Amaç:** Analitik için logları, IoT verilerini ve DB dökümlerini ham halde saklamak.
+*   **Kurulum:** Veriyi S3'e aktarın. Athena kullanarak doğrudan SQL ile sorgulayın. ETL işlemleri için Glue kullanın.
 
-### Pattern C: Hybrid Backup
-*   **Goal:** Backup on-premise server data to the cloud.
-*   **Setup:** Use AWS Storage Gateway (File Gateway) to mount an S3 bucket as a local NFS drive on your on-prem server.
+### Senaryo C: Hibrit Yedekleme
+*   **Amaç:** Şirket içi (on-premise) sunucu verilerini buluta yedeklemek.
+*   **Kurulum:** Bir S3 bucket'ını yerel sunucunuza NFS sürücüsü olarak bağlamak için AWS Storage Gateway (File Gateway) kullanın.
 
-## 4. Security Best Practices
-1.  **Block Public Access:** Enable "Block Public Access" at the account or bucket level unless it's a public website.
-2.  **Bucket Policies:** JSON-based policies to control access (e.g., "Only allow CloudFront to read files").
-3.  **Encryption:**
-    *   **SSE-S3:** AWS-managed keys (Default).
-    *   **SSE-KMS:** Customer-managed keys (More control, audit logs).
-4.  **Versioning:** Enable versioning to protect against accidental deletes or overwrites.
+## 4. Güvenlik En İyi Uygulamaları
+1.  **Genel Erişimi Engelleyin (Block Public Access):** Halka açık bir web sitesi değilse, hesap veya bucket seviyesinde "Block Public Access"i açın.
+2.  **Bucket Politikaları:** Erişimi kontrol etmek için JSON tabanlı politikalar (örn: "Sadece CloudFront dosyaları okuyabilsin").
+3.  **Şifreleme:**
+    *   **SSE-S3:** AWS tarafından yönetilen anahtarlar (Varsayılan).
+    *   **SSE-KMS:** Müşteri tarafından yönetilen anahtarlar (Daha fazla kontrol, denetim logları).
+4.  **Sürümleme (Versioning):** Kazara silmelere veya üzerine yazmalara karşı korumak için sürümlemeyi açın.
 
-## 5. Cost Optimization (Storage Classes)
+## 5. Maliyet Optimizasyonu (Depolama Sınıfları)
 
-| Class | Use Case | Cost | Retrieval |
+| Sınıf | Kullanım Durumu | Maliyet | Erişim Süresi |
 | :--- | :--- | :--- | :--- |
-| **S3 Standard** | Frequently accessed data. | $$$ | Instant |
-| **S3 Intelligent-Tiering** | Unknown access patterns. Auto-moves data. | $$ | Instant |
-| **S3 Standard-IA** | Infrequent Access (backups). | $$ | Instant (Retrieval fee) |
-| **S3 One Zone-IA** | Recreatable data (secondary backup). | $ | Instant (Retrieval fee) |
-| **S3 Glacier Instant** | Archive, rarely accessed but need fast. | $ | Milliseconds |
-| **S3 Glacier Deep Archive** | Long-term retention (compliance). | ¢ | 12-48 Hours |
+| **S3 Standard** | Sık erişilen veriler. | $$$ | Anlık |
+| **S3 Intelligent-Tiering** | Bilinmeyen erişim modelleri. Veriyi otomatik taşır. | $$ | Anlık |
+| **S3 Standard-IA** | Seyrek Erişim (yedekler). | $$ | Anlık (Erişim ücreti var) |
+| **S3 One Zone-IA** | Yeniden oluşturulabilir veriler (ikincil yedek). | $ | Anlık (Erişim ücreti var) |
+| **S3 Glacier Instant** | Arşiv, nadiren erişilir ama hızlı lazım. | $ | Milisaniye |
+| **S3 Glacier Deep Archive** | Uzun vadeli saklama (uyumluluk/yasal). | ¢ | 12-48 Saat |
 
-*   **Lifecycle Policies:** Automate moving objects to cheaper tiers (e.g., "Move to Glacier after 90 days").
+*   **Yaşam Döngüsü Politikaları (Lifecycle Policies):** Nesneleri otomatik olarak daha ucuz katmanlara taşıyın (örn: "90 gün sonra Glacier'a taşı").
 
 ## 6. Infrastructure as Code (Terraform)
 
@@ -89,35 +89,35 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt" {
 }
 ```
 
-## 7. AWS CLI Examples
+## 7. AWS CLI Örnekleri
 
-| Action | Command |
+| İşlem | Komut |
 | :--- | :--- |
-| **Create Bucket** | `aws s3 mb s3://my-bucket-name` |
-| **List Buckets** | `aws s3 ls` |
-| **Upload File** | `aws s3 cp file.txt s3://my-bucket-name/` |
-| **Sync Folder** | `aws s3 sync ./local-folder s3://my-bucket-name/remote-folder` |
-| **Delete Bucket** | `aws s3 rb s3://my-bucket-name --force` (Deletes contents too) |
+| **Bucket Oluştur** | `aws s3 mb s3://my-bucket-name` |
+| **Bucket Listele** | `aws s3 ls` |
+| **Dosya Yükle** | `aws s3 cp file.txt s3://my-bucket-name/` |
+| **Klasör Eşitle** | `aws s3 sync ./local-folder s3://my-bucket-name/remote-folder` |
+| **Bucket Sil** | `aws s3 rb s3://my-bucket-name --force` (İçindekileri de siler) |
 
-## 8. Common Exam Questions (SAA-C03 / DVA-C02)
+## 8. Sık Karşılaşılan Sınav Soruları (SAA-C03 / DVA-C02)
 
-**Q1: You need to store compliance logs for 7 years. Retrieval is rare (once a year) but must be within 12 hours. Which class is cheapest?**
+**S1: Uyumluluk loglarını 7 yıl saklamanız gerekiyor. Erişim çok nadir (yılda bir) ancak 12 saat içinde olmalı. En ucuz sınıf hangisidir?**
 *   A) S3 Standard
 *   B) S3 Intelligent-Tiering
 *   C) S3 Glacier Deep Archive ✅
 *   D) S3 Standard-IA
-*   *Reason: Deep Archive is the cheapest for long-term retention where 12h retrieval is acceptable.*
+*   *Sebep: 12 saatlik erişim süresinin kabul edilebilir olduğu uzun vadeli saklama için en ucuzu Deep Archive'dır.*
 
-**Q2: How do you ensure that an S3 object cannot be deleted or overwritten for a fixed period (WORM model)?**
-*   A) Enable Versioning
-*   B) Use MFA Delete
-*   C) S3 Object Lock ✅
-*   D) Bucket Policy
-*   *Reason: Object Lock (Governance or Compliance mode) enforces Write-Once-Read-Many.*
+**S2: Bir S3 nesnesinin belirli bir süre boyunca silinememesini veya üzerine yazılamamasını (WORM modeli) nasıl sağlarsınız?**
+*   A) Versioning açarak
+*   B) MFA Delete kullanarak
+*   C) S3 Object Lock kullanarak ✅
+*   D) Bucket Policy ile
+*   *Sebep: Object Lock (Governance veya Compliance modu) Write-Once-Read-Many kuralını zorunlu kılar.*
 
-**Q3: You want to host a static website on S3 but your bucket name doesn't match your domain name. What do you do?**
-*   A) Use a CNAME record.
-*   B) Use CloudFront. ✅
-*   C) It's impossible, names must match.
-*   D) Use Route53 Alias.
-*   *Reason: S3 static hosting requires bucket name to match domain ONLY if using S3 directly. If using CloudFront, the bucket name doesn't matter.*
+**S3: S3 üzerinde statik bir web sitesi barındırmak istiyorsunuz ancak bucket isminiz alan adınızla eşleşmiyor. Ne yapmalısınız?**
+*   A) CNAME kaydı kullanın.
+*   B) CloudFront kullanın. ✅
+*   C) İmkansız, isimler eşleşmeli.
+*   D) Route53 Alias kullanın.
+*   *Sebep: S3 statik hosting, sadece S3 doğrudan kullanılıyorsa bucket isminin alan adıyla eşleşmesini gerektirir. CloudFront kullanılıyorsa bucket isminin önemi yoktur.*

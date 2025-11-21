@@ -1,39 +1,39 @@
-# Kubernetes Deployments: The Standard for Stateless Apps
+# Kubernetes Deployments: Stateless Uygulamalar İçin Standart
 
-## 1. Introduction
-A **Deployment** is the standard Kubernetes object used to manage stateless applications. It provides declarative updates for Pods and ReplicaSets.
+## 1. Giriş
+**Deployment**, stateless (durumsuz) uygulamaları yönetmek için kullanılan standart Kubernetes nesnesidir. Pod'lar ve ReplicaSet'ler için bildirimsel (declarative) güncellemeler sağlar.
 
-You describe a *desired state* in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate.
+Deployment içinde *istenen durumu (desired state)* tanımlarsınız ve Deployment Controller, mevcut durumu kontrollü bir hızda istenen duruma getirir.
 
-### Why not just use Pods?
-- **Pods are ephemeral**: If a node dies, the Pod dies.
-- **ReplicaSets** ensure a number of pods are running, but don't handle updates (rolling out new versions).
-- **Deployments** manage ReplicaSets to handle rollouts and rollbacks.
-
----
-
-## 2. Internal Mechanics: How it Works
-When you create a Deployment, the following chain of events occurs:
-
-1.  **Deployment Created**: You submit the YAML to the API Server.
-2.  **Controller Manager**: The Deployment Controller notices the new object.
-3.  **ReplicaSet Creation**: The Deployment creates a **ReplicaSet** (RS) with a specific hash label (e.g., `pod-template-hash`).
-4.  **Pod Creation**: The ReplicaSet creates the desired number of **Pods**.
-
-### The Reconcile Loop
-Kubernetes is always "reconciling" (comparing Desired vs. Current state).
-- **Desired**: "I want 3 replicas of Nginx v1.14"
-- **Current**: "I have 0 replicas"
-- **Action**: Create 3 Pods.
-
-When you update an image (v1.14 -> v1.15):
-1.  Deployment creates a **NEW** ReplicaSet for v1.15.
-2.  It scales **UP** the new RS and scales **DOWN** the old RS gradually (RollingUpdate).
+### Neden Sadece Pod Kullanmıyoruz?
+- **Pod'lar geçicidir (ephemeral)**: Bir node ölürse, Pod da ölür.
+- **ReplicaSet'ler**, belirli sayıda pod'un çalışmasını sağlar ancak güncellemeleri (yeni sürümleri yaymayı) yönetmez.
+- **Deployment'lar**, rollout (yayılım) ve rollback (geri alma) işlemlerini yönetmek için ReplicaSet'leri kullanır.
 
 ---
 
-## 3. YAML Breakdown
-A production-grade Deployment YAML.
+## 2. İç Mekanikler: Nasıl Çalışır?
+Bir Deployment oluşturduğunuzda, aşağıdaki olay zinciri gerçekleşir:
+
+1.  **Deployment Oluşturulur**: YAML'ı API Sunucusuna gönderirsiniz.
+2.  **Controller Manager**: Deployment Controller yeni nesneyi fark eder.
+3.  **ReplicaSet Oluşturma**: Deployment, belirli bir hash etiketiyle (örn: `pod-template-hash`) bir **ReplicaSet** (RS) oluşturur.
+4.  **Pod Oluşturma**: ReplicaSet, istenen sayıda **Pod** oluşturur.
+
+### Uzlaştırma Döngüsü (Reconcile Loop)
+Kubernetes her zaman "uzlaştırma" (İstenen vs. Mevcut durumu karşılaştırma) yapar.
+- **İstenen**: "Nginx v1.14'ten 3 kopya istiyorum"
+- **Mevcut**: "0 kopya var"
+- **Eylem**: 3 Pod oluştur.
+
+Bir imajı güncellediğinizde (v1.14 -> v1.15):
+1.  Deployment, v1.15 için **YENİ** bir ReplicaSet oluşturur.
+2.  Yeni RS'i ölçeklendirir (**UP**) ve eski RS'i kademeli olarak küçültür (**DOWN**) (RollingUpdate).
+
+---
+
+## 3. YAML Analizi
+Prodüksiyon seviyesinde bir Deployment YAML örneği.
 
 ```yaml
 apiVersion: apps/v1
@@ -45,16 +45,16 @@ metadata:
     tier: api
 spec:
   replicas: 3
-  revisionHistoryLimit: 10 # Keep 10 old ReplicaSets for rollback
+  revisionHistoryLimit: 10 # Geri alma için 10 eski ReplicaSet sakla
   selector:
     matchLabels:
-      app: backend # MUST match template.metadata.labels
+      app: backend # template.metadata.labels ile EŞLEŞMELİDİR
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 1 # Max pods down during update
-      maxSurge: 1       # Max extra pods during update
-  template: # The Pod Template
+      maxUnavailable: 1 # Güncelleme sırasında kapalı olabilecek max pod
+      maxSurge: 1       # Güncelleme sırasında fazladan açılabilecek max pod
+  template: # Pod Şablonu
     metadata:
       labels:
         app: backend
@@ -64,63 +64,63 @@ spec:
         image: my-registry/backend:v2.0.1
         ports:
         - containerPort: 8080
-        resources: # ALWAYS define resources
+        resources: # HER ZAMAN kaynakları tanımlayın
           requests:
             cpu: "100m"
             memory: "128Mi"
           limits:
             cpu: "500m"
             memory: "512Mi"
-        livenessProbe: # Restart if dead
+        livenessProbe: # Ölürse yeniden başlat
           httpGet:
             path: /healthz
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
-        readinessProbe: # Remove from Service endpoints if not ready
+        readinessProbe: # Hazır değilse Servis endpoint'lerinden çıkar
           httpGet:
             path: /ready
             port: 8080
 ```
 
-### Key Fields
-- **`spec.selector`**: Determines which Pods this Deployment manages. **Immutable** after creation.
-- **`spec.strategy`**: Controls how updates happen (Critical for zero-downtime).
-- **`spec.template`**: The blueprint for the Pods. Any change here triggers a rollout.
+### Önemli Alanlar
+- **`spec.selector`**: Bu Deployment'ın hangi Pod'ları yöneteceğini belirler. Oluşturulduktan sonra **değiştirilemez (Immutable)**.
+- **`spec.strategy`**: Güncellemelerin nasıl yapılacağını kontrol eder (Sıfır kesinti için kritiktir).
+- **`spec.template`**: Pod'ların şablonudur. Buradaki herhangi bir değişiklik bir rollout tetikler.
 
 ---
 
-## 4. Deployment Strategies
+## 4. Dağıtım Stratejileri (Deployment Strategies)
 
-### A. Rolling Update (Default & Recommended)
-Replaces old pods with new ones gradually.
-- **Best for**: Stateless apps, zero-downtime requirements.
-- **Pros**: No downtime.
-- **Cons**: App must support running two versions simultaneously during rollout.
+### A. Rolling Update (Varsayılan & Önerilen)
+Eski podları kademeli olarak yenileriyle değiştirir.
+- **En iyisi**: Stateless uygulamalar, sıfır kesinti gereksinimleri.
+- **Artıları**: Kesinti yok.
+- **Eksileri**: Uygulama, yayılım sırasında iki versiyonun aynı anda çalışmasını desteklemelidir.
 
 ### B. Recreate
-Kills ALL old pods, then starts ALL new pods.
-- **Best for**: Dev environments, or apps that cannot run multiple versions at once (e.g., database schema conflicts).
-- **Pros**: Simple, clean state.
-- **Cons**: **Downtime** exists between kill and start.
+TÜM eski podları öldürür, sonra TÜM yeni podları başlatır.
+- **En iyisi**: Dev ortamları veya aynı anda birden fazla sürümün çalışamayacağı uygulamalar (örn: veritabanı şema çakışmaları).
+- **Artıları**: Basit, temiz durum.
+- **Eksileri**: Öldürme ve başlatma arasında **Kesinti (Downtime)** oluşur.
 
-### C. Canary (Advanced)
-Releasing a new version to a small subset of users before full rollout.
-- **Native K8s**: Not strictly a "strategy" field, but achieved by creating **two Deployments** (one `stable`, one `canary`) behind the **same Service**.
-- **Automated**: Tools like **Argo Rollouts** or **Flagger** provide true traffic-splitting canary deployments.
+### C. Canary (İleri Seviye)
+Yeni bir sürümü tam yayılımdan önce küçük bir kullanıcı alt kümesine sunmak.
+- **Native K8s**: Tam olarak bir "strateji" alanı değildir, ancak **aynı Servis** arkasında **iki Deployment** (biri `stable`, biri `canary`) oluşturarak elde edilir.
+- **Otomatik**: **Argo Rollouts** veya **Flagger** gibi araçlar gerçek trafik bölmeli canary dağıtımları sağlar.
 
 ---
 
-## 5. Scaling
+## 5. Ölçeklendirme (Scaling)
 
-### Manual Scaling
-Imperative command (good for emergencies):
+### Manuel Ölçeklendirme
+Emir kipi komutu (acil durumlar için iyidir):
 ```bash
 kubectl scale deployment/backend-api --replicas=5
 ```
 
 ### Horizontal Pod Autoscaler (HPA)
-The production way. Scales based on CPU/Memory metrics.
+Prodüksiyon yöntemi. CPU/Bellek metriklerine göre ölçeklenir.
 ```yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -139,59 +139,59 @@ spec:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 70 # Scale up if avg CPU > 70%
+        averageUtilization: 70 # Ort. CPU > %70 ise büyüt
 ```
 
 ---
 
-## 6. Troubleshooting & Operations
+## 6. Sorun Giderme & Operasyonlar
 
-### Common Commands
+### Yaygın Komutlar
 
-| Action | Command |
+| İşlem | Komut |
 | :--- | :--- |
-| **Check Status** | `kubectl rollout status deployment/my-app` |
-| **View History** | `kubectl rollout history deployment/my-app` |
-| **Undo Rollout** | `kubectl rollout undo deployment/my-app` |
-| **To Specific Ver**| `kubectl rollout undo deployment/my-app --to-revision=2` |
-| **Restart Pods** | `kubectl rollout restart deployment/my-app` (Useful for config updates) |
+| **Durumu Kontrol Et** | `kubectl rollout status deployment/my-app` |
+| **Geçmişi Gör** | `kubectl rollout history deployment/my-app` |
+| **Geri Al (Undo)** | `kubectl rollout undo deployment/my-app` |
+| **Belirli Sürüme Dön**| `kubectl rollout undo deployment/my-app --to-revision=2` |
+| **Podları Yeniden Başlat** | `kubectl rollout restart deployment/my-app` (Config güncellemeleri için yararlı) |
 
-### Debugging "Pending" or "CrashLoopBackOff"
-1.  **Describe Deployment**: Check for controller errors (e.g., quota exceeded).
+### "Pending" veya "CrashLoopBackOff" Hata Ayıklama
+1.  **Deployment'ı Tanımla (Describe)**: Controller hatalarını kontrol edin (örn: kota aşımı).
     ```bash
     kubectl describe deployment my-app
     ```
-2.  **Describe Pod**: Check events (scheduling errors, image pull errors).
+2.  **Pod'u Tanımla**: Olayları (events) kontrol edin (zamanlama hataları, imaj çekme hataları).
     ```bash
     kubectl describe pod my-app-xyz
     ```
-3.  **Logs**: Check application logs.
+3.  **Loglar**: Uygulama loglarını kontrol edin.
     ```bash
-    kubectl logs my-app-xyz --previous # Check why it crashed
+    kubectl logs my-app-xyz --previous # Neden çöktüğünü kontrol et
     ```
 
 ---
 
-## 7. Real DevOps Use-Cases
+## 7. Gerçek DevOps Senaryoları
 
-### Use-Case 1: Zero-Downtime Config Update
-**Scenario**: You need to update an environment variable or `ConfigMap`.
-**Solution**:
-1. Update the ConfigMap.
-2. Pods don't automatically reload.
-3. Run `kubectl rollout restart deployment/my-app`.
-4. K8s performs a RollingUpdate, creating new pods with the new config.
+### Senaryo 1: Sıfır Kesintili Config Güncellemesi
+**Durum**: Bir ortam değişkenini veya `ConfigMap`i güncellemeniz gerekiyor.
+**Çözüm**:
+1. ConfigMap'i güncelleyin.
+2. Pod'lar otomatik olarak yeniden yüklenmez.
+3. `kubectl rollout restart deployment/my-app` çalıştırın.
+4. K8s, yeni config ile yeni podlar oluşturarak bir RollingUpdate gerçekleştirir.
 
-### Use-Case 2: Handling Traffic Spikes
-**Scenario**: Black Friday traffic.
-**Solution**:
-- **Pre-scaling**: Manually scale up before the event if HPA reaction time is too slow.
-- **HPA**: Ensure HPA `maxReplicas` is high enough.
+### Senaryo 2: Trafik Ani Artışlarını Yönetme
+**Durum**: Black Friday trafiği.
+**Çözüm**:
+- **Ön Ölçeklendirme (Pre-scaling)**: HPA tepki süresi çok yavaşsa etkinlikten önce manuel olarak ölçeklendirin.
+- **HPA**: HPA `maxReplicas` değerinin yeterince yüksek olduğundan emin olun.
 
-### Use-Case 3: The "Bad Image" Rollback
-**Scenario**: You deployed `v2.0` but it has a critical bug.
-**Action**:
+### Senaryo 3: "Kötü İmaj" Geri Alma (Rollback)
+**Durum**: `v2.0` sürümünü dağıttınız ancak kritik bir hatası var.
+**Eylem**:
 ```bash
 kubectl rollout undo deployment/backend-api
 ```
-**Result**: K8s immediately stops scaling up the new ReplicaSet and scales back up the old (stable) ReplicaSet.
+**Sonuç**: K8s, yeni ReplicaSet'i büyütmeyi hemen durdurur ve eski (kararlı) ReplicaSet'i tekrar büyütür.

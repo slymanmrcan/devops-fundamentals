@@ -1,43 +1,43 @@
-# Load Balancing & Proxies: Traffic Management
+# Yük Dengeleme (Load Balancing) & Proxyler: Trafik Yönetimi
 
-## 1. Load Balancing
-Distributing incoming network traffic across multiple servers to ensure reliability and scalability.
+## 1. Yük Dengeleme (Load Balancing)
+Güvenilirlik ve ölçeklenebilirlik sağlamak için gelen ağ trafiğini birden fazla sunucuya dağıtma işlemidir.
 
-### Layer 4 vs Layer 7
-| Feature | Layer 4 (Transport) | Layer 7 (Application) |
+### Katman 4 vs Katman 7
+| Özellik | Katman 4 (Taşıma) | Katman 7 (Uygulama) |
 | :--- | :--- | :--- |
-| **Data** | IP & Port | HTTP Headers, Cookies, URL |
-| **Speed** | Faster (Packet level) | Slower (Inspects content) |
-| **Decisions**| "Send TCP port 80 to Server A" | "Send `/api` to Svc A, `/img` to Svc B" |
-| **Examples** | AWS Network Load Balancer (NLB) | AWS Application Load Balancer (ALB), Nginx |
+| **Veri** | IP & Port | HTTP Başlıkları, Çerezler, URL |
+| **Hız** | Daha Hızlı (Paket seviyesi) | Daha Yavaş (İçeriği inceler) |
+| **Kararlar**| "TCP port 80'i Sunucu A'ya gönder" | "`/api`'yi Servis A'ya, `/img`'yi Servis B'ye gönder" |
+| **Örnekler** | AWS Network Load Balancer (NLB) | AWS Application Load Balancer (ALB), Nginx |
 
-### Algorithms
-- **Round Robin**: Sequential (A -> B -> C -> A).
-- **Least Connections**: Send to server with fewest active users.
-- **IP Hash**: Client IP always goes to same server (Sticky Sessions).
-
----
-
-## 2. Proxies
-Intermediaries between client and server.
-
-### Forward Proxy
-- **Sits before**: The Client.
-- **Purpose**: Protects the client.
-- **Use Case**: Corporate office blocking Facebook, caching common sites, anonymity (VPN).
-- **Flow**: Client -> Forward Proxy -> Internet.
-
-### Reverse Proxy
-- **Sits before**: The Server.
-- **Purpose**: Protects the server.
-- **Use Case**: Load balancing, SSL Termination, Caching, hiding backend topology.
-- **Flow**: Internet -> Reverse Proxy (Nginx) -> App Server (Node.js).
-
-> **DevOps Standard**: almost ALL web apps run behind a reverse proxy (Nginx, Traefik, HAProxy, or Cloud LB).
+### Algoritmalar
+- **Round Robin**: Sıralı (A -> B -> C -> A).
+- **Least Connections**: En az aktif kullanıcısı olan sunucuya gönder.
+- **IP Hash**: İstemci IP'si her zaman aynı sunucuya gider (Sticky Sessions).
 
 ---
 
-## 3. SSL Termination
-Decrypting HTTPS traffic at the Load Balancer/Proxy level so the backend server only deals with HTTP.
-- **Pros**: Offloads CPU intensive encryption from app servers. Centralized certificate management.
-- **Cons**: Traffic between LB and App is unencrypted (usually fine in private VPC).
+## 2. Proxyler (Vekil Sunucular)
+İstemci ve sunucu arasındaki aracılardır.
+
+### Forward Proxy (İleri Yönlü Vekil)
+- **Konumu**: İstemcinin önünde.
+- **Amacı**: İstemciyi korumak.
+- **Kullanım Alanı**: Kurumsal ofislerde Facebook'u engelleme, yaygın siteleri önbellekleme, anonimlik (VPN).
+- **Akış**: İstemci -> Forward Proxy -> İnternet.
+
+### Reverse Proxy (Ters Yönlü Vekil)
+- **Konumu**: Sunucunun önünde.
+- **Amacı**: Sunucuyu korumak.
+- **Kullanım Alanı**: Yük dengeleme, SSL Sonlandırma, Önbellekleme, backend topolojisini gizleme.
+- **Akış**: İnternet -> Reverse Proxy (Nginx) -> Uygulama Sunucusu (Node.js).
+
+> **DevOps Standardı**: Neredeyse TÜM web uygulamaları bir reverse proxy (Nginx, Traefik, HAProxy veya Cloud LB) arkasında çalışır.
+
+---
+
+## 3. SSL Sonlandırma (SSL Termination)
+HTTPS trafiğinin şifresini Load Balancer/Proxy seviyesinde çözerek backend sunucusunun sadece HTTP ile uğraşmasını sağlamaktır.
+- **Avantajları**: Şifreleme yükünü uygulama sunucularından alır. Merkezi sertifika yönetimi sağlar.
+- **Dezavantajları**: LB ve Uygulama arasındaki trafik şifresizdir (özel VPC içinde genellikle sorun değildir).

@@ -1,79 +1,79 @@
-# Troubleshooting Tools: The DevOps Toolkit
+# Sorun Giderme Araçları: DevOps Alet Çantası
 
-## 1. Connectivity & Reachability
+## 1. Bağlantı ve Erişilebilirlik
 
 ### `ping`
-Checks if a host is reachable (ICMP).
+Bir host'un ulaşılabilir olup olmadığını kontrol eder (ICMP).
 ```bash
 ping google.com
 ```
-*Note: Many firewalls block ICMP, so a fail doesn't always mean the server is down.*
+*Not: Birçok güvenlik duvarı ICMP'yi engeller, bu yüzden başarısız olması sunucunun kapalı olduğu anlamına gelmeyebilir.*
 
 ### `telnet` / `nc` (netcat)
-Checks if a specific **TCP Port** is open.
+Belirli bir **TCP Portunun** açık olup olmadığını kontrol eder.
 ```bash
 nc -zv google.com 443
 # Connection to google.com port 443 [tcp/https] succeeded!
 ```
-*Crucial for debugging "Connection Refused" or Timeout errors.*
+*Not: "Connection Refused" veya Zaman Aşımı hatalarını ayıklamak için kritiktir.*
 
 ---
 
-## 2. DNS Debugging
+## 2. DNS Hata Ayıklama
 
 ### `nslookup` / `dig`
-Query DNS records.
+DNS kayıtlarını sorgular.
 ```bash
 dig google.com A
 dig google.com MX +short
 ```
-*Use this when you suspect DNS propagation issues.*
+*Not: DNS yayılma sorunlarından şüphelendiğinizde bunu kullanın.*
 
 ---
 
-## 3. Path & Latency
+## 3. Yol ve Gecikme (Path & Latency)
 
 ### `traceroute`
-Shows every hop (router) between you and the destination.
+Siz ve hedef arasındaki her bir durağı (router) gösterir.
 ```bash
 traceroute google.com
 ```
-*Helps identify WHERE the connection is dropping (ISP, Backbone, or Destination).*
+*Not: Bağlantının NEREDE koptuğunu (İSS, Omurga veya Hedef) belirlemeye yardımcı olur.*
 
 ---
 
-## 4. Listening Ports (On the Server)
+## 4. Dinlenen Portlar (Sunucu Üzerinde)
 
 ### `netstat` / `ss`
-See what ports your server is listening on.
+Sunucunuzun hangi portları dinlediğini görün.
 ```bash
 ss -tulpn
-# Shows TCP/UDP, Listening, Process Name, Numeric ports
+# TCP/UDP, Dinleniyor, İşlem Adı, Sayısal portları gösterir
 ```
-*Use this to verify your app actually started and bound to the correct port.*
+*Not: Uygulamanızın gerçekten başlayıp doğru porta bağlandığını doğrulamak için kullanın.*
 
 ### `lsof`
-List Open Files (and network sockets).
+Açık Dosyaları (ve ağ soketlerini) listeler.
 ```bash
 lsof -i :80
-# Shows which process is holding port 80
+# 80 portunu hangi işlemin tuttuğunu gösterir
 ```
 
 ---
 
-## 5. Data Inspection
+## 5. Veri İnceleme
 
 ### `curl`
-The swiss-army knife for HTTP.
+HTTP için İsviçre çakısı.
 ```bash
-curl -I https://example.com       # Headers only
-curl -v https://example.com       # Verbose (Handshake info)
-curl -L https://example.com       # Follow redirects
+curl -I https://example.com       # Sadece Başlıklar (Headers)
+curl -v https://example.com       # Ayrıntılı (El sıkışma bilgisi)
+curl -L https://example.com       # Yönlendirmeleri takip et
 ```
 
 ### `tcpdump`
-Capture actual packets. Hardcore debugging.
+Gerçek paketleri yakalar. İleri seviye hata ayıklama.
 ```bash
 tcpdump -i eth0 port 80
 ```
-*Use when you need to see the raw data on the wire.*
+*Not: Kablo üzerindeki ham veriyi görmeniz gerektiğinde kullanın.*

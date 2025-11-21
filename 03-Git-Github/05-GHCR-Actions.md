@@ -1,34 +1,34 @@
 # GitHub Container Registry (GHCR) & Actions
 
 ## 1. GitHub Container Registry (GHCR)
-GHCR allows you to host and manage Docker container images within GitHub.
+GHCR, Docker konteyner imajlarını GitHub içinde barındırmanızı ve yönetmenizi sağlar.
 
-### Login to GHCR
-You need a Personal Access Token (PAT) with `write:packages` and `read:packages` scopes.
+### GHCR'a Giriş Yapma (Login)
+`write:packages` ve `read:packages` yetkilerine sahip bir Personal Access Token (PAT) gereklidir.
 ```bash
-export CR_PAT=YOUR_TOKEN
-echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
+export CR_PAT=TOKENINIZ
+echo $CR_PAT | docker login ghcr.io -u KULLANICI_ADI --password-stdin
 ```
 
-### Tagging an Image
+### İmajı Etiketleme (Tagging)
 ```bash
-docker tag my-app:latest ghcr.io/username/my-app:latest
+docker tag my-app:latest ghcr.io/kullaniciadi/my-app:latest
 ```
 
-### Pushing an Image
+### İmajı Gönderme (Pushing)
 ```bash
-docker push ghcr.io/username/my-app:latest
+docker push ghcr.io/kullaniciadi/my-app:latest
 ```
 
-### Pulling an Image
+### İmajı Çekme (Pulling)
 ```bash
-docker pull ghcr.io/username/my-app:latest
+docker pull ghcr.io/kullaniciadi/my-app:latest
 ```
 
-## 2. GitHub Actions for CI/CD
-Automate the build and push process using GitHub Actions.
+## 2. CI/CD İçin GitHub Actions
+Derleme (build) ve gönderme (push) sürecini GitHub Actions kullanarak otomatikleştirin.
 
-Create a file at `.github/workflows/docker-publish.yml`:
+`.github/workflows/docker-publish.yml` dosyasını oluşturun:
 
 ```yaml
 name: Docker Build & Publish
@@ -50,23 +50,23 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout repository
+      - name: Depoyu çek (Checkout)
         uses: actions/checkout@v3
 
-      - name: Log in to the Container registry
+      - name: Container registry'e giriş yap
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Docker için metadata (tag, label) çıkar
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build and push Docker image
+      - name: Docker imajını derle ve gönder (Build & Push)
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -75,8 +75,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 ```
 
-This workflow will:
-1. Trigger on push to `main` or tags starting with `v`.
-2. Login to GHCR using the automatic `GITHUB_TOKEN`.
-3. Build the Docker image.
-4. Push the image to GHCR.
+Bu iş akışı şunları yapacaktır:
+1. `main` branch'ine push yapıldığında veya `v` ile başlayan bir tag oluşturulduğunda tetiklenir.
+2. Otomatik `GITHUB_TOKEN` kullanarak GHCR'a giriş yapar.
+3. Docker imajını derler.
+4. İmajı GHCR'a gönderir.

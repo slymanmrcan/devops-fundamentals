@@ -1,65 +1,65 @@
-# AWS IAM – Identity and Access Management
+# AWS IAM – Kimlik ve Erişim Yönetimi (Identity and Access Management)
 
-## 1. What It Solves
-Before Cloud: You had physical keys, VPNs, and LDAP servers.
-**With IAM:** You manage **Authentication** (Who are you?) and **Authorization** (What can you do?) for AWS resources. It is the "Security Gatekeeper" of AWS.
+## 1. Hangi Sorunu Çözer?
+Buluttan Önce: Fiziksel anahtarlarınız, VPN'leriniz ve LDAP sunucularınız vardı.
+**IAM ile:** AWS kaynakları için **Kimlik Doğrulama (Authentication)** (Sen kimsin?) ve **Yetkilendirme (Authorization)** (Ne yapabilirsin?) süreçlerini yönetirsiniz. AWS'in "Güvenlik Bekçisi"dir.
 
-## 2. Architecture & Key Components
+## 2. Mimari ve Temel Bileşenler
 
-### Architecture
-*   **Global Service:** IAM is global. Users/Roles created in IAM are available in all regions immediately.
-*   **Root Account:** The first identity created. Has unlimited power. **Lock it away.**
+### Mimari
+*   **Global Servis:** IAM globaldir. Oluşturulan Kullanıcılar/Roller tüm bölgelerde (region) anında kullanılabilir.
+*   **Root Hesabı:** Oluşturulan ilk kimliktir. Sınırsız yetkiye sahiptir. **Kullanmayın ve kilitleyin.**
 
-### Key Components
-1.  **Users:** Real people (e.g., `alice`, `bob`) or service accounts. Have long-term credentials (password or Access Keys).
-2.  **Groups:** Collections of users (e.g., `Developers`, `Admins`). Apply permissions to the group, not the user.
-3.  **Roles:** Temporary identities. Used by:
-    *   AWS Services (EC2, Lambda).
-    *   Cross-account access.
-    *   Federated users (Google/Okta login).
-4.  **Policies:** JSON documents defining permissions.
-    *   **Managed Policies:** Created by AWS (e.g., `AdministratorAccess`).
-    *   **Inline Policies:** Embedded directly into a user/role (Avoid if possible).
+### Temel Bileşenler
+1.  **Users (Kullanıcılar):** Gerçek kişiler (örn: `alice`, `bob`) veya servis hesapları. Uzun süreli kimlik bilgilerine (şifre veya Erişim Anahtarı) sahiptirler.
+2.  **Groups (Gruplar):** Kullanıcı koleksiyonları (örn: `Developers`, `Admins`). İzinleri kullanıcıya değil, gruba atayın.
+3.  **Roles (Roller):** Geçici kimlikler. Şunlar tarafından kullanılır:
+    *   AWS Servisleri (EC2, Lambda).
+    *   Hesaplar arası (Cross-account) erişim.
+    *   Federated kullanıcılar (Google/Okta girişi).
+4.  **Policies (Politikalar):** İzinleri tanımlayan JSON belgeleri.
+    *   **Managed Policies:** AWS tarafından oluşturulur (örn: `AdministratorAccess`).
+    *   **Inline Policies:** Doğrudan bir kullanıcıya/role gömülür (Mümkünse kaçının).
 
-## 3. Real Deployment Patterns
+## 3. Gerçek Dağıtım Senaryoları
 
-### Pattern A: EC2 Instance Profile
-*   **Goal:** Allow an App on EC2 to upload files to S3 without hardcoding keys.
-*   **Setup:** Create an IAM Role with `S3FullAccess`. Attach it to the EC2 instance. The AWS SDK on the instance automatically retrieves temporary credentials.
+### Senaryo A: EC2 Instance Profili
+*   **Amaç:** EC2 üzerindeki bir uygulamanın, anahtarları kod içine gömmeden S3'e dosya yüklemesini sağlamak.
+*   **Kurulum:** `S3FullAccess` yetkisine sahip bir IAM Rolü oluşturun. Bunu EC2 instance'ına atayın. Instance üzerindeki AWS SDK'sı geçici kimlik bilgilerini otomatik olarak alır.
 
-### Pattern B: Cross-Account Access
-*   **Goal:** Dev account needs to read data from Prod account S3 bucket.
-*   **Setup:**
-    1.  Prod Account creates a Role (`DevAccessRole`) trusting the Dev Account ID.
-    2.  Dev Account User assumes `DevAccessRole`.
+### Senaryo B: Hesaplar Arası Erişim (Cross-Account Access)
+*   **Amaç:** Dev hesabının, Prod hesabındaki S3 bucket'ından veri okuması gerekiyor.
+*   **Kurulum:**
+    1.  Prod Hesabı, Dev Hesabı ID'sine güvenen bir Rol (`DevAccessRole`) oluşturur.
+    2.  Dev Hesabı Kullanıcısı `DevAccessRole` rolünü üstlenir (assume role).
 
-### Pattern C: Identity Federation (SSO)
-*   **Goal:** Employees log in with corporate Active Directory (AD).
-*   **Setup:** Use AWS IAM Identity Center (formerly SSO) to map AD groups to IAM Roles.
+### Senaryo C: Kimlik Federasyonu (SSO)
+*   **Amaç:** Çalışanlar kurumsal Active Directory (AD) ile giriş yapsın.
+*   **Kurulum:** AD gruplarını IAM Rolleri ile eşleştirmek için AWS IAM Identity Center (eski adıyla SSO) kullanın.
 
-## 4. Security Best Practices
-1.  **Lock Root:** Delete root access keys. Enable MFA. Use it only for billing/account setup.
-2.  **Least Privilege:** Grant only the permissions needed (e.g., `S3ReadOnly`, not `S3FullAccess`).
-3.  **MFA (Multi-Factor Auth):** Enforce MFA for all human users.
-4.  **Rotate Credentials:** Rotate access keys every 90 days.
-5.  **Use Roles, Not Keys:** Prefer IAM Roles for applications over long-term Access Keys.
+## 4. Güvenlik En İyi Uygulamaları
+1.  **Root'u Kilitleyin:** Root erişim anahtarlarını silin. MFA'yı etkinleştirin. Sadece faturalandırma/hesap kurulumu için kullanın.
+2.  **En Az Yetki (Least Privilege):** Sadece gereken izinleri verin (örn: `S3FullAccess` yerine `S3ReadOnly`).
+3.  **MFA (Çok Faktörlü Kimlik Doğrulama):** Tüm insan kullanıcılar için MFA'yı zorunlu kılın.
+4.  **Kimlik Bilgilerini Döndürün:** Erişim anahtarlarını her 90 günde bir değiştirin.
+5.  **Anahtar Değil Rol Kullanın:** Uygulamalar için uzun süreli Erişim Anahtarları yerine IAM Rollerini tercih edin.
 
-## 5. Cost Optimization
-*   **IAM is Free:** You are not charged for Users, Groups, Roles, or Policies.
-*   **Indirect Costs:** You pay for the resources (EC2, S3) that IAM users create.
+## 5. Maliyet Optimizasyonu
+*   **IAM Ücretsizdir:** Kullanıcılar, Gruplar, Roller veya Politikalar için ücret ödemezsiniz.
+*   **Dolaylı Maliyetler:** IAM kullanıcılarının oluşturduğu kaynaklar (EC2, S3) için ödeme yaparsınız.
 
 ## 6. Infrastructure as Code (Terraform)
 
 ```hcl
-# 1. Create a User
+# 1. Kullanıcı Oluştur
 resource "aws_iam_user" "dev_user" {
   name = "jdoe"
 }
 
-# 2. Create a Policy (Least Privilege)
+# 2. Politika Oluştur (En Az Yetki)
 resource "aws_iam_policy" "s3_read_only" {
   name        = "S3ReadOnlyPolicy"
-  description = "Allows read-only access to specific bucket"
+  description = "Belirli bir bucket için salt okunur erişim"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -73,42 +73,42 @@ resource "aws_iam_policy" "s3_read_only" {
   })
 }
 
-# 3. Attach Policy to User
+# 3. Politikayı Kullanıcıya Ata
 resource "aws_iam_user_policy_attachment" "attach" {
   user       = aws_iam_user.dev_user.name
   policy_arn = aws_iam_policy.s3_read_only.arn
 }
 ```
 
-## 7. AWS CLI Examples
+## 7. AWS CLI Örnekleri
 
-| Action | Command |
+| İşlem | Komut |
 | :--- | :--- |
-| **Create User** | `aws iam create-user --user-name jdoe` |
-| **Create Access Key** | `aws iam create-access-key --user-name jdoe` |
-| **List Users** | `aws iam list-users` |
-| **Get Current ID** | `aws sts get-caller-identity` (Who am I?) |
-| **Attach Policy** | `aws iam attach-user-policy --user-name jdoe --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess` |
+| **Kullanıcı Oluştur** | `aws iam create-user --user-name jdoe` |
+| **Erişim Anahtarı Oluştur** | `aws iam create-access-key --user-name jdoe` |
+| **Kullanıcıları Listele** | `aws iam list-users` |
+| **Mevcut Kimliği Gör** | `aws sts get-caller-identity` (Ben kimim?) |
+| **Politika Ata** | `aws iam attach-user-policy --user-name jdoe --policy-arn arn:aws:iam::aws:policy/ReadOnlyAccess` |
 
-## 8. Common Exam Questions (SAA-C03 / DVA-C02)
+## 8. Sık Karşılaşılan Sınav Soruları (SAA-C03 / DVA-C02)
 
-**Q1: An application on EC2 needs to access DynamoDB. What is the most secure way to handle credentials?**
-*   A) Save Access Keys in `~/.aws/credentials`.
-*   B) Hardcode keys in the application code.
-*   C) Create an IAM Role and attach it to the EC2 instance. ✅
-*   D) Save keys in a private S3 bucket.
-*   *Reason: Roles provide temporary credentials that rotate automatically. Never store long-term keys on instances.*
+**S1: EC2 üzerindeki bir uygulamanın DynamoDB'ye erişmesi gerekiyor. Kimlik bilgilerini yönetmenin en güvenli yolu nedir?**
+*   A) Erişim Anahtarlarını `~/.aws/credentials` içine kaydetmek.
+*   B) Anahtarları uygulama koduna gömmek.
+*   C) Bir IAM Rolü oluşturup EC2 instance'ına atamak. ✅
+*   D) Anahtarları özel bir S3 bucket'ında saklamak.
+*   *Sebep: Roller, otomatik olarak değişen geçici kimlik bilgileri sağlar. Uzun süreli anahtarları asla instance üzerinde saklamayın.*
 
-**Q2: You want to grant a user access to S3 but deny access to a specific bucket folder. How does IAM evaluate this?**
-*   A) Allow overrides Deny.
-*   B) Deny overrides Allow. ✅
-*   C) The most recent policy wins.
-*   D) It depends on the group.
-*   *Reason: An explicit DENY always trumps an ALLOW.*
+**S2: Bir kullanıcıya S3 erişimi vermek istiyorsunuz ancak belirli bir klasöre erişimi reddetmek istiyorsunuz. IAM bunu nasıl değerlendirir?**
+*   A) Allow, Deny'ı ezer.
+*   B) Deny, Allow'u ezer. ✅
+*   C) En son eklenen politika kazanır.
+*   D) Gruba bağlıdır.
+*   *Sebep: Açık bir DENY (Reddetme) her zaman ALLOW (İzin Verme) kuralını geçersiz kılar.*
 
-**Q3: Which IAM entity is best suited for an external consultant who needs temporary access to your AWS account?**
-*   A) IAM User
-*   B) IAM Group
-*   C) IAM Role ✅
-*   D) Root User
-*   *Reason: Roles are for temporary access. You can give the consultant a role to assume.*
+**S3: AWS hesabınıza geçici erişim ihtiyacı olan harici bir danışman için hangi IAM varlığı en uygundur?**
+*   A) IAM Kullanıcısı
+*   B) IAM Grubu
+*   C) IAM Rolü ✅
+*   D) Root Kullanıcısı
+*   *Sebep: Roller geçici erişim içindir. Danışmana üstlenmesi (assume) için bir rol verebilirsiniz.*
