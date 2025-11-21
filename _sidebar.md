@@ -87,3 +87,8 @@
    * [Interactive Quizzes](13-Interactive-Quizzes/README.md)
 * 14-Cloudflare
   * [Fundamentals](14-Cloudflare/01-Fundamentals.md)
+  * [DNS & SSL](14-Cloudflare/02-DNS-SSL.md)
+  * [Security & WAF](14-Cloudflare/03-Security-WAF.md)
+  * [Performance & Caching](14-Cloudflare/04-Performance-Caching.md)
+  * [Workers & Pages](14-Cloudflare/05-Workers-Pages.md)
+  * [Zero Trust & Tunnels](14-Cloudflare/06-ZeroTrust-Tunnels.md)

@@ -1,66 +1,45 @@
 # Cloudflare Fundamentals
 
-Cloudflare, internet güvenliği, performansı ve güvenilirliği sağlayan küresel bir ağdır (CDN - Content Delivery Network). Web sitenizi kötü niyetli trafikten korur, statik içerikleri önbelleğe alarak hızlandırır ve DNS yönetimini üstlenir.
+Cloudflare, internetin güvenliğini, performansını ve güvenilirliğini artıran devasa bir küresel ağdır. Bir "Reverse Proxy" (Ters Vekil) olarak çalışır; yani web sitenize gelen trafik önce Cloudflare sunucularına uğrar, temizlenir ve optimize edildikten sonra sizin sunucunuza iletilir.
 
 ---
 
-## 1. Temel Özellikler
+## 1. Nasıl Çalışır? (Anycast Network)
+Cloudflare, **Anycast** teknolojisini kullanır. Bu teknoloji sayesinde, dünyanın neresinde olursanız olun, size **fiziksel olarak en yakın** Cloudflare veri merkezine bağlanırsınız.
 
-### 🛡️ Güvenlik (Security)
-*   **DDoS Koruması:** Sitenize gelen saldırıları (Distributed Denial of Service) otomatik olarak engeller.
-*   **WAF (Web Application Firewall):** SQL Injection, XSS gibi yaygın web saldırılarını durdurur.
-*   **SSL/TLS:** Siteniz için ücretsiz SSL sertifikası sağlar ve trafiği şifreler.
-*   **Bot Management:** Kötü niyetli botları ve örümcekleri engeller.
-
-### 🚀 Performans (Performance)
-*   **CDN (Content Delivery Network):** Resim, CSS, JS gibi dosyaları dünya genelindeki sunucularında (Edge Locations) saklar. Kullanıcıya en yakın sunucudan yanıt vererek siteyi hızlandırır.
-*   **Caching:** Dinamik olmayan içerikleri önbelleğe alır.
-*   **Image Optimization:** Resimleri otomatik olarak sıkıştırır ve WebP formatına dönüştürür (Pro özellik).
-
-### 🌐 DNS Yönetimi
-Cloudflare, dünyanın en hızlı DNS sağlayıcılarından biridir (1.1.1.1).
-*   **Proxy (Turuncu Bulut ☁️):** Trafik Cloudflare üzerinden geçer. Güvenlik ve CDN aktiftir. IP adresiniz gizlenir.
-*   **DNS Only (Gri Bulut ☁️):** Trafik doğrudan sunucunuza gider. Cloudflare sadece isim çözümlemesi yapar. Güvenlik ve CDN devre dışıdır.
+*   **Örnek:** Siteniz New York'taki bir sunucuda barınıyor olsun.
+    *   İstanbul'daki bir ziyaretçi sitenize girdiğinde, istek New York'a gitmek yerine Cloudflare'in **İstanbul** sunucusuna gider.
+    *   Eğer içerik önbellekte (cache) varsa, yanıt direkt İstanbul'dan döner (Milisaniyeler içinde!).
+    *   Yoksa, Cloudflare New York'tan veriyi alır ve ziyaretçiye iletir.
 
 ---
 
-## 2. Cloudflare Teknolojileri
+## 2. Temel Avantajları
 
-### Workers
-Sunucuya ihtiyaç duymadan (Serverless) JavaScript, Rust veya C++ kodlarını Cloudflare'in Edge ağında çalıştırmanızı sağlar.
-*   **Kullanım:** HTTP isteklerini değiştirme, yönlendirme, basit API'ler.
+### 🛡️ Güvenlik
+Sitenizi internetin "kötü mahallelerinden" korur.
+*   **IP Gizleme:** Gerçek sunucu IP adresiniz gizlenir, saldırganlar doğrudan sunucunuza saldıramaz.
+*   **DDoS Koruması:** Terabitler boyutundaki saldırıları bile emebilir.
+*   **WAF:** Web sitenizi hacklemeye çalışan botları durdurur.
 
-### Zero Trust (Cloudflare Access)
-VPN kullanmadan, şirket içi uygulamalarınıza güvenli erişim sağlar. Kullanıcıları kimlik sağlayıcılar (Google, GitHub, Okta) ile doğrular.
+### 🚀 Performans
+*   **CDN:** Statik dosyalarınız (resim, CSS, JS) dünya genelindeki 300+ veri merkezine dağıtılır.
+*   **Optimizasyon:** Resimler sıkıştırılır, kodlar küçültülür (Minify).
 
-### Pages
-Statik sitelerinizi (React, Vue, Hugo, vb.) doğrudan Git reponuzdan (GitHub/GitLab) alıp build eder ve yayınlar. (Netlify/Vercel alternatifi).
-
-### R2
-AWS S3 alternatifi nesne depolama (Object Storage). En büyük avantajı **Egress (veri çıkış) ücreti olmamasıdır**.
-
----
-
-## 3. Alternatifler
-
-| Özellik | Cloudflare | AWS Alternatifi | Diğer Alternatifler |
-| :--- | :--- | :--- | :--- |
-| **CDN** | Cloudflare CDN | Amazon CloudFront | Akamai, Fastly |
-| **DNS** | Cloudflare DNS | Amazon Route 53 | Google Cloud DNS, NS1 |
-| **WAF** | Cloudflare WAF | AWS WAF | Imperva |
-| **DDoS** | Unmetered DDoS Protection | AWS Shield | Akamai |
-| **Serverless** | Workers | Lambda @ Edge | Vercel Edge Functions |
-| **Storage** | R2 | S3 | Backblaze B2 |
+### 💎 Güvenilirlik
+*   **Always Online:** Sunucunuz çökse bile Cloudflare sitenizin önbelleğe alınmış bir kopyasını göstermeye devam edebilir.
 
 ---
 
-## 4. Sıkça Sorulan Sorular (SSS)
+## 3. Plan Karşılaştırması (Özet)
 
-**S: Cloudflare kullanırsam sitemin IP adresi değişir mi?**
-C: Evet, eğer "Proxy" (Turuncu Bulut) modunu kullanırsanız, ziyaretçiler sitenizin gerçek IP'sini değil, Cloudflare IP'lerini görür. Bu bir güvenlik önlemidir.
+| Özellik | Free (Ücretsiz) | Pro ($20/ay) | Business ($200/ay) | Enterprise |
+| :--- | :--- | :--- | :--- | :--- |
+| **DDoS Koruması** | ✅ Sınırsız | ✅ Sınırsız | ✅ Sınırsız | ✅ Gelişmiş |
+| **CDN** | ✅ Global | ✅ Global | ✅ Global | ✅ Öncelikli |
+| **WAF** | ❌ (Kısıtlı) | ✅ Tam Özellik | ✅ Tam Özellik | ✅ Özelleştirilebilir |
+| **Resim Opt.** | ❌ | ✅ (Lossless) | ✅ (Gelişmiş) | ✅ |
+| **Destek** | Topluluk | E-posta | Chat (7/24) | Telefon/Özel |
+| **SLA** | Yok | Yok | %100 Uptime | %100 Uptime (Tazminatlı) |
 
-**S: Nameserver (NS) değişikliği zorunlu mu?**
-C: Genellikle evet. Alan adınızın yönetimini Cloudflare'e devretmek için NS kayıtlarını Cloudflare'e yönlendirmeniz gerekir.
-
-**S: Ücretsiz plan yeterli mi?**
-C: Kişisel siteler, bloglar ve küçük işletmeler için ücretsiz plan (Free Tier) fazlasıyla yeterlidir. DDoS koruması, CDN ve SSL ücretsizdir.
+> **Öneri:** Kişisel projeler ve küçük işletmeler için **Free** plan fazlasıyla yeterlidir. E-ticaret ve kritik işler için **Pro** önerilir.
