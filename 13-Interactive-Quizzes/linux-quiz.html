@@ -302,9 +302,18 @@
         ];
 
         let score = 0;
-        const quizContainer = document.getElementById('quiz-container');
+        // Moved inside initQuiz to ensure DOM is ready
 
         function initQuiz() {
+            console.log("initQuiz started");
+            const quizContainer = document.getElementById('quiz-container');
+
+            if (!quizContainer) {
+                console.error("quiz-container element not found!");
+                alert("Hata: Test alanı bulunamadı (quiz-container missing).");
+                return;
+            }
+
             questions.forEach((q, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
@@ -328,6 +337,7 @@
                 card.appendChild(optionsList);
                 quizContainer.appendChild(card);
             });
+            console.log("initQuiz finished, questions rendered: " + questions.length);
         }
 
         function checkAnswer(selectedOption, questionIndex, optionIndex) {
