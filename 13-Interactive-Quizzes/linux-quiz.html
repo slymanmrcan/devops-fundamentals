@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,14 +17,16 @@
             align-items: flex-start;
             min-height: 100vh;
         }
+
         .container {
             background-color: #ffffff;
             width: 100%;
             max-width: 800px;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
+
         h1 {
             text-align: center;
             color: #2d3436;
@@ -32,6 +35,7 @@
             border-bottom: 2px solid #dfe6e9;
             padding-bottom: 20px;
         }
+
         .question-card {
             background-color: #fff;
             border: 1px solid #dfe6e9;
@@ -40,19 +44,23 @@
             margin-bottom: 25px;
             transition: transform 0.2s;
         }
+
         .question-card:hover {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
+
         .question-text {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 15px;
             color: #2d3436;
         }
+
         .options {
             list-style: none;
             padding: 0;
         }
+
         .option {
             background-color: #f5f6fa;
             border: 1px solid #dcdde1;
@@ -63,37 +71,45 @@
             transition: all 0.3s ease;
             font-size: 1rem;
         }
+
         .option:hover {
             background-color: #dcdde1;
         }
+
         .option.correct {
             background-color: #00b894 !important;
             color: white;
             border-color: #00b894;
         }
+
         .option.wrong {
             background-color: #d63031 !important;
             color: white;
             border-color: #d63031;
         }
+
         .option.disabled {
             pointer-events: none;
             opacity: 0.7;
         }
+
         .feedback {
             margin-top: 10px;
             font-weight: bold;
             display: none;
         }
+
         .feedback.show {
             display: block;
         }
+
         #score-section {
             text-align: center;
             margin-top: 40px;
             padding-top: 20px;
             border-top: 2px solid #dfe6e9;
         }
+
         #show-score-btn {
             background-color: #0984e3;
             color: white;
@@ -104,9 +120,11 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         #show-score-btn:hover {
             background-color: #74b9ff;
         }
+
         #final-score {
             font-size: 2rem;
             font-weight: bold;
@@ -115,244 +133,248 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>Linux Orta Seviye Test</h1>
-    <div id="quiz-container">
-        <!-- Sorular buraya JS ile gelecek -->
+    <div class="container">
+        <h1>Linux Orta Seviye Test</h1>
+        <div id="quiz-container">
+            <!-- Sorular buraya JS ile gelecek -->
+        </div>
+        <div id="score-section">
+            <button id="show-score-btn" onclick="calculateScore()">Skoru Göster</button>
+            <div id="final-score"></div>
+        </div>
     </div>
-    <div id="score-section">
-        <button id="show-score-btn" onclick="calculateScore()">Skoru Göster</button>
-        <div id="final-score"></div>
-    </div>
-</div>
 
-<script>
-    const questions = [
-        {
-            text: "1. 'find' komutu ile boyutu 100MB'dan büyük dosyaları listelemek için hangi parametre kullanılır?",
-            options: [
-                "find . -size 100M",
-                "find . -size +100M",
-                "find . -s > 100",
-                "find . -type f --big 100"
-            ],
-            answer: 1 // B
-        },
-        {
-            text: "2. Bir '.tar.gz' sıkıştırılmış arşiv dosyasını çıkarmak (extract) için hangi parametre kombinasyonu gereklidir?",
-            options: [
-                "tar -cvzf dosya.tar.gz",
-                "tar -xvf dosya.tar.gz",
-                "tar -xzvf dosya.tar.gz",
-                "tar -uzvf dosya.tar.gz"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "3. Bir dosyanın izinlerini 'rwxr-xr-x' (755) yapmak ne anlama gelir?",
-            options: [
-                "Sahibi her şeyi yapar, grup ve diğerleri sadece okur ve çalıştırır.",
-                "Herkes her şeyi yapabilir.",
-                "Sahibi sadece okur, diğerleri yazar.",
-                "Sadece root kullanıcısı erişebilir."
-            ],
-            answer: 0 // A
-        },
-        {
-            text: "4. 'grep' komutu ile bir kelimeyi İÇERMEYEN satırları bulmak için hangi parametre kullanılır?",
-            options: [
-                "grep -i",
-                "grep -r",
-                "grep -v",
-                "grep -n"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "5. Sistemdeki tüm dinleyen (listening) TCP ve UDP portlarını sayısal olarak görmek için hangi komut kullanılır?",
-            options: [
-                "netstat -a",
-                "netstat -tulpn",
-                "ps aux",
-                "top"
-            ],
-            answer: 1 // B
-        },
-        {
-            text: "6. Bir servisin (örn: nginx) sistem açılışında otomatik başlamasını sağlamak için hangi komut kullanılır?",
-            options: [
-                "systemctl start nginx",
-                "systemctl status nginx",
-                "systemctl enable nginx",
-                "service nginx run"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "7. 'chmod' komutunda 'SetUID' bitini ayarlamak için hangi sayısal değer kullanılır?",
-            options: [
-                "1000",
-                "2000",
-                "4000",
-                "7777"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "8. Bir dizinin toplam boyutunu insan tarafından okunabilir formatta (human-readable) görmek için hangi komut kullanılır?",
-            options: [
-                "df -h",
-                "du -sh",
-                "ls -la",
-                "fdisk -l"
-            ],
-            answer: 1 // B
-        },
-        {
-            text: "9. 'cron' zamanlayıcısında '0 2 * * *' ifadesi ne anlama gelir?",
-            options: [
-                "Her ayın 2. günü",
-                "Her saat başı 2. dakikada",
-                "Her gün saat 02:00'de",
-                "Haftada iki kez"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "10. Bir metin dosyasındaki 'eski' kelimelerinin hepsini 'yeni' ile değiştirmek için hangi 'sed' komutu doğrudur?",
-            options: [
-                "sed 's/eski/yeni/' dosya.txt",
-                "sed 'r/eski/yeni/g' dosya.txt",
-                "sed 's/eski/yeni/g' dosya.txt",
-                "sed -i 'change eski yeni' dosya.txt"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "11. 'kill -9 <PID>' komutundaki '-9' sinyali ne anlama gelir?",
-            options: [
-                "SIGTERM (Nazikçe kapat)",
-                "SIGINT (Kesme)",
-                "SIGKILL (Zorla/Derhal öldür)",
-                "SIGHUP (Yeniden başlat)"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "12. Sembolik link (soft link) oluşturmak için hangi komut kullanılır?",
-            options: [
-                "ln -s hedef link_ismi",
-                "ln hedef link_ismi",
-                "link -soft hedef link_ismi",
-                "cp -l hedef link_ismi"
-            ],
-            answer: 0 // A
-        },
-        {
-            text: "13. '/etc/fstab' dosyasının temel amacı nedir?",
-            options: [
-                "Kullanıcı şifrelerini saklamak",
-                "Ağ ayarlarını yapılandırmak",
-                "Disk bölümlerinin (partitions) otomatik bağlanmasını (mount) tanımlamak",
-                "Sistem loglarını tutmak"
-            ],
-            answer: 2 // C
-        },
-        {
-            text: "14. 'awk' komutu ile bir dosyanın sadece 2. sütununu yazdırmak için hangisi kullanılır?",
-            options: [
-                "awk {print 2}",
-                "awk '{print $2}'",
-                "awk -f 2",
-                "cut -c 2"
-            ],
-            answer: 1 // B
-        },
-        {
-            text: "15. SSH anahtar tabanlı kimlik doğrulama için, public key'i karşı sunucuya kopyalayan komut hangisidir?",
-            options: [
-                "ssh-keygen",
-                "ssh-add",
-                "ssh-copy-id",
-                "scp id_rsa.pub server:"
-            ],
-            answer: 2 // C
-        }
-    ];
+    <script>
+        const questions = [
+            {
+                text: "1. 'find' komutu ile boyutu 100MB'dan büyük dosyaları listelemek için hangi parametre kullanılır?",
+                options: [
+                    "find . -size 100M",
+                    "find . -size +100M",
+                    "find . -s > 100",
+                    "find . -type f --big 100"
+                ],
+                answer: 1 // B
+            },
+            {
+                text: "2. Bir '.tar.gz' sıkıştırılmış arşiv dosyasını çıkarmak (extract) için hangi parametre kombinasyonu gereklidir?",
+                options: [
+                    "tar -cvzf dosya.tar.gz",
+                    "tar -xvf dosya.tar.gz",
+                    "tar -xzvf dosya.tar.gz",
+                    "tar -uzvf dosya.tar.gz"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "3. Bir dosyanın izinlerini 'rwxr-xr-x' (755) yapmak ne anlama gelir?",
+                options: [
+                    "Sahibi her şeyi yapar, grup ve diğerleri sadece okur ve çalıştırır.",
+                    "Herkes her şeyi yapabilir.",
+                    "Sahibi sadece okur, diğerleri yazar.",
+                    "Sadece root kullanıcısı erişebilir."
+                ],
+                answer: 0 // A
+            },
+            {
+                text: "4. 'grep' komutu ile bir kelimeyi İÇERMEYEN satırları bulmak için hangi parametre kullanılır?",
+                options: [
+                    "grep -i",
+                    "grep -r",
+                    "grep -v",
+                    "grep -n"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "5. Sistemdeki tüm dinleyen (listening) TCP ve UDP portlarını sayısal olarak görmek için hangi komut kullanılır?",
+                options: [
+                    "netstat -a",
+                    "netstat -tulpn",
+                    "ps aux",
+                    "top"
+                ],
+                answer: 1 // B
+            },
+            {
+                text: "6. Bir servisin (örn: nginx) sistem açılışında otomatik başlamasını sağlamak için hangi komut kullanılır?",
+                options: [
+                    "systemctl start nginx",
+                    "systemctl status nginx",
+                    "systemctl enable nginx",
+                    "service nginx run"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "7. 'chmod' komutunda 'SetUID' bitini ayarlamak için hangi sayısal değer kullanılır?",
+                options: [
+                    "1000",
+                    "2000",
+                    "4000",
+                    "7777"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "8. Bir dizinin toplam boyutunu insan tarafından okunabilir formatta (human-readable) görmek için hangi komut kullanılır?",
+                options: [
+                    "df -h",
+                    "du -sh",
+                    "ls -la",
+                    "fdisk -l"
+                ],
+                answer: 1 // B
+            },
+            {
+                text: "9. 'cron' zamanlayıcısında '0 2 * * *' ifadesi ne anlama gelir?",
+                options: [
+                    "Her ayın 2. günü",
+                    "Her saat başı 2. dakikada",
+                    "Her gün saat 02:00'de",
+                    "Haftada iki kez"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "10. Bir metin dosyasındaki 'eski' kelimelerinin hepsini 'yeni' ile değiştirmek için hangi 'sed' komutu doğrudur?",
+                options: [
+                    "sed 's/eski/yeni/' dosya.txt",
+                    "sed 'r/eski/yeni/g' dosya.txt",
+                    "sed 's/eski/yeni/g' dosya.txt",
+                    "sed -i 'change eski yeni' dosya.txt"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "11. 'kill -9 <PID>' komutundaki '-9' sinyali ne anlama gelir?",
+                options: [
+                    "SIGTERM (Nazikçe kapat)",
+                    "SIGINT (Kesme)",
+                    "SIGKILL (Zorla/Derhal öldür)",
+                    "SIGHUP (Yeniden başlat)"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "12. Sembolik link (soft link) oluşturmak için hangi komut kullanılır?",
+                options: [
+                    "ln -s hedef link_ismi",
+                    "ln hedef link_ismi",
+                    "link -soft hedef link_ismi",
+                    "cp -l hedef link_ismi"
+                ],
+                answer: 0 // A
+            },
+            {
+                text: "13. '/etc/fstab' dosyasının temel amacı nedir?",
+                options: [
+                    "Kullanıcı şifrelerini saklamak",
+                    "Ağ ayarlarını yapılandırmak",
+                    "Disk bölümlerinin (partitions) otomatik bağlanmasını (mount) tanımlamak",
+                    "Sistem loglarını tutmak"
+                ],
+                answer: 2 // C
+            },
+            {
+                text: "14. 'awk' komutu ile bir dosyanın sadece 2. sütununu yazdırmak için hangisi kullanılır?",
+                options: [
+                    "awk {print 2}",
+                    "awk '{print $2}'",
+                    "awk -f 2",
+                    "cut -c 2"
+                ],
+                answer: 1 // B
+            },
+            {
+                text: "15. SSH anahtar tabanlı kimlik doğrulama için, public key'i karşı sunucuya kopyalayan komut hangisidir?",
+                options: [
+                    "ssh-keygen",
+                    "ssh-add",
+                    "ssh-copy-id",
+                    "scp id_rsa.pub server:"
+                ],
+                answer: 2 // C
+            }
+        ];
 
-    let score = 0;
-    const quizContainer = document.getElementById('quiz-container');
+        let score = 0;
+        const quizContainer = document.getElementById('quiz-container');
 
-    function initQuiz() {
-        questions.forEach((q, index) => {
-            const card = document.createElement('div');
-            card.className = 'question-card';
-            
-            const title = document.createElement('div');
-            title.className = 'question-text';
-            title.textContent = q.text;
-            card.appendChild(title);
+        function initQuiz() {
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
 
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options';
+                const title = document.createElement('div');
+                title.className = 'question-text';
+                title.textContent = q.text;
+                card.appendChild(title);
 
-            q.options.forEach((opt, optIndex) => {
-                const li = document.createElement('li');
-                li.className = 'option';
-                li.textContent = opt;
-                li.onclick = () => checkAnswer(li, index, optIndex);
-                optionsList.appendChild(li);
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options';
+
+                q.options.forEach((opt, optIndex) => {
+                    const li = document.createElement('li');
+                    li.className = 'option';
+                    li.textContent = opt;
+                    li.onclick = () => checkAnswer(li, index, optIndex);
+                    optionsList.appendChild(li);
+                });
+
+                card.appendChild(optionsList);
+                quizContainer.appendChild(card);
             });
-
-            card.appendChild(optionsList);
-            quizContainer.appendChild(card);
-        });
-    }
-
-    function checkAnswer(selectedOption, questionIndex, optionIndex) {
-        const card = selectedOption.parentElement.parentElement;
-        const options = card.querySelectorAll('.option');
-        const correctAnswerIndex = questions[questionIndex].answer;
-
-        // Prevent changing answer
-        if (card.getAttribute('data-answered') === 'true') return;
-        card.setAttribute('data-answered', 'true');
-
-        // Disable all options
-        options.forEach(opt => opt.classList.add('disabled'));
-
-        if (optionIndex === correctAnswerIndex) {
-            selectedOption.classList.add('correct');
-            score++;
-        } else {
-            selectedOption.classList.add('wrong');
-            // Highlight correct answer
-            options[correctAnswerIndex].classList.add('correct');
         }
-    }
 
-    function calculateScore() {
-        const resultDiv = document.getElementById('final-score');
-        const percentage = Math.round((score / questions.length) * 100);
-        
-        let message = "";
-        if (percentage >= 90) message = "Mükemmel! 🎉";
-        else if (percentage >= 70) message = "Çok İyi! 👏";
-        else if (percentage >= 50) message = "İdare Eder 🤔";
-        else message = "Daha çok çalışmalısın 📚";
+        function checkAnswer(selectedOption, questionIndex, optionIndex) {
+            const card = selectedOption.parentElement.parentElement;
+            const options = card.querySelectorAll('.option');
+            const correctAnswerIndex = questions[questionIndex].answer;
 
-        resultDiv.innerHTML = `Skorunuz: ${score} / ${questions.length}<br><span style="font-size: 1.5rem; color: #636e72;">(%${percentage}) - ${message}</span>`;
-        
-        // Scroll to bottom
-        resultDiv.scrollIntoView({ behavior: 'smooth' });
-    }
+            // Prevent changing answer
+            if (card.getAttribute('data-answered') === 'true') return;
+            card.setAttribute('data-answered', 'true');
 
-    // Start the quiz
-    initQuiz();
+            // Disable all options
+            options.forEach(opt => opt.classList.add('disabled'));
 
-</script>
+            if (optionIndex === correctAnswerIndex) {
+                selectedOption.classList.add('correct');
+                score++;
+            } else {
+                selectedOption.classList.add('wrong');
+                // Highlight correct answer
+                options[correctAnswerIndex].classList.add('correct');
+            }
+        }
+
+        function calculateScore() {
+            const resultDiv = document.getElementById('final-score');
+            const percentage = Math.round((score / questions.length) * 100);
+
+            let message = "";
+            if (percentage >= 90) message = "Mükemmel! 🎉";
+            else if (percentage >= 70) message = "Çok İyi! 👏";
+            else if (percentage >= 50) message = "İdare Eder 🤔";
+            else message = "Daha çok çalışmalısın 📚";
+
+            resultDiv.innerHTML = `Skorunuz: ${score} / ${questions.length}<br><span style="font-size: 1.5rem; color: #636e72;">(%${percentage}) - ${message}</span>`;
+
+            // Scroll to bottom
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Start the quiz when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initQuiz();
+        });
+
+    </script>
 
 </body>
+
 </html>
