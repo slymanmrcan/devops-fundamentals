@@ -368,11 +368,32 @@
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Start the quiz when DOM is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            initQuiz();
-        });
+        // Error handling
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.color = 'red';
+            errorDiv.style.padding = '20px';
+            errorDiv.style.textAlign = 'center';
+            errorDiv.innerHTML = `<h3>Bir hata oluştu:</h3><p>${msg}</p>`;
+            document.body.prepend(errorDiv);
+            return false;
+        };
 
+        // Robust Initialization
+        function start() {
+            try {
+                initQuiz();
+            } catch (e) {
+                console.error(e);
+                alert("Test başlatılamadı: " + e.message);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start);
+        } else {
+            start();
+        }
     </script>
 
 </body>
