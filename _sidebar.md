@@ -85,3 +85,5 @@
   * [Practice Questions](12-Certifications/01-Practice-Questions.md)
 * 13-Interactive-Quizzes
    * [Interactive Quizzes](13-Interactive-Quizzes/README.md)
+* 14-Cloudflare
+  * [Fundamentals](14-Cloudflare/01-Fundamentals.md)
