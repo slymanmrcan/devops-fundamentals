@@ -84,4 +84,4 @@
 * 12-Certifications
   * [Practice Questions](12-Certifications/01-Practice-Questions.md)
 * 13-Interactive-Quizzes
-  * [Linux Quiz (HTML)](13-Interactive-Quizzes/linux-quiz.html)
+  * [Linux Quiz (HTML)](13-Interactive-Quizzes/linux-quiz.html ':ignore')
