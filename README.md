@@ -49,6 +49,10 @@ Ağ temelleri ve güvenliği.
 - Subnetting, Load Balancing, Firewallar.
 - Sorun giderme araçları.
 
+### 🧪 13. Interactive Quizzes
+Tüm başlıklar için çoktan seçmeli testler.
+- Tarayıcıdan çöz: [all-topics.html](13-Interactive-Quizzes/all-topics.html)
+
 ---
 
 ## 🛠️ Nasıl Çalıştırılır?

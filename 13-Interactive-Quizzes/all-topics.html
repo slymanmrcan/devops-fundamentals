@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linux Orta Seviye Test</title>
+    <title>DevOps Quiz Merkezi</title>
     <style>
         :root {
             --primary: #6c5ce7;
             --secondary: #a29bfe;
             --success: #00b894;
             --error: #d63031;
-            --background: #2d3436;
+            --background: #1f2428;
             --card-bg: #ffffff;
             --text: #2d3436;
             --text-light: #636e72;
@@ -25,7 +25,7 @@
         }
 
         body {
-            background-color: var(--background);
+            background: radial-gradient(circle at 20% 20%, #303a73 0, #1f2428 35%), radial-gradient(circle at 80% 0%, #5e63ce 0, #1f2428 40%), #1f2428;
             color: var(--text);
             display: flex;
             justify-content: center;
@@ -34,35 +34,60 @@
             padding: 20px;
         }
 
+        .quiz-shell {
+            width: 100%;
+            max-width: 900px;
+        }
+
         .quiz-container {
             background-color: var(--card-bg);
-            width: 100%;
-            max-width: 600px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
             overflow: hidden;
-            position: relative;
-            min-height: 500px;
+            min-height: 520px;
             display: flex;
             flex-direction: column;
         }
 
-        /* Header & Progress */
         .quiz-header {
-            padding: 20px 30px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dfe6e9;
-            display: flex;
-            justify-content: space-between;
+            padding: 20px 24px;
+            background: #f7f7fb;
+            border-bottom: 1px solid #e1e5ee;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
             align-items: center;
         }
 
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        #quiz-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .question-count {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
         .progress-container {
-            flex-grow: 1;
             height: 8px;
-            background-color: #dfe6e9;
+            background-color: #e6e8f0;
             border-radius: 4px;
-            margin: 0 15px;
             overflow: hidden;
         }
 
@@ -73,27 +98,16 @@
             transition: width 0.4s ease;
         }
 
-        .question-count {
-            font-weight: bold;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        /* Question Content */
         .quiz-body {
-            padding: 30px;
+            padding: 28px;
             flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
         .question-text {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 25px;
-            line-height: 1.5;
-            color: var(--text);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1f1f24;
+            margin-bottom: 18px;
         }
 
         .options-list {
@@ -103,110 +117,116 @@
         }
 
         .option {
-            padding: 15px 20px;
-            border: 2px solid #dfe6e9;
+            background: #f8f9fb;
+            border: 1px solid #e6e8f0;
             border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 1rem;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
         }
 
-        .option:hover:not(.disabled) {
-            border-color: var(--primary);
-            background-color: #f0f3ff;
+        .option:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            border-color: var(--secondary);
         }
 
         .option.selected {
             border-color: var(--primary);
-            background-color: #eef2ff;
+            background-color: #eef0ff;
         }
 
         .option.correct {
             border-color: var(--success);
-            background-color: rgba(0, 184, 148, 0.1);
+            background-color: rgba(0, 184, 148, 0.12);
             color: var(--success);
             font-weight: 600;
         }
 
         .option.wrong {
             border-color: var(--error);
-            background-color: rgba(214, 48, 49, 0.1);
+            background-color: rgba(214, 48, 49, 0.12);
             color: var(--error);
         }
 
         .option.disabled {
             pointer-events: none;
-            opacity: 0.7;
+            opacity: 0.75;
         }
 
-        /* Footer & Buttons */
         .quiz-footer {
-            padding: 20px 30px;
-            border-top: 1px solid #dfe6e9;
+            padding: 20px 24px;
+            border-top: 1px solid #e1e5ee;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
             background: #fff;
         }
 
         .btn {
-            padding: 12px 30px;
+            padding: 11px 18px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.15s, box-shadow 0.15s;
         }
 
         .btn-primary {
             background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.35);
         }
 
-        .btn-primary:hover {
+        .btn-secondary {
+            background: #eef0ff;
+            color: #2d3436;
+            border: 1px solid #dcdff3;
+        }
+
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
         }
 
         .btn:disabled {
-            background: #b2bec3;
+            background: #c6ccd8;
             cursor: not-allowed;
-            transform: none;
             box-shadow: none;
+            transform: none;
+            color: #fff;
         }
 
-        /* Result Screen */
         .result-screen {
             text-align: center;
-            padding: 40px;
+            padding: 40px 30px;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100%;
+            gap: 16px;
         }
 
         .score-circle {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
             background: conic-gradient(var(--primary) 0%, #dfe6e9 0%);
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 8px;
             position: relative;
         }
 
         .score-circle::before {
             content: '';
-            width: 130px;
-            height: 130px;
+            width: 132px;
+            height: 132px;
             background: white;
             border-radius: 50%;
             position: absolute;
@@ -214,23 +234,20 @@
 
         .score-text {
             position: relative;
-            font-size: 2.5rem;
-            font-weight: bold;
+            font-size: 2.4rem;
+            font-weight: 800;
             color: var(--primary);
         }
 
         .result-message {
             font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: var(--text);
+            font-weight: 700;
         }
 
         .result-subtext {
             color: var(--text-light);
-            margin-bottom: 30px;
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -244,66 +261,78 @@
         }
 
         .fade-in {
-            animation: fadeIn 0.4s ease forwards;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @media (max-width: 640px) {
+            .quiz-header {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-body {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
-
-    <div class="quiz-container">
-        <!-- Header -->
-        <div class="quiz-header" id="quiz-header">
-            <div>
-                <div id="quiz-title" style="font-weight:700; margin-bottom:6px;">Linux Orta Seviye Test</div>
-                <div class="question-count">Soru <span id="current-q">1</span> / <span id="total-q">15</span></div>
+    <div class="quiz-shell">
+        <div class="quiz-container">
+            <div class="quiz-header" id="quiz-header">
+                <div class="title-block">
+                    <div id="quiz-title">DevOps Quiz</div>
+                    <div class="question-count">Soru <span id="current-q">1</span> / <span id="total-q">1</span></div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <select id="quiz-select" class="btn btn-secondary">
+                        <option value="linux">Linux</option>
+                        <option value="docker">Docker</option>
+                        <option value="git">Git & GitHub</option>
+                        <option value="cicd">CI/CD</option>
+                        <option value="aws">AWS</option>
+                        <option value="kubernetes">Kubernetes</option>
+                        <option value="terraform">Terraform</option>
+                        <option value="network">Network</option>
+                        <option value="monitoring">Monitoring</option>
+                        <option value="ansible">Ansible</option>
+                        <option value="cloudflare">Cloudflare</option>
+                    </select>
+                    <button class="btn btn-secondary" id="restart-btn">Baştan Başla</button>
+                </div>
             </div>
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
+
+            <div class="quiz-body" id="quiz-body">
+                <div class="question-text" id="question-text">Soru yükleniyor...</div>
+                <ul class="options-list" id="options-list"></ul>
             </div>
-            <select id="quiz-select" class="btn" style="background:#f1f3f5; color:#2d3436;">
-                <option value="linux">Linux</option>
-                <option value="docker">Docker</option>
-                <option value="git">Git & GitHub</option>
-                <option value="cicd">CI/CD</option>
-                <option value="aws">AWS</option>
-                <option value="kubernetes">Kubernetes</option>
-                <option value="terraform">Terraform</option>
-                <option value="network">Network</option>
-                <option value="monitoring">Monitoring</option>
-                <option value="ansible">Ansible</option>
-                <option value="cloudflare">Cloudflare</option>
-            </select>
-        </div>
 
-        <!-- Question Body -->
-        <div class="quiz-body" id="quiz-body">
-            <div class="question-text" id="question-text">Soru yükleniyor...</div>
-            <ul class="options-list" id="options-list">
-                <!-- Options will be injected here -->
-            </ul>
-        </div>
-
-        <!-- Footer -->
-        <div class="quiz-footer" id="quiz-footer">
-            <button class="btn btn-primary" id="next-btn" disabled>Sonraki Soru</button>
-        </div>
-
-        <!-- Result Screen (Hidden by default) -->
-        <div class="result-screen" id="result-screen">
-            <div class="score-circle" id="score-circle">
-                <span class="score-text" id="final-score-text">0</span>
+            <div class="quiz-footer" id="quiz-footer">
+                <div style="color: var(--text-light); font-weight:600;">Puan: <span id="score-brief">0</span></div>
+                <button class="btn btn-primary" id="next-btn" disabled>Sonraki Soru</button>
             </div>
-            <h2 class="result-message" id="result-message">Tebrikler!</h2>
-            <p class="result-subtext">Testi başarıyla tamamladınız.</p>
-            <button class="btn btn-primary" onclick="location.reload()">Tekrar Dene</button>
+
+            <div class="result-screen" id="result-screen">
+                <div class="score-circle" id="score-circle">
+                    <span class="score-text" id="final-score-text">0</span>
+                </div>
+                <h2 class="result-message" id="result-message">Tebrikler!</h2>
+                <p class="result-subtext">Testi tamamladınız.</p>
+                <div class="controls">
+                    <button class="btn btn-secondary" onclick="location.reload()">Sayfayı Yenile</button>
+                    <button class="btn btn-primary" id="retry-btn">Aynı Testi Tekrarla</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         const quizBank = {
             linux: {
-                title: "Linux Orta Seviye Test",
+                title: "Linux Testi",
                 questions: [
                     { text: "1. 'find' komutu ile boyutu 100MB'dan büyük dosyaları listelemek için hangi parametre kullanılır?", options: ["find . -size 100M", "find . -size +100M", "find . -s > 100", "find . -type f --big 100"], answer: 1 },
                     { text: "2. Bir '.tar.gz' arşivini çıkarmak için doğru komut hangisidir?", options: ["tar -cvzf", "tar -xvf", "tar -xzvf", "tar -uzvf"], answer: 2 },
@@ -314,7 +343,9 @@
                     { text: "7. 'chmod'da SetUID bitini ayarlamak için hangi sayısal değer eklenir?", options: ["1000", "2000", "4000", "7777"], answer: 2 },
                     { text: "8. Bir dizinin toplam boyutunu insan okunur görmek için?", options: ["df -h", "du -sh", "ls -la", "fdisk -l"], answer: 1 },
                     { text: "9. '0 2 * * *' cron ifadesi neyi ifade eder?", options: ["Her ayın 2. günü", "Her saat başı 2. dakikada", "Her gün 02:00'de", "Haftada iki kez"], answer: 2 },
-                    { text: "10. 'sed' ile 'eski' kelimelerini 'yeni' ile değiştirmek için doğru komut?", options: ["sed 's/eski/yeni/' dosya", "sed 'r/eski/yeni/g' dosya", "sed 's/eski/yeni/g' dosya", "sed -i 'change eski yeni' dosya"], answer: 2 }
+                    { text: "10. 'sed' ile 'eski' kelimelerini 'yeni' ile değiştirmek için doğru komut?", options: ["sed 's/eski/yeni/' dosya", "sed 'r/eski/yeni/g' dosya", "sed 's/eski/yeni/g' dosya", "sed -i 'change eski yeni' dosya"], answer: 2 },
+                    { text: "11. Bir servisin son 100 log satırını canlı izlemek için doğru komut?", options: ["journalctl -u nginx -n 100 -f", "tail -f /var/log/nginx.log", "systemctl log nginx", "service nginx logs"], answer: 0 },
+                    { text: "12. Disk inode kullanımını hızlıca görmek için hangi komut kullanılır?", options: ["df -h", "du -i", "df -i", "ls -li"], answer: 2 }
                 ]
             },
             docker: {
@@ -324,10 +355,14 @@
                     { text: "2. Çalışan konteyner içinde komut çalıştırmak için?", options: ["docker start", "docker exec -it <id>", "docker attach -d", "docker run -d"], answer: 1 },
                     { text: "3. 'COPY' ile 'ADD' arasındaki temel fark nedir?", options: ["COPY sıkıştırılmış arşivi açar, ADD açmaz", "ADD URL ve arşiv açmayı destekler, COPY sadece yerel kopyalar", "COPY remote URL'den alır", "Fark yok"], answer: 1 },
                     { text: "4. Dockerfile'da build cache'i kırmak için hangi komut bloğu iyi bir yere alınmalıdır?", options: ["COPY . .", "RUN apt-get update", "EXPOSE 80", "CMD [\"npm\", \"start\"]"], answer: 1 },
-                    { text: "5. Çok-katmanlı build (multi-stage) amacı nedir?", options: ["Port açmak", "Entry point ayarlamak", "Son imajı küçültmek", "Network köprüsü kurmak"], answer: 2 },
+                    { text: "5. Multi-stage build amacı nedir?", options: ["Port açmak", "Entry point ayarlamak", "Son imajı küçültmek", "Network köprüsü kurmak"], answer: 2 },
                     { text: "6. Bridge network'te konteyner isimleriyle erişmek için ne gerekir?", options: ["--net host", "docker compose kullanmak", "Custom bridge network'te olmak", "Macvlan ayarlamak"], answer: 2 },
                     { text: "7. 'docker system prune' ne yapar?", options: ["Tüm imajları siler", "Kullanılmayan imaj/volume/network/containers'ı temizler", "Sadece logları temizler", "Running konteynerleri durdurur"], answer: 1 },
-                    { text: "8. Registry push öncesi imajı etiketlemek için komut?", options: ["docker label", "docker tag kaynak hedef", "docker push --tag", "docker save --tag"], answer: 1 }
+                    { text: "8. Registry push öncesi imajı etiketlemek için komut?", options: ["docker label", "docker tag kaynak hedef", "docker push --tag", "docker save --tag"], answer: 1 },
+                    { text: "9. Çoklu mimari (multi-arch) imaj oluşturmak için hangi araç kullanılır?", options: ["docker save", "docker buildx", "docker cp", "docker stats"], answer: 1 },
+                    { text: "10. Sadece kullanılmayan konteynerleri temizlemek için?", options: ["docker container prune", "docker image prune", "docker volume prune", "docker system rm"], answer: 0 },
+                    { text: "11. Bir volume'u konteynere salt-okunur takmak için kullanılan ek parametre?", options: [":ro", "--readonly", "--ro-volume", ":ronly"], answer: 0 },
+                    { text: "12. Konteynerin crash sonrası otomatik kalkmasını sağlamak için?", options: ["--restart unless-stopped", "--auto-start", "--resume", "--reboot"], answer: 0 }
                 ]
             },
             git: {
@@ -340,7 +375,11 @@
                     { text: "5. GitHub Actions'da repository secret'ına erişmek için kullanılan söz dizimi?", options: ["${{ env.SECRET }}", "${{ github.SECRET }}", "${{ secrets.SECRET }}", "${{ vars.SECRET }}"], answer: 2 },
                     { text: "6. Git LFS ne için kullanılır?", options: ["Büyük dosyaları pointer ile izlemek", "Logları sıkıştırmak", "SSH anahtarlarını yönetmek", "Branch korumak"], answer: 0 },
                     { text: "7. 'git stash pop' sonrası çatışma olursa ilk yapılacak adım?", options: ["git reset --hard", "Çatışmaları çözüp git add", "Yeni stash oluşturmak", "Rebase yapmak"], answer: 1 },
-                    { text: "8. Pull request'e squash merge yapmanın sonucu?", options: ["Tüm commit'ler korunur", "Tek bir commit'e indirger", "Branch silinir", "Tag oluşur"], answer: 1 }
+                    { text: "8. Pull request'e squash merge yapmanın sonucu?", options: ["Tüm commit'ler korunur", "Tek bir commit'e indirger", "Branch silinir", "Tag oluşur"], answer: 1 },
+                    { text: "9. 'git reflog' neyi gösterir?", options: ["Remote loglarını", "Branch değişim geçmişini (HEAD hareketleri)", "Sadece merge'leri", "Tag listesini"], answer: 1 },
+                    { text: "10. Shallow clone yapmak için kullanılan bayrak?", options: ["--depth", "--shallow", "--thin", "--partial"], answer: 0 },
+                    { text: "11. Sparse checkout etkinleştirmek için ilk adım?", options: ["git sparse-checkout init", "git init sparse", "git checkout sparse", "git fetch --sparse"], answer: 0 },
+                    { text: "12. GitHub Actions'da cache ve artifact arasındaki temel fark nedir?", options: ["Cache kalıcıdır, artifact geçicidir", "Cache build'i hızlandırır, artifact çıktı dosyalarını saklar", "Artifact şifreler, cache şifrelemez", "Fark yok"], answer: 1 }
                 ]
             },
             cicd: {
@@ -353,7 +392,11 @@
                     { text: "5. Ortam bazlı değişkenleri güvenli saklamak için ne kullanılır?", options: ["Hardcode", "Repo içinde .env", "Secret/Variable store", "Dockerfile ARG"], answer: 2 },
                     { text: "6. Blue/Green deployment'ın faydası nedir?", options: ["Tek sunucu kullanmak", "Downtime'sız geçiş ve hızlı geri dönüş", "Daha ucuz lisans", "Logları azaltmak"], answer: 1 },
                     { text: "7. Canary release neyi ifade eder?", options: ["Önce staging'e gitmek", "Trafiğin küçük bir yüzdesine yeni sürümü açmak", "Rollback'i kapatmak", "Yalnızca gece deploy etmek"], answer: 1 },
-                    { text: "8. Pipeline cache'i ne için kullanılır?", options: ["Güvenlik için", "Hızlı test/build için bağımlılıkları saklamak", "Artefact arşivi yapmak", "Logları saklamak"], answer: 1 }
+                    { text: "8. Pipeline cache'i ne için kullanılır?", options: ["Güvenlik için", "Hızlı test/build için bağımlılıkları saklamak", "Artefact arşivi yapmak", "Logları saklamak"], answer: 1 },
+                    { text: "9. Matrix build'in amacı nedir?", options: ["UI testlerini hızlandırmak", "Aynı işi farklı kombinasyonlarda paralel koşturmak (örn: node sürümü/OS)", "Cache'i paylaşmak", "Only PR'larda çalıştırmak"], answer: 1 },
+                    { text: "10. Pipeline'da kalite bariyeri olarak ne kullanılır?", options: ["Manual approval, test/coverage eşikleri", "Sadece log okumak", "Deploy'u kapatmak", "Tag oluşturmak"], answer: 0 },
+                    { text: "11. Artefact ile cache arasındaki en önemli fark?", options: ["Cache boyut sınırı yoktur", "Cache build'i hızlandırır, artefact sonuçları paylaşır", "Artefact şifrelenmez", "Cache kalıcıdır"], answer: 1 },
+                    { text: "12. Test başarısız olursa CD aşamasının davranışı nasıl olmalıdır?", options: ["Devam etmeli", "Prod'a geçmeli", "Durmalı ve raporlamalı", "Sadece log yazmalı"], answer: 2 }
                 ]
             },
             aws: {
@@ -366,7 +409,11 @@
                     { text: "5. Lambda soğuk başlangıcı azaltmak için yöntem?", options: ["Kod büyütmek", "Memory azaltmak", "Provisioned Concurrency", "Timeout'u düşürmek"], answer: 2 },
                     { text: "6. ALB ile hedef grubu sağlıklı tutmak için?", options: ["Security Group'u kapatmak", "Health check ayarlamak", "Route 53 policy eklemek", "ASG'yi silmek"], answer: 1 },
                     { text: "7. S3 ile CloudFront birlikte kullanıldığında origin nasıl korunur?", options: ["Bucket'ı public yapmak", "Origin Access Control/Identity kullanmak", "IAM user açmak", "VPC Endpoint kapatmak"], answer: 1 },
-                    { text: "8. Terraform 'plan' komutu AWS'de ne yapar?", options: ["Kaynakları oluşturur", "Değişiklikleri uygular", "Beklenen değişiklikleri gösterir", "State'i sıfırlar"], answer: 2 }
+                    { text: "8. Terraform 'plan' komutu AWS'de ne yapar?", options: ["Kaynakları oluşturur", "Değişiklikleri uygular", "Beklenen değişiklikleri gösterir", "State'i sıfırlar"], answer: 2 },
+                    { text: "9. RDS Multi-AZ dağıtımı ne sağlar?", options: ["Okuma kopyası", "Yüksek erişilebilirlik için standby replika", "Performans artışı", "Daha ucuz depolama"], answer: 1 },
+                    { text: "10. S3 varsayılan şifreleme için hangisi etkinleştirilebilir?", options: ["SSE-S3 veya SSE-KMS", "Only KMS CMK", "Only client-side", "Şifreleme yok"], answer: 0 },
+                    { text: "11. CloudWatch alarmı bir SNS konusu ile bağlamak ne sağlar?", options: ["Logları taşır", "Alarm tetiklenince bildirim/aksiyon sağlar", "IAM rolü açar", "VPC kurar"], answer: 1 },
+                    { text: "12. Route 53 latency based routing ne yapar?", options: ["Hep aynı IP'ye yönlendirir", "En düşük gecikmeli sağlıklı hedefe yönlendirir", "Sadece yakın coğrafyaya gider", "TTL'yi sıfırlar"], answer: 1 }
                 ]
             },
             kubernetes: {
@@ -379,7 +426,11 @@
                     { text: "5. Horizontal Pod Autoscaler hangi metriğe göre ölçekler?", options: ["Disk I/O", "CPU/Memory gibi resource metrics", "Pod sayısı", "Namespace sayısı"], answer: 1 },
                     { text: "6. Helm chart values override nasıl yapılır?", options: ["Chart'ı edit", "helm template", "helm install -f values.yaml", "kubectl apply chart"], answer: 2 },
                     { text: "7. Pod CrashLoopBackOff durumda ilk bakılacak komut?", options: ["kubectl logs <pod>", "kubectl get svc", "kubectl apply -f pod.yaml", "helm uninstall"], answer: 0 },
-                    { text: "8. PersistentVolumeClaim bağlı bir pod silinirse veri?", options: ["Silinir", "PVC'ye bağlı ise kalır", "Namespace kapanırsa gider", "Etki yok"], answer: 1 }
+                    { text: "8. PersistentVolumeClaim bağlı bir pod silinirse veri?", options: ["Silinir", "PVC'ye bağlı ise kalır", "Namespace kapanırsa gider", "Etki yok"], answer: 1 },
+                    { text: "9. NodePort servislerinin varsayılan port aralığı nedir?", options: ["2000-4000", "30000-32767", "1024-2048", "49152-65535"], answer: 1 },
+                    { text: "10. Readiness probesi neyi kontrol eder?", options: ["Uygulama hayatta mı", "Uygulama trafiği almaya hazır mı", "Node sağlıklı mı", "Volume bağlı mı"], answer: 1 },
+                    { text: "11. PodDisruptionBudget (PDB) amacı nedir?", options: ["RBAC ayarlamak", "Gönüllü kesinti sırasında minimum pod sayısını korumak", "Network politikası yazmak", "Registry seçmek"], answer: 1 },
+                    { text: "12. 'kubectl top' komutunun çalışması için ne gereklidir?", options: ["Ingress", "Metrics Server", "CSI driver", "Flannel"], answer: 1 }
                 ]
             },
             terraform: {
@@ -392,7 +443,11 @@
                     { text: "5. Module versiyonunu kilitlemek için neresi kullanılır?", options: ["outputs.tf", "main.tf içinde source", "versions.tf veya required_version", "terraform.tfstate"], answer: 2 },
                     { text: "6. Değişken gizlemek için hangi özellik kullanılır?", options: ["type = secret", "sensitive = true", "encrypted = true", "hidden = yes"], answer: 1 },
                     { text: "7. Plan-on-PR mantığında apply nerede koşar?", options: ["Fork'ta otomatik", "Prod'da manuel onay sonrası", "Her push'ta", "Sadece local"], answer: 1 },
-                    { text: "8. Workspace'ler hangi durumda faydalıdır?", options: ["Tek ortam", "Çoklu ortam/state ayrımı (dev/stage/prod)", "Provider değiştirmek", "IAM policy yazmak"], answer: 1 }
+                    { text: "8. Workspace'ler hangi durumda faydalıdır?", options: ["Tek ortam", "Çoklu ortam/state ayrımı (dev/stage/prod)", "Provider değiştirmek", "IAM policy yazmak"], answer: 1 },
+                    { text: "9. 'depends_on' ne işe yarar?", options: ["Resource ismini değiştirir", "Açık bağımlılık ekleyerek oluşturma sırasını garantiler", "State'i şifreler", "Planı azaltır"], answer: 1 },
+                    { text: "10. 'lifecycle { prevent_destroy = true }' ne yapar?", options: ["Kaynak oluşturmaz", "Silinmesini engeller, destroy'da hata verir", "Plan'ı hızlandırır", "State'i kilitler"], answer: 1 },
+                    { text: "11. Locking olmadan remote state kullandığınızda risk nedir?", options: ["Plan çalışmaz", "Aynı anda apply ile state bozulabilir", "Provider yüklenmez", "Versiyon kilitlenir"], answer: 1 },
+                    { text: "12. 'terraform fmt' komutunun amacı nedir?", options: ["Plan çalıştırmak", "State'i temizlemek", "Kod stilini standart hale getirmek", "Module indirmek"], answer: 2 }
                 ]
             },
             network: {
@@ -405,7 +460,11 @@
                     { text: "5. TLS el sıkışmasında sertifika neyi doğrular?", options: ["Kullanıcı parolasını", "Sunucunun kimliğini", "IP adresini", "MAC adresini"], answer: 1 },
                     { text: "6. Traceroute hangi bilgiyi verir?", options: ["DNS kayıtlarını", "Paketin geçtiği yönlendiricileri", "Port durumunu", "Subdomain'leri"], answer: 1 },
                     { text: "7. Load balancer health check başarısız olursa ne olur?", options: ["Trafik yine gider", "O hedef havuzdan çıkarılır", "DNS düşer", "Sertifika yenilenir"], answer: 1 },
-                    { text: "8. NAT cihazı hangi katmanda çalışır?", options: ["2", "3", "4", "7"], answer: 1 }
+                    { text: "8. NAT cihazı hangi katmanda çalışır?", options: ["2", "3", "4", "7"], answer: 1 },
+                    { text: "9. MTU kısaltması neyi ifade eder?", options: ["Maximum TCP Usage", "Maximum Transmission Unit", "Min Transmission Unit", "Multi Transfer Unit"], answer: 1 },
+                    { text: "10. BGP hangi port üzerinden çalışır?", options: ["22", "80", "179", "53"], answer: 2 },
+                    { text: "11. Stateless firewall özelliği nedir?", options: ["Session bilgisi tutmaz", "Otomatik cevap verir", "TLS sonlandırır", "WAF görevi yapar"], answer: 0 },
+                    { text: "12. UDP için üçlü el sıkışma (handshake) gerekliliği nasıldır?", options: ["Gereklidir", "TCP ile aynıdır", "Gerekmez, connectionless", "HTTPS ile aynıdır"], answer: 2 }
                 ]
             },
             monitoring: {
@@ -418,7 +477,11 @@
                     { text: "5. Blackbox exporter ne yapar?", options: ["Disk toplar", "Network probe (HTTP/TCP/ICMP) ile dıştan ölçer", "Log parser", "Node metrics"], answer: 1 },
                     { text: "6. Loki'nin temel farkı?", options: ["Full-text index", "Prometheus label modeliyle log indeksleme", "Alertmanager yerine geçer", "Tracing yapar"], answer: 1 },
                     { text: "7. SLI/SLO kavramında SLO nedir?", options: ["Ölçülen metrik", "Hedeflenen güvenilirlik seviyesi", "Alarm eşiği", "Runbook"], answer: 1 },
-                    { text: "8. K8s node exporter pod'u hangi metrikleri toplar?", options: ["Uygulama logları", "OS düzeyi CPU/Memory/Disk/Network", "Ingress logları", "Kube audit"], answer: 1 }
+                    { text: "8. K8s node exporter pod'u hangi metrikleri toplar?", options: ["Uygulama logları", "OS düzeyi CPU/Memory/Disk/Network", "Ingress logları", "Kube audit"], answer: 1 },
+                    { text: "9. Prometheus retention süresi hangi parametreyle ayarlanır?", options: ["--storage.tsdb.retention.time", "--retention", "--keep-metrics", "--store-duration"], answer: 0 },
+                    { text: "10. Alertmanager'da grouping ne işe yarar?", options: ["Alertleri tek tek göndermek", "Benzer alertleri tek bildirime toplamak", "Alertleri silmek", "Sadece e-mail atmak"], answer: 1 },
+                    { text: "11. Synthetic monitoring neyi ölçer?", options: ["Gerçek kullanıcı trafiğini", "Senaryo tabanlı yapay isteklerle dıştan erişilebilirliği", "Log boyutunu", "Packet loss'u"], answer: 1 },
+                    { text: "12. Dağıtık tracing için kullanılan yaygın araçlardan biri?", options: ["Fluentd", "Jaeger/Tempo", "Telegraf", "Filebeat"], answer: 1 }
                 ]
             },
             ansible: {
@@ -431,7 +494,11 @@
                     { text: "5. Ansible Galaxy'nin amacı?", options: ["CI/CD yönetmek", "Hazır rol paylaşımı", "Monitoring yapmak", "Container çalıştırmak"], answer: 1 },
                     { text: "6. Playbook'ta duyarlı veriyi saklamak için?", options: ["vars.yml", "vault kullanmak", "plaintext", "template'te yazmak"], answer: 1 },
                     { text: "7. 'delegate_to: localhost' ne yapar?", options: ["Play'i durdurur", "Görevi kontrol makinesinde çalıştırır", "SSH tüneli açar", "Rolleri skip eder"], answer: 1 },
-                    { text: "8. Rolling update (serial) nasıl tanımlanır?", options: ["serial: 1", "gather_facts: false", "strategy: debug", "order: sorted"], answer: 0 }
+                    { text: "8. Rolling update (serial) nasıl tanımlanır?", options: ["serial: 1", "gather_facts: false", "strategy: debug", "order: sorted"], answer: 0 },
+                    { text: "9. 'check mode' (dry-run) nasıl etkinleştirilir?", options: ["--simulate", "--dry", "-C veya --check", "-n"], answer: 2 },
+                    { text: "10. 'gather_facts: false' ne yapar?", options: ["Facts toplamayı kapatır, play'i hızlandırır", "Play'i iptal eder", "SSH'i kapatır", "Vars'ı siler"], answer: 0 },
+                    { text: "11. Handler'lar ne zaman çalışır?", options: ["Her task sonrası", "Notify edildiğinde ve play sonunda", "Play başında", "Sadece failure'da"], answer: 1 },
+                    { text: "12. Bir modülü ayrı user ile çalıştırmak için hangi alan kullanılır?", options: ["user:", "remote_user:", "become_method:", "delegate_to:"], answer: 1 }
                 ]
             },
             cloudflare: {
@@ -444,7 +511,11 @@
                     { text: "5. Argo Smart Routing'in faydası?", options: ["DNSSEC ekler", "Latency'yi azaltmak için optimize rotalar", "HTTP2 kapatır", "WAF bypass"], answer: 1 },
                     { text: "6. Workers nerede çalışır?", options: ["Origin server", "Kullanıcı tarayıcı", "Cloudflare edge üzerinde", "S3 üzerinde"], answer: 2 },
                     { text: "7. SSL/TLS Full (Strict) modunda beklenen gereksinim?", options: ["Origin'de geçerli sertifika", "Self-signed yeterli", "HTTPS kapalı", "HSTS kapalı"], answer: 0 },
-                    { text: "8. DNS load balancing için hangi servis kullanılır?", options: ["Workers KV", "Spectrum", "Load Balancer + Health Checks", "Magic Transit"], answer: 2 }
+                    { text: "8. DNS load balancing için hangi servis kullanılır?", options: ["Workers KV", "Spectrum", "Load Balancer + Health Checks", "Magic Transit"], answer: 2 },
+                    { text: "9. DNSSEC'in amacı nedir?", options: ["Daha hızlı çözümleme", "DNS yanıtlarının bütünlüğünü imzalar ve sahteciliği önler", "Cache'i büyütmek", "WAF'ı açmak"], answer: 1 },
+                    { text: "10. Rate Limiting kuralı ne sağlar?", options: ["Sadece cache temizliği", "IP başına istek sınırı koyup kötüye kullanımı engeller", "DNS TTL ayarı", "SSL yenileme"], answer: 1 },
+                    { text: "11. Automatic Platform Optimization (APO) özellikle hangi platform için optimize edilmiştir?", options: ["Drupal", "WordPress", "Magento", "Joomla"], answer: 1 },
+                    { text: "12. Page Rules ile yapılabileceklerden biri?", options: ["CPU artırmak", "URL bazlı cache/redirect/SSL ayarları yapmak", "Origin diskini büyütmek", "BGP anonsu yapmak"], answer: 1 }
                 ]
             }
         };
@@ -455,7 +526,6 @@
         let isAnswered = false;
         let activeQuizKey = "linux";
 
-        // DOM Elements
         const questionText = document.getElementById('question-text');
         const optionsList = document.getElementById('options-list');
         const currentQSpan = document.getElementById('current-q');
@@ -468,9 +538,14 @@
         const resultScreen = document.getElementById('result-screen');
         const quizSelect = document.getElementById('quiz-select');
         const quizTitle = document.getElementById('quiz-title');
+        const scoreBrief = document.getElementById('score-brief');
+        const restartBtn = document.getElementById('restart-btn');
+        const retryBtn = document.getElementById('retry-btn');
 
         function initQuiz() {
             quizSelect.addEventListener('change', () => setQuiz(quizSelect.value));
+            restartBtn.addEventListener('click', () => setQuiz(activeQuizKey));
+            retryBtn.addEventListener('click', () => setQuiz(activeQuizKey));
             setQuiz(activeQuizKey);
         }
 
@@ -482,7 +557,8 @@
             totalQSpan.textContent = questions.length;
             currentQuestion = 0;
             score = 0;
-            quizHeader.style.display = 'flex';
+            scoreBrief.textContent = "0";
+            quizHeader.style.display = 'grid';
             quizBody.style.display = 'block';
             quizFooter.style.display = 'flex';
             resultScreen.style.display = 'none';
@@ -494,17 +570,14 @@
             nextBtn.disabled = true;
             nextBtn.textContent = index === questions.length - 1 ? "Testi Bitir" : "Sonraki Soru";
 
-            // Update Header
             currentQSpan.textContent = index + 1;
             const progress = ((index) / questions.length) * 100;
             progressBar.style.width = `${progress}%`;
 
-            // Animation
             quizBody.classList.remove('fade-in');
-            void quizBody.offsetWidth; // Trigger reflow
+            void quizBody.offsetWidth;
             quizBody.classList.add('fade-in');
 
-            // Load Content
             const q = questions[index];
             questionText.textContent = q.text;
             optionsList.innerHTML = '';
@@ -529,18 +602,15 @@
                 selectedOption.classList.add('correct');
                 selectedOption.innerHTML += ' ✅';
                 score++;
+                scoreBrief.textContent = `${score} / ${questions.length}`;
             } else {
                 selectedOption.classList.add('wrong');
                 selectedOption.innerHTML += ' ❌';
-                // Show correct one
                 options[correctIndex].classList.add('correct');
                 options[correctIndex].innerHTML += ' ✅';
             }
 
-            // Disable all
             options.forEach(opt => opt.classList.add('disabled'));
-
-            // Enable Next Button
             nextBtn.disabled = false;
         }
 
@@ -565,25 +635,21 @@
             const message = document.getElementById('result-message');
             const subtext = document.querySelector('.result-subtext');
 
-            // Animate Score
             let currentScore = 0;
             const interval = setInterval(() => {
                 if (currentScore >= percentage) clearInterval(interval);
                 else currentScore++;
                 scoreText.textContent = `${currentScore}%`;
                 scoreCircle.style.background = `conic-gradient(var(--primary) ${currentScore * 3.6}deg, #dfe6e9 0deg)`;
-            }, 20);
+            }, 16);
 
-            // Message
             if (percentage >= 80) message.textContent = "Mükemmel! 🎉";
             else if (percentage >= 60) message.textContent = "Gayet İyi! 👏";
             else message.textContent = "Tekrar Dene! 📚";
-            subtext.textContent = `${quizBank[activeQuizKey].title} tamamlandı. Skorunuz: ${percentage}%`;
+            subtext.textContent = `${quizBank[activeQuizKey].title} tamamlandı. Skorunuz: ${score}/${questions.length} (${percentage}%)`;
         }
 
-        // Start
         initQuiz();
-
     </script>
 </body>
 
