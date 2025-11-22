@@ -34,6 +34,7 @@
   * [Advanced](03-Git-Github/04-Advanced.md)
   * [GHCR & Actions](03-Git-Github/05-GHCR-Actions.md)
   * [Team Workflow (PR)](03-Git-Github/06-Team-Workflow.md)
+  * [Verified Commits](03-Git-Github/07-Verified-Commits.md)
 * 04-CICD
   * [Introduction](04-CICD/01-Introduction.md)
   * [Workflow Syntax](04-CICD/02-Workflow-Syntax.md)
