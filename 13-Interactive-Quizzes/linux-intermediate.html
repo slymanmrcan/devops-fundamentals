@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Orta Seviye Quiz</title>
+    <style>
+        :root {
+            --bg: #2d3436;
+            --surface: #1e272e;
+            --panel: #222b32;
+            --primary: #74b9ff;
+            --text: #dfe6e9;
+            --muted: #b2bec3;
+            --success: #00b894;
+            --error: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 28px 18px;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 960px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid #2f3840;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+        }
+
+        .header {
+            padding: 18px 22px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center;
+            background: #1b2229;
+            border-bottom: 1px solid #2f3840;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .pill {
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #2a333b;
+            border: 1px solid #2f3840;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .body {
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+            background: var(--panel);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #131a20;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2f3840;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #9ad1ff);
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .options {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 13px 14px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            background: #1f272e;
+            cursor: pointer;
+            transition: transform 0.12s, border-color 0.12s, background 0.12s;
+        }
+
+        .option:hover:not(.disabled) {
+            transform: translateY(-1px);
+            border-color: var(--primary);
+            background: #253038;
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(0, 184, 148, 0.12);
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .option.wrong {
+            border-color: var(--error);
+            background: rgba(255, 107, 107, 0.12);
+            color: var(--error);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 22px 20px;
+            background: #1b2229;
+            border-top: 1px solid #2f3840;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 11px 22px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(120deg, #6fc0ff, var(--primary));
+            color: #0f151c;
+            transition: transform 0.12s, box-shadow 0.12s;
+            box-shadow: 0 12px 30px rgba(116, 185, 255, 0.25);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 30px 22px;
+            background: var(--panel);
+        }
+
+        .score {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .result h2 {
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .result p {
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+        <div class="panel">
+            <div class="header">
+                <div>
+                    <div class="title">Linux Orta Seviye Quiz</div>
+                    <div class="subtitle">20 soru • servis yönetimi, ağ ve metin araçları</div>
+                </div>
+                <div class="pill">Soru <span id="current">1</span> / <span id="total">20</span></div>
+            </div>
+
+            <div class="body" id="quiz-body">
+                <div class="progress-track">
+                    <div class="progress-bar" id="progress"></div>
+                </div>
+                <div class="question" id="question">Yükleniyor...</div>
+                <ul class="options" id="options"></ul>
+            </div>
+
+            <div class="result" id="result">
+                <div class="score" id="score">0%</div>
+                <h2 id="result-title">Tebrikler!</h2>
+                <p id="result-detail">Sonucu görmek için test bitir.</p>
+                <button class="btn" onclick="location.reload()">Baştan Başla</button>
+            </div>
+
+            <div class="footer">
+                <div class="meta" id="meta">Her soru 1 puan - tek seçim</div>
+                <button class="btn" id="next" disabled>Sonraki Soru</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "systemctl status nginx çıktısında hangi bilgi yer alır?", opts: ["Sadece versiyon", "Servis durumu/log özetini", "Port listesi", "Kernel logları"], a: 1 },
+            { q: "Bir servisi açılışta başlatmak için doğru komut?", opts: ["systemctl start", "systemctl enable", "service reload", "systemctl run"], a: 1 },
+            { q: "Belirli bir servisin loglarını görmek için doğru komut?", opts: ["journalctl -u servis", "logcat servis", "tail /var/log/syslog sadece", "service logs"], a: 0 },
+            { q: "Netstat alternatiflerinden listening portları görmek için?", opts: ["netstat -l", "ss -tulpn", "ps -aux", "lsof -i :80"], a: 1 },
+            { q: "SSH anahtarının varsayılan yolu nedir?", opts: ["~/.ssh/id_rsa", "/etc/ssh/ssh_host_key", "/var/ssh/key", "~/.ssh/id_ecdsa.pub"], a: 0 },
+            { q: "Uzak sunucuya dosya kopyalamak için doğru scp sözdizimi?", opts: ["scp user@host /dosya", "scp dosya user@host:/hedef", "scp host:dosya user", "scp copy remote"], a: 1 },
+            { q: "crontab -l ne yapar?", opts: ["Cron servisini başlatır", "Sistem cronlarını resetler", "Geçerli kullanıcının cron görevlerini listeler", "Root cronunu yazar"], a: 2 },
+            { q: "Sed ile satır içinde 'eski'yi 'yeni' ile değiştirmek için?", opts: ["sed replace eski yeni", "sed 's/eski/yeni/' dosya", "sed -c eski yeni dosya", "sed -g eski yeni dosya"], a: 1 },
+            { q: "Awk ile her satırın ilk kolonu nasıl yazdırılır?", opts: ["awk '{print $0}'", "awk '{print $1}'", "awk print1", "awk -c1"], a: 1 },
+            { q: "find . -mtime -1 komutu neyi listeler?", opts: ["Son 1 gün değiştirilmiş dosyaları", "1 MB altı dosyaları", "Son 1 dakika dosyaları", "1 gün önceki dosyaları siler"], a: 0 },
+            { q: "xargs komutunun temel amacı?", opts: ["Dosya sistemi formatlamak", "Verilen girdiden komut argümanı üretmek/çalıştırmak", "Log sıkıştırmak", "Port yönlendirmek"], a: 1 },
+            { q: "Bir shell değişkenini alt süreçlere aktarmak için?", opts: ["var=1", "set var=1", "export var=1", "declare var=1"], a: 2 },
+            { q: "Alias'ı kalıcı yapmak için nereye yazılır?", opts: ["Geçici terminale", "/etc/hosts", "~/.bashrc veya shell config", "/var/log"], a: 2 },
+            { q: "Bir sürecin en yüksek CPU kullanımıyla listesini görmek için pratik komut?", opts: ["ps aux --sort=-%cpu | head", "ps -cpu top", "lsproc", "watch ps"], a: 0 },
+            { q: "Bir log dosyasının son 100 satırını görmek için?", opts: ["tail dosya", "tail -n 100 dosya", "head -n 100 dosya", "log -100"], a: 1 },
+            { q: "SSH ile 2222 portuna bağlanmak için?", opts: ["ssh user@host 2222", "ssh -p 2222 user@host", "ssh user@host -port 2222", "ssh -P user 2222"], a: 1 },
+            { q: "whois komutu ne işe yarar?", opts: ["TCP port test", "DNS cache temizleme", "Alan adı kayıt bilgilerini getirir", "ARP tablo gösterir"], a: 2 },
+            { q: "Bir log dosyasındaki hata kelimelerini saymak için pratik komut?", opts: ["grep hata log | wc -l", "wc -c hata log", "count hata log", "grep -n log"], a: 0 },
+            { q: "Bir kullanıcıyı sudosu olacak şekilde eklemek için hangi grup?", opts: ["wheel/sudo grubuna eklemek", "docker grubuna eklemek", "adm grubuna eklemek", "tty grubuna eklemek"], a: 0 },
+            { q: "Hosta statik bir DNS kaydı eklemek için hangi dosya kullanılır?", opts: ["/etc/resolve.conf", "/etc/resolv.conf", "/etc/dns", "/etc/hosts.conf"], a: 1 }
+        ];
+
+        let index = 0;
+        let score = 0;
+        const totalEl = document.getElementById("total");
+        const currentEl = document.getElementById("current");
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const nextBtn = document.getElementById("next");
+        const progressEl = document.getElementById("progress");
+        const resultEl = document.getElementById("result");
+        const bodyEl = document.getElementById("quiz-body");
+        const scoreEl = document.getElementById("score");
+        const resultTitle = document.getElementById("result-title");
+        const resultDetail = document.getElementById("result-detail");
+
+        totalEl.textContent = questions.length;
+
+        function renderQuestion() {
+            const current = questions[index];
+            questionEl.textContent = `${index + 1}. ${current.q}`;
+            currentEl.textContent = index + 1;
+            progressEl.style.width = `${(index / questions.length) * 100}%`;
+            nextBtn.disabled = true;
+            optionsEl.innerHTML = "";
+            current.opts.forEach((opt, i) => {
+                const li = document.createElement("li");
+                li.className = "option";
+                li.textContent = opt;
+                li.onclick = () => checkAnswer(li, i, current.a);
+                optionsEl.appendChild(li);
+            });
+        }
+
+        function checkAnswer(el, chosen, answer) {
+            const opts = optionsEl.querySelectorAll(".option");
+            opts.forEach(o => o.classList.add("disabled"));
+            if (chosen === answer) {
+                el.classList.add("correct");
+                score++;
+            } else {
+                el.classList.add("wrong");
+                opts[answer].classList.add("correct");
+            }
+            nextBtn.disabled = false;
+        }
+
+        nextBtn.addEventListener("click", () => {
+            index++;
+            if (index < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        });
+
+        function showResult() {
+            bodyEl.style.display = "none";
+            nextBtn.style.display = "none";
+            resultEl.style.display = "block";
+            progressEl.style.width = "100%";
+            const pct = Math.round((score / questions.length) * 100);
+            scoreEl.textContent = `${pct}%`;
+            if (pct >= 85) {
+                resultTitle.textContent = "Harika! 🚀";
+                resultDetail.textContent = "Linux orta seviye konularına hakimsin.";
+            } else if (pct >= 65) {
+                resultTitle.textContent = "İyi iş! 👏";
+                resultDetail.textContent = "Biraz daha pratikle kolayca yükselir.";
+            } else {
+                resultTitle.textContent = "Tekrar dene! 📚";
+                resultDetail.textContent = "Servis, ağ ve metin araçlarını gözden geçir.";
+            }
+        }
+
+        renderQuestion();
+    </script>
+</body>
+
+</html>
