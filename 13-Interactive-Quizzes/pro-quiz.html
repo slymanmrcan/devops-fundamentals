@@ -7,15 +7,14 @@
     <title>DevOps Pro Seviye Quiz</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --panel: #0b1220;
-            --card: #111a2d;
-            --primary: #38bdf8;
-            --accent: #a855f7;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --success: #22c55e;
-            --error: #ef4444;
+            --bg: #2d3436;
+            --surface: #1e272e;
+            --panel: #222b32;
+            --primary: #74b9ff;
+            --text: #dfe6e9;
+            --muted: #b2bec3;
+            --success: #00b894;
+            --error: #ff6b6b;
         }
 
         * {
@@ -27,14 +26,12 @@
 
         body {
             min-height: 100vh;
-            background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.18), transparent 30%),
-                radial-gradient(circle at 80% 0%, rgba(168, 85, 247, 0.22), transparent 35%),
-                linear-gradient(145deg, #0b1220, #0f172a 55%, #0b1220);
+            background: var(--bg);
             color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 24px;
+            padding: 32px 18px;
         }
 
         .shell {
@@ -43,27 +40,27 @@
         }
 
         .panel {
-            background: var(--panel);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--surface);
+            border: 1px solid #2f3840;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
         }
 
         .header {
-            padding: 20px 24px;
+            padding: 18px 22px;
             display: grid;
-            gap: 8px;
             grid-template-columns: 1fr auto;
+            gap: 8px;
             align-items: center;
-            background: linear-gradient(120deg, rgba(56, 189, 248, 0.15), rgba(168, 85, 247, 0.15));
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: #1b2229;
+            border-bottom: 1px solid #2f3840;
         }
 
         .title {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
         }
 
         .subtitle {
@@ -74,33 +71,34 @@
         .pill {
             padding: 8px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #2a333b;
+            border: 1px solid #2f3840;
             font-weight: 700;
             font-size: 0.9rem;
+            color: var(--text);
         }
 
         .body {
-            padding: 26px;
+            padding: 22px;
             display: grid;
-            gap: 18px;
-            background: var(--card);
+            gap: 16px;
+            background: var(--panel);
         }
 
         .progress-track {
             width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.06);
+            height: 8px;
+            background: #131a20;
             border-radius: 10px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid #2f3840;
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            transition: width 0.35s ease;
+            background: linear-gradient(90deg, var(--primary), #9ad1ff);
+            transition: width 0.3s ease;
         }
 
         .question {
@@ -116,46 +114,45 @@
         }
 
         .option {
-            padding: 14px 16px;
+            padding: 13px 14px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid #2f3840;
+            background: #1f272e;
             cursor: pointer;
-            transition: transform 0.15s, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+            transition: transform 0.12s, border-color 0.12s, background 0.12s;
         }
 
         .option:hover:not(.disabled) {
             transform: translateY(-1px);
             border-color: var(--primary);
-            background: rgba(56, 189, 248, 0.06);
-            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.12);
+            background: #253038;
         }
 
         .option.correct {
             border-color: var(--success);
-            background: rgba(34, 197, 94, 0.12);
+            background: rgba(0, 184, 148, 0.12);
             color: var(--success);
             font-weight: 700;
         }
 
         .option.wrong {
             border-color: var(--error);
-            background: rgba(239, 68, 68, 0.12);
+            background: rgba(255, 107, 107, 0.12);
             color: var(--error);
         }
 
         .option.disabled {
             pointer-events: none;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 26px 24px;
-            background: var(--panel);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px 22px 20px;
+            background: #1b2229;
+            border-top: 1px solid #2f3840;
         }
 
         .meta {
@@ -164,20 +161,19 @@
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 11px 22px;
             border-radius: 12px;
-            border: none;
+            border: 1px solid #2f3840;
             font-weight: 800;
-            letter-spacing: 0.3px;
             cursor: pointer;
-            background: linear-gradient(120deg, var(--primary), var(--accent));
-            color: #0b1220;
-            box-shadow: 0 12px 35px rgba(56, 189, 248, 0.25);
-            transition: transform 0.15s, box-shadow 0.15s;
+            background: linear-gradient(120deg, #6fc0ff, var(--primary));
+            color: #0f151c;
+            transition: transform 0.12s, box-shadow 0.12s;
+            box-shadow: 0 12px 30px rgba(116, 185, 255, 0.25);
         }
 
         .btn:disabled {
-            opacity: 0.6;
+            opacity: 0.65;
             cursor: not-allowed;
             box-shadow: none;
             transform: none;
@@ -185,24 +181,24 @@
 
         .btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 16px 40px rgba(168, 85, 247, 0.28);
         }
 
         .result {
             display: none;
             text-align: center;
-            padding: 32px 26px;
+            padding: 30px 22px;
+            background: var(--panel);
         }
 
         .score {
-            font-size: 3rem;
+            font-size: 2.6rem;
             font-weight: 900;
             color: var(--primary);
         }
 
         .result h2 {
-            margin-top: 10px;
-            margin-bottom: 8px;
+            margin-top: 8px;
+            margin-bottom: 6px;
         }
 
         .result p {

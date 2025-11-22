@@ -85,6 +85,7 @@
   * [Practice Questions](12-Certifications/01-Practice-Questions.md)
 * 13-Interactive-Quizzes
    * [Interactive Quizzes](13-Interactive-Quizzes/README.md)
+   * [Pro Seviye Quiz (DevOps)](13-Interactive-Quizzes/pro-quiz.html)
 * 14-Cloudflare
   * [Fundamentals](14-Cloudflare/01-Fundamentals.md)
   * [DNS & SSL](14-Cloudflare/02-DNS-SSL.md)
