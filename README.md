@@ -1,5 +1,5 @@
 # 🚀 Open Türkçe DevOps Roadmap
-
+çalışan hali : https://slymanmrcan.github.io/devops-fundamentals/
 Hoş geldiniz! Bu proje, **DevOps** dünyasına adım atmak veya mevcut bilgilerini derinleştirmek isteyenler için hazırlanmış, tamamen Türkçe ve açık kaynaklı bir **Öğrenme Yol Haritasıdır (Roadmap)**.
 
 Amacımız, karmaşık teknik konuları basitleştirerek, pratik örneklerle ve modern araçlarla donatılmış bir kaynak oluşturmaktır.
