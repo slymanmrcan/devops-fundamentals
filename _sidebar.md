@@ -107,6 +107,7 @@
    * <a href="13-Interactive-Quizzes/git-basic.html" target="_blank" rel="noopener" data-no-router>Git Temel Seviye (yeni sekme)</a>
    * <a href="13-Interactive-Quizzes/git-intermediate.html" target="_blank" rel="noopener" data-no-router>Git Orta Seviye (yeni sekme)</a>
    * <a href="13-Interactive-Quizzes/git-advanced.html" target="_blank" rel="noopener" data-no-router>Git İleri Seviye (yeni sekme)</a>
+   * <a href="13-Interactive-Quizzes/linux-50.html" target="_blank" rel="noopener" data-no-router>Linux 50 Soru (yeni sekme)</a>
 * 14-Cloudflare
   * [Fundamentals](14-Cloudflare/01-Fundamentals.md)
   * [DNS & SSL](14-Cloudflare/02-DNS-SSL.md)
