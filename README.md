@@ -1,5 +1,6 @@
 # 🚀 Open Türkçe DevOps Roadmap
-çalışan hali : https://slymanmrcan.github.io/devops-fundamentals/
+
+> Canlı demo: **https://slymanmrcan.github.io/devops-fundamentals/**
 Hoş geldiniz! Bu proje, **DevOps** dünyasına adım atmak veya mevcut bilgilerini derinleştirmek isteyenler için hazırlanmış, tamamen Türkçe ve açık kaynaklı bir **Öğrenme Yol Haritasıdır (Roadmap)**.
 
 Amacımız, karmaşık teknik konuları basitleştirerek, pratik örneklerle ve modern araçlarla donatılmış bir kaynak oluşturmaktır.
@@ -28,30 +29,59 @@ Versiyon kontrolü ve işbirliği.
 - **Advanced**: Rebase, cherry-pick, stash.
 - **CI/CD**: GHCR ve GitHub Actions ile otomasyon.
 
+### ⚙️ 04. CI/CD
+Sürekli entegrasyon ve teslimat.
+- Workflow söz dizimi, ortam değişkenleri, gerçek dünya örnekleri.
+- Güvenlik ve kalite taramaları, gizli anahtar yönetimi.
+
 ### ☁️ 05. AWS (Amazon Web Services)
 Bulut bilişim temelleri.
 - **EC2**: Sanal sunucular.
 - **S3**: Depolama çözümleri.
 - **IAM**: Kimlik ve erişim yönetimi.
 - **VPC**: Sanal ağ yapılandırması.
+- **Lambda**: Sunucusuz fonksiyonlar.
 
 ### ☸️ 06. Kubernetes
 Konteyner orkestrasyonu.
 - Deployment stratejileri, pod yönetimi ve ölçekleme.
+- Servisler, ağ, ConfigMap/Secret yönetimi, Helm.
 
 ### 🏗️ 07. Terraform
 Infrastructure as Code (IaC).
-- Altyapının kod ile yönetilmesi ve otomasyonu.
+- Proje yapısı, state yönetimi, modüller.
+- AWS ve GitHub yönetimi, ileri seviye akışlar, Cloudflare R2.
 
 ### 🌐 08. Network
 Ağ temelleri ve güvenliği.
 - OSI Modeli, TCP/IP, DNS, HTTP/HTTPS.
 - Subnetting, Load Balancing, Firewallar.
-- Sorun giderme araçları.
+- Sorun giderme araçları, protokoller.
+
+### 📈 09. Monitoring
+Gözlemlenebilirlik temelleri.
+- Prometheus, Grafana, metrik/alerting.
+
+### 🤖 10. Ansible
+Yapılandırma yönetimi.
+- Envanter, playbook temelleri.
+
+### 🧭 11. Cloud Sözlüğü
+Kavram ve servis eşleştirmeleri.
+- AWS/Azure/GCP/OCI servis haritası.
+- Compute, storage, database, network kavramları.
+
+### 🎯 12. Sertifikasyonlar
+Pratik sınav soruları.
+- AWS, Linux, Kubernetes, Terraform, Monitoring, CI/CD & GitOps.
 
 ### 🧪 13. Interactive Quizzes
 Tüm başlıklar için çoktan seçmeli testler.
 - Tarayıcıdan çöz: [all-topics.html](13-Interactive-Quizzes/all-topics.html)
+
+### ☁️ 14. Cloudflare
+Cloudflare servisleri.
+- DNS & SSL, güvenlik/WAF, performans & caching, Workers & Pages, Zero Trust & Tunnels.
 
 ---
 
