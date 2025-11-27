@@ -69,6 +69,7 @@
   * [Firewalls Security](08-Network/05-Firewalls-Security.md)
   * [Troubleshooting Tools](08-Network/06-Troubleshooting-Tools.md)
   * [Network Protocols](08-Network/07-Network-Protocols.md)
+  * [Advanced Concepts](08-Network/08-Advanced-Concepts.md)
 * 09-Monitoring
   * [Introduction](09-Monitoring/01-Introduction.md)
   * [Prometheus](09-Monitoring/02-Prometheus.md)
