@@ -1,17 +1,19 @@
 # Docker: Kapsamlı Mimari, Mühendislik ve Çalışma Prensipleri
-**Döküman Tipi:** Derinlemesine Teknik Analiz | **Seviye:** İleri
+
+> [!NOTE]
+> **Döküman Tipi:** Derinlemesine Teknik Analiz | **Seviye:** İleri
 
 ---
 
 ## İçindekiler
-1.  [Docker Felsefesi: Değişmez Altyapı (Immutable Infrastructure)](#1-docker-felsefesi-değişmez-altyapı-immutable-infrastructure)
+1.  [Docker Felsefesi: Değişmez Altyapı](#1-docker-felsefesi-değişmez-altyapı-immutable-infrastructure)
 2.  [Docker Mimarisi: Derinlemesine Bakış](#2-docker-mimarisi-derinlemesine-bakış)
-3.  [Linux Kernel Teknolojileri (Namespace & Cgroups)](#3-linux-kernel-teknolojileri-namespace--cgroups)
-4.  [Dosya Sistemi Mimarisi: UnionFS ve Katmanlar](#4-dosya-sistemi-mimarisi-unionfs-ve-katmanlar)
-5.  [Container Network Model (CNM)](#5-container-network-model-cnm)
-6.  [Docker'ın Farklı İşletim Sistemlerinde Çalışma Mekanizması](#6-dockerın-farklı-işletim-sistemlerinde-çalışma-mekanizması)
-7.  [Container Yaşam Döngüsü (Lifecycle)](#7-container-yaşam-döngüsü-lifecycle)
-8.  [OCI Standartları ve Runtime Ekosistemi](#8-oci-standartları-ve-runtime-ekosistemi)
+3.  [Linux Kernel Teknolojileri](#3-linux-kernel-teknolojileri-namespace--cgroups)
+4.  [Dosya Sistemi Mimarisi](#4-dosya-sistemi-mimarisi-unionfs-ve-katmanlar)
+5.  [Container Network Model](#5-container-network-model-cnm)
+6.  [İşletim Sistemleri Uyumu](#6-dockerın-farklı-işletim-sistemlerinde-çalışma-mekanizması)
+7.  [Container Yaşam Döngüsü](#7-container-yaşam-döngüsü-lifecycle)
+8.  [OCI Standartları](#8-oci-standartları-ve-runtime-ekosistemi)
 9.  [Güvenlik Mimarisi](#9-güvenlik-mimarisi)
 
 ---
@@ -21,8 +23,14 @@
 Docker sadece bir araç değil, yazılım dağıtımında bir paradigma değişimidir. Geleneksel "Pet vs Cattle" (Evcil Hayvan vs Sürü) analojisini hayata geçirir.
 
 ### 1.1 Mutable vs Immutable
-*   **Geleneksel (Mutable):** Sunucu kurulur, üzerine uygulama atılır. Güncelleme geldiğinde sunucuya bağlanılır, yamalar yapılır, kütüphaneler güncellenir. Bu zamanla sunucuda "Configuration Drift" (Yapılandırma Kayması) yaratır. Sunucu bozulursa tamiri zordur (Evcil Hayvan yaklaşımı).
-*   **Docker (Immutable):** Sunucu veya container asla güncellenmez/yama yapılmaz. Yeni versiyon mu geldi? Eskisi çöpe atılır, yenisi sıfırdan oluşturulur. Bu, her dağıtımın %100 temiz ve tahmin edilebilir olmasını sağlar (Sürü yaklaşımı).
+
+> [!WARNING]
+> **Geleneksel (Mutable - Pet)**
+> Sunucu kurulur, üzerine uygulama atılır. Güncelleme geldiğinde sunucuya bağlanılır, yamalar yapılır, kütüphaneler güncellenir. Bu zamanla sunucuda "Configuration Drift" (Yapılandırma Kayması) yaratır. Sunucu bozulursa tamiri zordur.
+
+> [!TIP]
+> **Docker (Immutable - Cattle)**
+> Sunucu veya container asla güncellenmez/yama yapılmaz. Yeni versiyon mu geldi? Eskisi çöpe atılır, yenisi sıfırdan oluşturulur. Bu, her dağıtımın %100 temiz ve tahmin edilebilir olmasını sağlar.
 
 ### 1.2 "Matrix of Hell" Sorunu
 Geliştirme, Test ve Prod ortamlarında; OS versiyonu, Python versiyonu, kütüphane patch seviyelerinin uyuşmazlığı kriz yaratır. Docker, uygulamayı **Runtime Environment** (Çalışma Ortamı) ile birlikte paketleyerek bu matrisi yok eder.
@@ -34,6 +42,16 @@ Geliştirme, Test ve Prod ortamlarında; OS versiyonu, Python versiyonu, kütüp
 Docker, modüler bir **Client-Server** mimarisine sahiptir. Bir komut yazdığınızda arka planda şu akış gerçekleşir:
 
 ### 2.1 Bileşenler ve Akış
+
+```mermaid
+graph LR
+    Client[Docker Client CLI] -->|REST API| Daemon[Docker Daemon]
+    Daemon -->|gRPC| Containerd
+    Containerd -->|Manage| Shim[Containerd-Shim]
+    Shim -->|Spawn| Runc
+    Runc -->|Create| Kernel
+```
+
 1.  **Docker Client (CLI):** Kullanıcının yazdığı `docker run` komutunu REST API isteğine çevirir.
 2.  **Docker Socket (`/var/run/docker.sock`):** Client ile Daemon arasındaki iletişim kanalıdır.
 3.  **Docker Daemon (`dockerd`):** API isteklerini karşılayan, yüksek seviyeli yöneticidir. Ancak container'ı kendisi başlatmaz. İşi `containerd`'ye devreder.
@@ -51,12 +69,15 @@ Docker bir sanallaştırma (virtualization) değil, bir **izolasyon** teknolojis
 
 ### 3.1 Namespaces (Görünürlük İzolasyonu)
 Container'ın "Ben tek başınayım" sanmasını sağlayan duvarlardır. 6 temel namespace vardır:
-1.  **PID Namespace:** Container içindeki process ID'leri izole eder. Host'ta PID 4500 olan bir işlem, container içinde PID 1 olarak görünür.
-2.  **NET Namespace:** Container'a özel sanal ağ arayüzü (eth0), IP adresi ve routing tablosu sağlar.
-3.  **MNT Namespace:** Container'a özel dosya sistemi bağlama noktaları sağlar. Host'un `/tmp` klasörü ile container'ın `/tmp` klasörü bağımsızdır.
-4.  **UTS Namespace:** Hostname ve domain name izolasyonu sağlar.
-5.  **IPC Namespace:** İşlemler arası iletişimi (Shared Memory) izole eder.
-6.  **USER Namespace:** Container içindeki root kullanıcısını, host makinedeki yetkisiz bir kullanıcıya eşler (Güvenlik için kritiktir).
+
+| Namespace | Açıklama |
+| :--- | :--- |
+| **PID** | Container içindeki process ID'leri izole eder. Host'ta PID 4500 olan bir işlem, container içinde PID 1 olarak görünür. |
+| **NET** | Container'a özel sanal ağ arayüzü (eth0), IP adresi ve routing tablosu sağlar. |
+| **MNT** | Container'a özel dosya sistemi bağlama noktaları sağlar. |
+| **UTS** | Hostname ve domain name izolasyonu sağlar. |
+| **IPC** | İşlemler arası iletişimi (Shared Memory) izole eder. |
+| **USER** | Container içindeki root kullanıcısını, host makinedeki yetkisiz bir kullanıcıya eşler. |
 
 ### 3.2 Control Groups (Cgroups - Kaynak İzolasyonu)
 Container'ın kaynak kullanımını limitleyen ve raporlayan mekanizmadır.
@@ -78,9 +99,12 @@ Bir Docker imajı, salt okunur (read-only) katmanların üst üste binmesinden o
 
 ### 4.2 Copy-on-Write (CoW) Stratejisi
 Container çalıştırıldığında, read-only imaj katmanlarının en tepesine **"Thin Writable Layer"** (İnce Yazılabilir Katman) eklenir.
-*   **Okuma:** Veri alt katmanlardan okunur.
-*   **Yazma:** Bir dosya değiştirilmek istendiğinde, dosya alt katmandan (imajdan) üstteki yazılabilir katmana **kopyalanır** ve orada değiştirilir. Orijinal imaj asla bozulmaz.
-*   **Not:** Bu işlem, yoğun I/O (Database gibi) işlemleri için performans kaybı yaratabilir. Bu yüzden veritabanları için **Volume** (doğrudan disk erişimi) kullanılır.
+
+1.  **Okuma:** Veri alt katmanlardan okunur.
+2.  **Yazma:** Bir dosya değiştirilmek istendiğinde, dosya alt katmandan (imajdan) üstteki yazılabilir katmana **kopyalanır** ve orada değiştirilir. Orijinal imaj asla bozulmaz.
+
+> [!IMPORTANT]
+> Bu işlem, yoğun I/O (Database gibi) işlemleri için performans kaybı yaratabilir. Bu yüzden veritabanları için **Volume** (doğrudan disk erişimi) kullanılır.
 
 ### 4.3 Storage Drivers
 Bu katmanlı yapıyı yöneten arka uç sürücüleridir:
@@ -95,11 +119,14 @@ Bu katmanlı yapıyı yöneten arka uç sürücüleridir:
 Docker'da ağ, container'ların birbiriyle ve dış dünyayla konuşmasını sağlayan soyut bir katmandır.
 
 ### 5.1 Temel Network Sürücüleri
-1.  **Bridge (Varsayılan):** Docker host üzerinde sanal bir köprü (docker0) oluşturur. Container'lar bu köprüye bağlanır ve NAT (Network Address Translation) üzerinden dışarı çıkar.
-2.  **Host:** İzolasyonu kaldırır. Container, host makinenin ağ kartını doğrudan kullanır. Performans çok yüksektir ama port çakışması riski vardır.
-3.  **None:** Ağ yok. Tamamen izole. Sadece loopback (localhost) çalışır.
-4.  **Overlay:** Birden fazla Docker sunucusu (Swarm/Kubernetes Cluster) üzerindeki container'ların aynı ağdaymış gibi konuşmasını sağlar (VXLAN tünelleme kullanır).
-5.  **Macvlan:** Container'a fiziksel ağdan gerçek bir MAC adresi atar. Container modeme doğrudan bağlı bir fiziksel cihaz gibi görünür.
+
+| Sürücü | Açıklama |
+| :--- | :--- |
+| **Bridge** | Varsayılan. Docker host üzerinde sanal bir köprü (docker0) oluşturur. NAT üzerinden dışarı çıkar. |
+| **Host** | İzolasyonu kaldırır. Container, host makinenin ağ kartını doğrudan kullanır. Performans çok yüksektir. |
+| **None** | Ağ yok. Tamamen izole. Sadece loopback (localhost) çalışır. |
+| **Overlay** | Swarm/Kubernetes Cluster üzerindeki container'ların aynı ağdaymış gibi konuşmasını sağlar. |
+| **Macvlan** | Container'a fiziksel ağdan gerçek bir MAC adresi atar. |
 
 ---
 
@@ -116,17 +143,28 @@ Docker bir Linux teknolojisidir. Diğer işletim sistemlerinde çalışması iç
 macOS, UNIX tabanlıdır (Darwin Kernel) ancak Linux Namespaces/Cgroups özelliklerine sahip değildir.
 *   **Mimari:** Docker Desktop veya Colima, arka planda (HyperKit veya QEMU ile) minimalist bir **Linux VM** çalıştırır.
 *   **Docker Daemon:** Mac'te değil, o gizli Linux VM'in içinde çalışır.
-*   **Dosya Paylaşımı (Bind Mounts):** Mac dosya sistemi Linux VM'e ağ üzerinden (gRPC/VirtioFS) bağlanır. Bu nedenle Mac'te dosya I/O performansı Linux'a göre yavaştır.
+*   **Dosya Paylaşımı:** Mac dosya sistemi Linux VM'e ağ üzerinden bağlanır. Bu nedenle Mac'te dosya I/O performansı Linux'a göre yavaştır.
 
 ### 6.3 Windows (WSL 2 vs Hyper-V)
 *   **WSL 2 (Önerilen):** Windows içine gömülü gerçek Linux çekirdeğidir. Docker burada native Linux performansına çok yakın çalışır.
-*   **Windows Containers:** Windows Kernel'inin sağladığı izolasyonu kullanır. Sadece Windows tabanlı uygulamalar (örn. .NET Framework) çalıştırabilir.
+*   **Windows Containers:** Windows Kernel'inin sağladığı izolasyonu kullanır. Sadece Windows tabanlı uygulamalar çalıştırabilir.
 
 ---
 
 ## 7. Container Yaşam Döngüsü (Lifecycle)
 
 Bir container sadece "Açık" veya "Kapalı" değildir. Bir durum makinesi (State Machine) gibi davranır.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Created: docker create
+    Created --> Running: docker start
+    Running --> Paused: docker pause
+    Paused --> Running: docker unpause
+    Running --> Stopped: docker stop
+    Stopped --> Running: docker start
+    Stopped --> [*]: docker rm
+```
 
 1.  **Created:** Container oluşturuldu ama başlatılmadı (`docker create`).
 2.  **Running:** Process çalışıyor, kaynak tüketiyor (`docker start`).
@@ -147,7 +185,6 @@ Docker ilk çıktığında tekeldi. Ancak Kubernetes ve diğer firmaların bask�
 "Bir container nasıl çalıştırılmalı?" standardıdır.
 *   **High-Level Runtime:** Docker, Containerd, CRI-O (Image çekme, yönetme işleri).
 *   **Low-Level Runtime:** Runc, crun, gVisor, Kata Containers (Kernel ile konuşma işleri).
-    *   *Kata Containers:* Güvenlik için container'ı izole process yerine mikro-VM olarak başlatır.
 
 ---
 
@@ -156,12 +193,13 @@ Docker ilk çıktığında tekeldi. Ancak Kubernetes ve diğer firmaların bask�
 Containerlar sanal makineler kadar izole **değildir**. Aynı çekirdeği paylaşırlar.
 
 ### 9.1 Saldırı Yüzeyi
-Eğer bir saldırgan container içinden Kernel'e sızmayı başarırsa (Kernel Exploit), tüm host makineyi ele geçirebilir.
+> [!CAUTION]
+> Eğer bir saldırgan container içinden Kernel'e sızmayı başarırsa (Kernel Exploit), tüm host makineyi ele geçirebilir.
 
 ### 9.2 Güvenlik Katmanları
 1.  **Rootless Mode:** Docker Daemon ve container'ların root yetkisi olmadan çalıştırılması.
-2.  **Capabilities (Yetenekler):** Linux'ta "Root" yetkisi tek parça değildir. Docker, varsayılan olarak container'daki root kullanıcısının yeteneklerini budar (Örn: Zamanı değiştiremez, modül yükleyemez).
-3.  **Seccomp (Secure Computing Mode):** Container'ın yapabileceği System Call'ları sınırlar. (Örn: "Bu container `reboot` çağrısı yapamasın").
+2.  **Capabilities (Yetenekler):** Linux'ta "Root" yetkisi tek parça değildir. Docker, varsayılan olarak container'daki root kullanıcısının yeteneklerini budar.
+3.  **Seccomp (Secure Computing Mode):** Container'ın yapabileceği System Call'ları sınırlar.
 4.  **Read-Only Root Filesystem:** Container'ın kök dizinini salt okunur yaparak saldırganın dosya değiştirmesini engellemek.
 
 ---

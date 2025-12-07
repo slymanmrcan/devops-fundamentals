@@ -1,10 +1,16 @@
 # Docker Kurulum ve İnce Ayarlar (Advanced Setup)
 
-Bu rehber, sadece "Next > Next > Install" kurulumunu değil, performans ve kaynak yönetimi için kritik olan ince ayarları da kapsar.
+> [!NOTE]
+> Bu rehber, sadece "Next > Next > Install" kurulumunu değil, performans ve kaynak yönetimi için kritik olan ince ayarları da kapsar.
+
+---
 
 ## 1. macOS: Colima (Detaylı Yapılandırma)
 
-Colima, macOS üzerinde Docker çalıştırmak için en hafif ve esnek yöntemdir. Ancak varsayılan ayarlar (2CPU, 2GB RAM) çoğu zaman yetersiz kalır.
+Colima, macOS üzerinde Docker çalıştırmak için en hafif ve esnek yöntemdir.
+
+> [!WARNING]
+> Varsayılan ayarlar (2CPU, 2GB RAM) çoğu zaman yetersiz kalır.
 
 ### Kurulum
 ```bash
@@ -26,7 +32,9 @@ colima start --cpu 4 --memory 8 --disk 100
 ### İleri Seviye Ayarlar
 
 #### 1. Rosetta 2 (x86_64 Emülasyonu)
-Apple Silicon (M1/M2) kullanıyorsanız ve Intel tabanlı (amd64) imajları hızlı çalıştırmak istiyorsanız Rosetta'yı etkinleştirin.
+> [!TIP]
+> Apple Silicon (M1/M2) kullanıyorsanız ve Intel tabanlı (amd64) imajları hızlı çalıştırmak istiyorsanız Rosetta'yı etkinleştirin.
+
 ```bash
 colima start --arch aarch64 --vm-type=vz --vz-rosetta
 ```
@@ -67,7 +75,10 @@ colima template
 
 ## 2. Windows: WSL2 (Performans Ayarları)
 
-WSL2 harikadır ancak varsayılan olarak **tüm RAM'inizi yiyebilir**. Bunu sınırlamak şarttır.
+WSL2 harikadır ancak varsayılan olarak **tüm RAM'inizi yiyebilir**.
+
+> [!IMPORTANT]
+> Kaynak kullanımını sınırlamak şarttır.
 
 ### .wslconfig ile Kaynak Sınırlama
 Windows kullanıcı dizininizde (`C:\Users\KullaniciAdi\.wslconfig`) bir dosya oluşturun ve şunları ekleyin:
@@ -114,7 +125,10 @@ sudo systemctl enable containerd.service
 ```
 
 ### 3. Log Rotasyonu (ÖNEMLİ!)
-Docker varsayılan olarak logları sınırsız tutar. Bir gün diskiniz dolabilir.
+
+> [!CAUTION]
+> Docker varsayılan olarak logları sınırsız tutar. Bir gün diskiniz dolabilir.
+
 `/etc/docker/daemon.json` dosyasını oluşturun/düzenleyin:
 
 ```json
