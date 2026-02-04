@@ -20,7 +20,7 @@ Ağa yeni bir cihaz (telefon, laptop) bağlandığında, ona otomatik olarak kim
 İnsanların anlayacağı isimleri (`google.com`), bilgisayarların anlayacağı IP adreslerine (`142.250.1.1`) çevirir.
 
 *   **Örnek:** Tarayıcıya `facebook.com` yazdığınızda, DNS sunucusu "Bu adres `31.13.79.35` numaralı sunucuda" der.
-*   **Detay:** Daha fazla bilgi için [DNS, HTTP & HTTPS](08-Network/02-DNS-HTTP-HTTPS.md) dosyasına bakın.
+*   **Detay:** Daha fazla bilgi için [DNS, HTTP & HTTPS](/08-Network/02-DNS-HTTP-HTTPS) dosyasına bakın.
 
 ## 3. IPv4 vs IPv6
 **"Eski ve Yeni Kimlik Sistemi"**

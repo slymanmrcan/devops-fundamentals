@@ -84,6 +84,11 @@ export default defineConfig({
   head: [
     ['link', { rel: 'icon', href: `${base}favicon.ico` }]
   ],
+  markdown: {
+    languageAlias: {
+      promql: 'sql'
+    }
+  },
   cleanUrls: true,
   themeConfig: {
     appearance: 'dark',
