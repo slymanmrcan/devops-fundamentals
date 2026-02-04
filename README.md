@@ -77,7 +77,7 @@ Pratik sınav soruları.
 
 ### 🧪 13. Interactive Quizzes
 Tüm başlıklar için çoktan seçmeli testler.
-- Tarayıcıdan çöz: [all-topics.html](13-Interactive-Quizzes/all-topics.html)
+- Tarayıcıdan çöz: [quiz.html?set=all](13-Interactive-Quizzes/quiz.html?set=all)
 
 ### ☁️ 14. Cloudflare
 Cloudflare servisleri.

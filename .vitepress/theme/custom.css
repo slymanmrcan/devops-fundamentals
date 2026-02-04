@@ -19,7 +19,7 @@
   --vp-c-warning-soft: rgba(251, 191, 36, 0.15);
   --vp-c-danger-soft: rgba(248, 113, 113, 0.15);
 
-  --vp-layout-max-width: 1280px;
+  --vp-layout-max-width: 1480px;
   --vp-sidebar-width: 300px;
   --vp-nav-height: 64px;
   --vp-c-divider: #e2e8f0;
@@ -125,6 +125,17 @@ body {
 
 .VPFooter {
   border-top: 1px solid var(--vp-c-divider);
+}
+
+@media (min-width: 1200px) {
+  .quiz-page .VPDoc {
+    max-width: 1320px;
+  }
+
+  .quiz-page .VPDoc .content {
+    max-width: 1320px;
+    margin: 0 auto;
+  }
 }
 
 @media (max-width: 960px) {
