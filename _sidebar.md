@@ -92,23 +92,6 @@
   * [Terraform Practice Exams](12-Certifications/Terraform-Practice-Exams.md)
   * [Monitoring Practice Exams](12-Certifications/Monitoring-Practice-Exams.md)
   * [CI/CD & GitOps Practice Exams](12-Certifications/CICD-GitOps-Practice-Exams.md)
-* 13-Interactive-Quizzes
-   * <a href="13-Interactive-Quizzes/index.html" target="_blank" rel="noopener" data-no-router>Linux Orta Seviye Test (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/all-topics.html" target="_blank" rel="noopener" data-no-router>Tüm Konular Quizi (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/pro-quiz.html" target="_blank" rel="noopener" data-no-router>Pro Seviye Quiz (DevOps)</a>
-   * <a href="13-Interactive-Quizzes/network-basic.html" target="_blank" rel="noopener" data-no-router>Network Temel Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/network-intermediate.html" target="_blank" rel="noopener" data-no-router>Network Orta Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/network-advanced.html" target="_blank" rel="noopener" data-no-router>Network İleri Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/docker-basic.html" target="_blank" rel="noopener" data-no-router>Docker Temel Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/docker-intermediate.html" target="_blank" rel="noopener" data-no-router>Docker Orta Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/docker-advanced.html" target="_blank" rel="noopener" data-no-router>Docker İleri Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/linux-basic.html" target="_blank" rel="noopener" data-no-router>Linux Temel Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/linux-intermediate.html" target="_blank" rel="noopener" data-no-router>Linux Orta Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/linux-advanced.html" target="_blank" rel="noopener" data-no-router>Linux İleri Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/git-basic.html" target="_blank" rel="noopener" data-no-router>Git Temel Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/git-intermediate.html" target="_blank" rel="noopener" data-no-router>Git Orta Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/git-advanced.html" target="_blank" rel="noopener" data-no-router>Git İleri Seviye (yeni sekme)</a>
-   * <a href="13-Interactive-Quizzes/linux-50.html" target="_blank" rel="noopener" data-no-router>Linux 50 Soru (yeni sekme)</a>
 * 14-Cloudflare
   * [Fundamentals](14-Cloudflare/01-Fundamentals.md)
   * [DNS & SSL](14-Cloudflare/02-DNS-SSL.md)

@@ -8,9 +8,6 @@ hero:
     - theme: brand
       text: Dokümanlara Git
       link: /01-Linux/01-Basic/01-Introduction
-    - theme: alt
-      text: Quizleri Aç
-      link: /quizler
 features:
   - title: Sistematik Yol Haritası
     details: Başlangıçtan ileri seviyeye, adım adım ilerleyen konu akışı.
