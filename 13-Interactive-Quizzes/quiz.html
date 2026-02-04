@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Merkezi</title>
+  <link rel="stylesheet" href="./quiz.css">
+</head>
+
+<body>
+  <div class="shell">
+    <div class="panel" id="catalog-panel">
+      <div class="header">
+        <div>
+          <div class="title">Quiz Merkezi</div>
+          <div class="subtitle">Bir quiz seç, aynı sayfada çözmeye başla.</div>
+        </div>
+        <div class="pill">Tüm quizler</div>
+      </div>
+      <div class="body">
+        <div class="catalog" id="catalog"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="quiz-panel" style="display:none;">
+      <div class="header">
+        <div>
+          <div class="title" id="quiz-title">Quiz</div>
+          <div class="subtitle" id="quiz-subtitle">Tek seçim · 1 puan</div>
+        </div>
+        <div class="pill" id="quiz-pill">Soru 1/1</div>
+      </div>
+      <div class="body" id="quiz-body">
+        <div class="progress-track">
+          <div class="progress-bar" id="progress"></div>
+        </div>
+        <div class="question" id="question">Soru yükleniyor...</div>
+        <ul class="options" id="options"></ul>
+      </div>
+      <div class="result" id="result">
+        <div class="score" id="score">0%</div>
+        <h2 id="result-title">Tebrikler!</h2>
+        <p id="result-detail">Sonucu görmek için test bitir.</p>
+        <button class="btn" id="restart">Baştan Başla</button>
+      </div>
+      <div class="footer" id="quiz-footer">
+        <div class="meta" id="meta">Her soru 1 puan</div>
+        <button class="btn" id="next" disabled>Sonraki Soru</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./quiz-data.js"></script>
+  <script src="./quiz.js"></script>
+</body>
+
+</html>
