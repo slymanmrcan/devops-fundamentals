@@ -2,13 +2,15 @@
 
 Quizler statik HTML olarak ayrı çalışır. Aşağıdaki bağlantılar yeni sekmede açılır.
 
+## Karma (Çok Konu)
+
 <div style="display:flex; flex-wrap:wrap; gap:12px; margin:16px 0 24px;">
-  <a class="VPButton medium brand" href="./13-Interactive-Quizzes/index.html" target="_blank" rel="noopener">Quiz Merkezi</a>
-  <a class="VPButton medium alt" href="./13-Interactive-Quizzes/all-topics.html" target="_blank" rel="noopener">Tüm Konular</a>
-  <a class="VPButton medium alt" href="./13-Interactive-Quizzes/pro-quiz.html" target="_blank" rel="noopener">Pro Quiz</a>
+  <a class="VPButton medium brand" href="./13-Interactive-Quizzes/index.html" target="_blank" rel="noopener">Quiz Merkezi (Konu Seçmeli)</a>
+  <a class="VPButton medium alt" href="./13-Interactive-Quizzes/all-topics.html" target="_blank" rel="noopener">Tüm Konular (Karışık)</a>
+  <a class="VPButton medium alt" href="./13-Interactive-Quizzes/pro-quiz.html" target="_blank" rel="noopener">Pro Quiz (Karışık)</a>
 </div>
 
-## Konu Bazlı
+## Tek Konu
 
 - <a href="./13-Interactive-Quizzes/linux-basic.html" target="_blank" rel="noopener">Linux Temel Seviye</a>
 - <a href="./13-Interactive-Quizzes/linux-intermediate.html" target="_blank" rel="noopener">Linux Orta Seviye</a>
