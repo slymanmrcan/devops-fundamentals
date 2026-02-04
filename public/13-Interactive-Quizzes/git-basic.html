@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Temel Seviye Quiz</title>
+    <style>
+        :root {
+            --bg: #2d3436;
+            --surface: #1e272e;
+            --panel: #222b32;
+            --primary: #74b9ff;
+            --text: #dfe6e9;
+            --muted: #b2bec3;
+            --success: #00b894;
+            --error: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 28px 18px;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 960px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid #2f3840;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+        }
+
+        .header {
+            padding: 18px 22px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center;
+            background: #1b2229;
+            border-bottom: 1px solid #2f3840;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .pill {
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #2a333b;
+            border: 1px solid #2f3840;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .body {
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+            background: var(--panel);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #131a20;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2f3840;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #9ad1ff);
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .options {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 13px 14px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            background: #1f272e;
+            cursor: pointer;
+            transition: transform 0.12s, border-color 0.12s, background 0.12s;
+        }
+
+        .option:hover:not(.disabled) {
+            transform: translateY(-1px);
+            border-color: var(--primary);
+            background: #253038;
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(0, 184, 148, 0.12);
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .option.wrong {
+            border-color: var(--error);
+            background: rgba(255, 107, 107, 0.12);
+            color: var(--error);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 22px 20px;
+            background: #1b2229;
+            border-top: 1px solid #2f3840;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 11px 22px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(120deg, #6fc0ff, var(--primary));
+            color: #0f151c;
+            transition: transform 0.12s, box-shadow 0.12s;
+            box-shadow: 0 12px 30px rgba(116, 185, 255, 0.25);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 30px 22px;
+            background: var(--panel);
+        }
+
+        .score {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .result h2 {
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .result p {
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+        <div class="panel">
+            <div class="header">
+                <div>
+                    <div class="title">Git Temel Seviye Quiz</div>
+                    <div class="subtitle">20 soru • temel komutlar ve akış</div>
+                </div>
+                <div class="pill">Soru <span id="current">1</span> / <span id="total">20</span></div>
+            </div>
+
+            <div class="body" id="quiz-body">
+                <div class="progress-track">
+                    <div class="progress-bar" id="progress"></div>
+                </div>
+                <div class="question" id="question">Yükleniyor...</div>
+                <ul class="options" id="options"></ul>
+            </div>
+
+            <div class="result" id="result">
+                <div class="score" id="score">0%</div>
+                <h2 id="result-title">Tebrikler!</h2>
+                <p id="result-detail">Sonucu görmek için test bitir.</p>
+                <button class="btn" onclick="location.reload()">Baştan Başla</button>
+            </div>
+
+            <div class="footer">
+                <div class="meta" id="meta">Her soru 1 puan - tek seçim</div>
+                <button class="btn" id="next" disabled>Sonraki Soru</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "Yeni bir Git reposu başlatmak için?", opts: ["git init", "git start", "git repo", "git begin"], a: 0 },
+            { q: "Değişikliklerin durumunu görmek için?", opts: ["git diff", "git status", "git check", "git show"], a: 1 },
+            { q: "İzlenmeyen dosyayı takibe almak için?", opts: ["git commit", "git add dosya", "git push", "git stash"], a: 1 },
+            { q: "Commit oluşturmak için doğru komut?", opts: ["git save -m", "git commit -m \"mesaj\"", "git push -m", "git write"], a: 1 },
+            { q: "Uzak depo eklemek için?", opts: ["git remote add origin <url>", "git add origin <url>", "git push origin", "git link <url>"], a: 0 },
+            { q: "Uzak repoya ilk push için (branch main ise)?", opts: ["git push origin", "git push -u origin main", "git push main", "git upload"], a: 1 },
+            { q: "Son commit'i mesajıyla görmek için pratik komut?", opts: ["git show --stat", "git log -1", "git status -1", "git head"], a: 1 },
+            { q: "Çalışma alanıyla staged farkını görmek için?", opts: ["git diff --cached", "git diff", "git show", "git status"], a: 0 },
+            { q: ".gitignore dosyasının amacı?", opts: ["Logları silmek", "Takip edilmeyecek dosya/desenleri belirtmek", "Commit mesajı yazmak", "Remote eklemek"], a: 1 },
+            { q: "Yeni branch oluşturup geçmek için tek komut?", opts: ["git checkout -b feature", "git branch feature && git checkout feature", "git switch", "git new feature"], a: 0 },
+            { q: "Branch listesini görmek için?", opts: ["git branches", "git branch", "git show-branch", "git list"], a: 1 },
+            { q: "Branch'i başka branche birleştirmek için temel komut?", opts: ["git merge <branch>", "git rebase <branch>", "git join <branch>", "git attach <branch>"], a: 0 },
+            { q: "Uzak branch'i yerel branch olarak takip etmek için?", opts: ["git checkout origin/main", "git checkout -b main origin/main", "git fetch main", "git pull main"], a: 1 },
+            { q: "Çalışma alanındaki değişiklikleri geçici olarak saklamak için?", opts: ["git stash", "git save", "git hide", "git park"], a: 0 },
+            { q: "Son commit'i geri almak ama değişiklikleri çalışma alanında tutmak için?", opts: ["git reset --hard HEAD~1", "git reset --soft HEAD~1", "git reset --mixed HEAD~1", "git revert HEAD"], a: 2 },
+            { q: "Son commit'i mesajıyla birlikte tamamen geri almak (değişiklik de silinsin) için?", opts: ["git reset --hard HEAD~1", "git revert HEAD", "git stash drop", "git clean"], a: 0 },
+            { q: "Remote'ları listelemek için?", opts: ["git remote -v", "git remotes", "git list remote", "git show remote"], a: 0 },
+            { q: "HEAD nedir?", opts: ["Son commit hash'i", "Çalıştığın branch'i işaret eden referans", "Remote adı", "Stash adı"], a: 1 },
+            { q: "Var olan commit'e dokunmadan yeni bir düzeltme commit'i eklemek için?", opts: ["git amend", "git revert <hash>", "git undo", "git redo"], a: 1 },
+            { q: "Branch ismini değiştirmek için (geçerli branch'teyken)?", opts: ["git rename", "git branch -m yeni-ad", "git switch -m", "git move branch"], a: 1 }
+        ];
+
+        let index = 0;
+        let score = 0;
+        const totalEl = document.getElementById("total");
+        const currentEl = document.getElementById("current");
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const nextBtn = document.getElementById("next");
+        const progressEl = document.getElementById("progress");
+        const resultEl = document.getElementById("result");
+        const bodyEl = document.getElementById("quiz-body");
+        const scoreEl = document.getElementById("score");
+        const resultTitle = document.getElementById("result-title");
+        const resultDetail = document.getElementById("result-detail");
+
+        totalEl.textContent = questions.length;
+
+        function renderQuestion() {
+            const current = questions[index];
+            questionEl.textContent = `${index + 1}. ${current.q}`;
+            currentEl.textContent = index + 1;
+            progressEl.style.width = `${(index / questions.length) * 100}%`;
+            nextBtn.disabled = true;
+            optionsEl.innerHTML = "";
+            current.opts.forEach((opt, i) => {
+                const li = document.createElement("li");
+                li.className = "option";
+                li.textContent = opt;
+                li.onclick = () => checkAnswer(li, i, current.a);
+                optionsEl.appendChild(li);
+            });
+        }
+
+        function checkAnswer(el, chosen, answer) {
+            const opts = optionsEl.querySelectorAll(".option");
+            opts.forEach(o => o.classList.add("disabled"));
+            if (chosen === answer) {
+                el.classList.add("correct");
+                score++;
+            } else {
+                el.classList.add("wrong");
+                opts[answer].classList.add("correct");
+            }
+            nextBtn.disabled = false;
+        }
+
+        nextBtn.addEventListener("click", () => {
+            index++;
+            if (index < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        });
+
+        function showResult() {
+            bodyEl.style.display = "none";
+            nextBtn.style.display = "none";
+            resultEl.style.display = "block";
+            progressEl.style.width = "100%";
+            const pct = Math.round((score / questions.length) * 100);
+            scoreEl.textContent = `${pct}%`;
+            if (pct >= 85) {
+                resultTitle.textContent = "Harika! 🚀";
+                resultDetail.textContent = "Git temel akışına hakimsin.";
+            } else if (pct >= 65) {
+                resultTitle.textContent = "İyi iş! 👏";
+                resultDetail.textContent = "Biraz daha pratikle pekiştir.";
+            } else {
+                resultTitle.textContent = "Tekrar dene! 📚";
+                resultDetail.textContent = "Temel komut ve kavramlara odaklan.";
+            }
+        }
+
+        renderQuestion();
+    </script>
+</body>
+
+</html>

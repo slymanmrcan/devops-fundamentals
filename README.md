@@ -87,14 +87,28 @@ Cloudflare servisleri.
 
 ## 🛠️ Nasıl Çalıştırılır?
 
-Bu dokümantasyon **Docsify** kullanılarak oluşturulmuştur. Bilgisayarınızda görüntülemek için:
+Bu dokümantasyon **VitePress** ile yayınlanır.
 
-1. Python yüklü ise (Mac/Linux'ta genellikle yüklüdür):
+1. Bağımlılıkları yükleyin:
    ```bash
-   python3 -m http.server 3000
+   npm install
    ```
-2. Tarayıcınızda şu adrese gidin:
+2. Geliştirme sunucusunu başlatın:
+   ```bash
+   npm run docs:dev
+   ```
+3. Tarayıcıdan açın:
    `http://localhost:3000`
+
+> Not: Quiz sayfaları `public/13-Interactive-Quizzes/` altında statik olarak servis edilir.
+
+## 🚀 Deploy (GitHub Pages)
+
+`main` branch’e yapılan her push, GitHub Actions ile otomatik olarak build alır ve `gh-pages` branch’ine deploy eder.
+
+1. Repo Settings → Pages → Source: **GitHub Actions**
+2. `main` branch’e push yapın.
+
 
 ---
 
