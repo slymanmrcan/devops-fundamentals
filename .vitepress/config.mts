@@ -95,7 +95,7 @@ export default defineConfig({
     appearance: 'dark',
     nav: [
       { text: 'Dokümanlar', link: '/' },
-      { text: 'Quizler', link: '/13-Interactive-Quizzes/index.html' },
+      { text: 'Quizler', link: '/quizler' },
       { text: 'GitHub', link: 'https://github.com/slymanmrcan/devops-fundamentals' }
     ],
     sidebar,
