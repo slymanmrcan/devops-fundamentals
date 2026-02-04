@@ -11,7 +11,7 @@ CI/CD süreçlerinde API anahtarları, şifreler veya sunucu IP adresleri gibi h
 3.  İsim (örn: `DOCKER_PASSWORD`) ve değer girin.
 
 ### Nasıl Kullanılır?
-YAML dosyasında `${{ secrets.SECRET_ADI }}` şeklinde erişilir.
+YAML dosyasında <code v-pre>${{ secrets.SECRET_ADI }}</code> şeklinde erişilir.
 
 ```yaml
 - name: Login to Docker Hub
@@ -29,7 +29,7 @@ YAML dosyasında `${{ secrets.SECRET_ADI }}` şeklinde erişilir.
 2.  "New repository variable" butonuna tıklayın.
 
 ### Nasıl Kullanılır?
-YAML dosyasında `${{ vars.VARIABLE_ADI }}` şeklinde erişilir.
+YAML dosyasında <code v-pre>${{ vars.VARIABLE_ADI }}</code> şeklinde erişilir.
 
 ```yaml
 - name: Print Environment

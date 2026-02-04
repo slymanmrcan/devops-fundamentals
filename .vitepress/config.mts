@@ -86,7 +86,8 @@ export default defineConfig({
   ],
   markdown: {
     languageAlias: {
-      promql: 'sql'
+      promql: 'sql',
+      ssh: 'bash'
     }
   },
   cleanUrls: true,
