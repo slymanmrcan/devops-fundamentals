@@ -1,0 +1,1 @@
+import{_ as a,o as r,c as t,ag as i}from"./chunks/framework.DhRkhqU-.js";const h=JSON.parse('{"title":"Quizler","description":"","frontmatter":{},"headers":[],"relativePath":"quizler.md","filePath":"quizler.md"}'),l={name:"quizler.md"};function n(o,e,u,c,k,s){return r(),t("div",null,[...e[0]||(e[0]=[i("",6)])])}const z=a(l,[["render",n]]);export{h as __pageData,z as default};
