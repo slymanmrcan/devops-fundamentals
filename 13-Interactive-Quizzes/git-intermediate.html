@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Orta Seviye Quiz</title>
+    <style>
+        :root {
+            --bg: #2d3436;
+            --surface: #1e272e;
+            --panel: #222b32;
+            --primary: #74b9ff;
+            --text: #dfe6e9;
+            --muted: #b2bec3;
+            --success: #00b894;
+            --error: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 28px 18px;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 960px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid #2f3840;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+        }
+
+        .header {
+            padding: 18px 22px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center;
+            background: #1b2229;
+            border-bottom: 1px solid #2f3840;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .pill {
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #2a333b;
+            border: 1px solid #2f3840;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .body {
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+            background: var(--panel);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #131a20;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2f3840;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #9ad1ff);
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .options {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 13px 14px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            background: #1f272e;
+            cursor: pointer;
+            transition: transform 0.12s, border-color 0.12s, background 0.12s;
+        }
+
+        .option:hover:not(.disabled) {
+            transform: translateY(-1px);
+            border-color: var(--primary);
+            background: #253038;
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(0, 184, 148, 0.12);
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .option.wrong {
+            border-color: var(--error);
+            background: rgba(255, 107, 107, 0.12);
+            color: var(--error);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 22px 20px;
+            background: #1b2229;
+            border-top: 1px solid #2f3840;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 11px 22px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(120deg, #6fc0ff, var(--primary));
+            color: #0f151c;
+            transition: transform 0.12s, box-shadow 0.12s;
+            box-shadow: 0 12px 30px rgba(116, 185, 255, 0.25);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 30px 22px;
+            background: var(--panel);
+        }
+
+        .score {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .result h2 {
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .result p {
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+        <div class="panel">
+            <div class="header">
+                <div>
+                    <div class="title">Git Orta Seviye Quiz</div>
+                    <div class="subtitle">20 soru • rebase, stash, reflog, submodule</div>
+                </div>
+                <div class="pill">Soru <span id="current">1</span> / <span id="total">20</span></div>
+            </div>
+
+            <div class="body" id="quiz-body">
+                <div class="progress-track">
+                    <div class="progress-bar" id="progress"></div>
+                </div>
+                <div class="question" id="question">Yükleniyor...</div>
+                <ul class="options" id="options"></ul>
+            </div>
+
+            <div class="result" id="result">
+                <div class="score" id="score">0%</div>
+                <h2 id="result-title">Tebrikler!</h2>
+                <p id="result-detail">Sonucu görmek için test bitir.</p>
+                <button class="btn" onclick="location.reload()">Baştan Başla</button>
+            </div>
+
+            <div class="footer">
+                <div class="meta" id="meta">Her soru 1 puan - tek seçim</div>
+                <button class="btn" id="next" disabled>Sonraki Soru</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "Merge yerine rebase kullanmanın temel sonucu nedir?", opts: ["Commitleri siler", "Lineer tarih oluşturur, commitleri yeniden yazar", "Remote'u kapatır", "Branch'i siler"], a: 1 },
+            { q: "git cherry-pick <hash> ne yapar?", opts: ["Commit'i siler", "Seçili commit'i mevcut branche uygular", "Yeni branch açar", "Stash oluşturur"], a: 1 },
+            { q: "git reset --mixed HEAD~1 ne yapar?", opts: ["Çalışma alanını siler", "Son commit'i kaldırır, değişiklikleri çalışma alanında ve unstaged bırakır", "Commit'i revert eder", "Sadece staging'i korur"], a: 1 },
+            { q: "git revert <hash> ne üretir?", opts: ["Commit'i siler", "Ters değişiklik içeren yeni commit ekler", "Branch'i siler", "Stash oluşturur"], a: 1 },
+            { q: "Annotate tag oluşturmak için doğru komut?", opts: ["git tag v1", "git tag -a v1 -m \"mesaj\"", "git tag --note v1", "git tag -s v1 -m"], a: 1 },
+            { q: "git stash apply ile git stash pop farkı?", opts: ["Fark yok", "apply uygular, pop uygular ve stash kaydını siler", "apply siler, pop uygular", "apply merge yapar"], a: 1 },
+            { q: "git reflog neyi gösterir?", opts: ["Remote branch listesi", "HEAD hareketlerinin geçmişi", "Tag listesi", "Credential cache"], a: 1 },
+            { q: "git clean -fd komutu ne yapar?", opts: ["Staged dosyaları siler", "Untracked dosya ve dizinleri zorla temizler", "Commit'leri temizler", "Cache'i sıfırlar"], a: 1 },
+            { q: "Son 3 commit'i squashlamak için hangi komutla başlarsın?", opts: ["git rebase -i HEAD~3", "git merge --squash", "git squash 3", "git commit --squash"], a: 0 },
+            { q: "Merge conflict sonrası ilk adım?", opts: ["git reset --hard", "Çakışan dosyaları düzeltip git add yapmak", "git revert", "git stash"], a: 1 },
+            { q: "Staged ile son commit farkını görmek için?", opts: ["git diff", "git diff --cached", "git status -v", "git show --cached"], a: 1 },
+            { q: "git blame'in amacı?", opts: ["Commit mesajı düzeltmek", "Satır bazlı yazar/tarih bilgisini göstermek", "Branch silmek", "Tag eklemek"], a: 1 },
+            { q: "Var olan branch'in upstream'ini sonradan ayarlamak için?", opts: ["git upstream set", "git branch --set-upstream-to=origin/feature feature", "git push --set", "git track"], a: 1 },
+            { q: "git fetch ile git pull farkı?", opts: ["Pull sadece fetch yapar", "Fetch indirir, pull indirip merge/rebase eder", "Fark yok", "Fetch commit siler"], a: 1 },
+            { q: "Submodule'ları ilk kez çekmek/güncellemek için doğru komut?", opts: ["git submodule update --init --recursive", "git submodule install", "git pull --sub", "git fetch --submodule"], a: 0 },
+            { q: "git bisect'in amacı?", opts: ["Tag oluşturmak", "Hatalı commit'i ikili arama ile bulmak", "Branch temizlemek", "Remote silmek"], a: 1 },
+            { q: "Untracked dosyaları da stash'e eklemek için hangi bayrak?", opts: ["git stash -a", "git stash -u", "git stash --all", "git stash add"], a: 1 },
+            { q: "Commit grafiğini kısaca görmek için pratik komut?", opts: ["git graph", "git log --oneline --graph --decorate --all", "git history", "git show graph"], a: 1 },
+            { q: "Son commit mesajını değiştirip içeriği aynı tutmak için?", opts: ["git commit --amend", "git revert HEAD", "git reset --hard", "git amend-msg"], a: 0 },
+            { q: "Yerel branch adını değiştirmek için (branch'ta değilken)?", opts: ["git rename old new", "git branch -m old new", "git move old new", "git switch -m old new"], a: 1 }
+        ];
+
+        let index = 0;
+        let score = 0;
+        const totalEl = document.getElementById("total");
+        const currentEl = document.getElementById("current");
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const nextBtn = document.getElementById("next");
+        const progressEl = document.getElementById("progress");
+        const resultEl = document.getElementById("result");
+        const bodyEl = document.getElementById("quiz-body");
+        const scoreEl = document.getElementById("score");
+        const resultTitle = document.getElementById("result-title");
+        const resultDetail = document.getElementById("result-detail");
+
+        totalEl.textContent = questions.length;
+
+        function renderQuestion() {
+            const current = questions[index];
+            questionEl.textContent = `${index + 1}. ${current.q}`;
+            currentEl.textContent = index + 1;
+            progressEl.style.width = `${(index / questions.length) * 100}%`;
+            nextBtn.disabled = true;
+            optionsEl.innerHTML = "";
+            current.opts.forEach((opt, i) => {
+                const li = document.createElement("li");
+                li.className = "option";
+                li.textContent = opt;
+                li.onclick = () => checkAnswer(li, i, current.a);
+                optionsEl.appendChild(li);
+            });
+        }
+
+        function checkAnswer(el, chosen, answer) {
+            const opts = optionsEl.querySelectorAll(".option");
+            opts.forEach(o => o.classList.add("disabled"));
+            if (chosen === answer) {
+                el.classList.add("correct");
+                score++;
+            } else {
+                el.classList.add("wrong");
+                opts[answer].classList.add("correct");
+            }
+            nextBtn.disabled = false;
+        }
+
+        nextBtn.addEventListener("click", () => {
+            index++;
+            if (index < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        });
+
+        function showResult() {
+            bodyEl.style.display = "none";
+            nextBtn.style.display = "none";
+            resultEl.style.display = "block";
+            progressEl.style.width = "100%";
+            const pct = Math.round((score / questions.length) * 100);
+            scoreEl.textContent = `${pct}%`;
+            if (pct >= 85) {
+                resultTitle.textContent = "Harika! 🚀";
+                resultDetail.textContent = "Git orta seviye akışlarda rahatsın.";
+            } else if (pct >= 65) {
+                resultTitle.textContent = "İyi iş! 👏";
+                resultDetail.textContent = "Biraz daha pratikle daha da güçlenir.";
+            } else {
+                resultTitle.textContent = "Tekrar dene! 📚";
+                resultDetail.textContent = "Rebase, stash, reflog ve submodule konularına odaklan.";
+            }
+        }
+
+        renderQuestion();
+    </script>
+</body>
+
+</html>

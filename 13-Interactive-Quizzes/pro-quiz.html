@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Pro Seviye Quiz</title>
+    <style>
+        :root {
+            --bg: #2d3436;
+            --surface: #1e272e;
+            --panel: #222b32;
+            --primary: #74b9ff;
+            --text: #dfe6e9;
+            --muted: #b2bec3;
+            --success: #00b894;
+            --error: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 32px 18px;
+        }
+
+        .shell {
+            width: 100%;
+            max-width: 960px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid #2f3840;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+        }
+
+        .header {
+            padding: 18px 22px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center;
+            background: #1b2229;
+            border-bottom: 1px solid #2f3840;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        .pill {
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: #2a333b;
+            border: 1px solid #2f3840;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .body {
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+            background: var(--panel);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #131a20;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2f3840;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), #9ad1ff);
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .options {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 13px 14px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            background: #1f272e;
+            cursor: pointer;
+            transition: transform 0.12s, border-color 0.12s, background 0.12s;
+        }
+
+        .option:hover:not(.disabled) {
+            transform: translateY(-1px);
+            border-color: var(--primary);
+            background: #253038;
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(0, 184, 148, 0.12);
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .option.wrong {
+            border-color: var(--error);
+            background: rgba(255, 107, 107, 0.12);
+            color: var(--error);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 22px 20px;
+            background: #1b2229;
+            border-top: 1px solid #2f3840;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 11px 22px;
+            border-radius: 12px;
+            border: 1px solid #2f3840;
+            font-weight: 800;
+            cursor: pointer;
+            background: linear-gradient(120deg, #6fc0ff, var(--primary));
+            color: #0f151c;
+            transition: transform 0.12s, box-shadow 0.12s;
+            box-shadow: 0 12px 30px rgba(116, 185, 255, 0.25);
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 30px 22px;
+            background: var(--panel);
+        }
+
+        .score {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .result h2 {
+            margin-top: 8px;
+            margin-bottom: 6px;
+        }
+
+        .result p {
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+        <div class="panel">
+            <div class="header">
+                <div>
+                    <div class="title">DevOps Pro Seviye Quiz</div>
+                    <div class="subtitle">Senaryo bazlı, ileri seviye 16 soru</div>
+                </div>
+                <div class="pill">Soru <span id="current">1</span> / <span id="total">16</span></div>
+            </div>
+
+            <div class="body" id="quiz-body">
+                <div class="progress-track">
+                    <div class="progress-bar" id="progress"></div>
+                </div>
+                <div class="question" id="question">Yükleniyor...</div>
+                <ul class="options" id="options"></ul>
+            </div>
+
+            <div class="result" id="result">
+                <div class="score" id="score">0%</div>
+                <h2 id="result-title">Tebrikler!</h2>
+                <p id="result-detail">Sonucu görmek için test bitir.</p>
+                <button class="btn" onclick="location.reload()">Baştan Başla</button>
+            </div>
+
+            <div class="footer">
+                <div class="meta" id="meta">Her soru 1 puan - tek seçim</div>
+                <button class="btn" id="next" disabled>Sonraki Soru</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "Bir prod Kubernetes cluster'ında node'lar sık sık 'NotReady' oluyor. Pod'lar eviction sonrası farklı node'lara planlanmıyor. İlk bakılacak yer?", opts: ["CNI daemonset logları ve kubelet network plugin durumu", "Ingress controller deployment'ı", "Helm chart values.yaml", "HorizontalPodAutoscaler tanımı"], a: 0 },
+            { q: "Terraform state remote backend (S3 + DynamoDB lock) için en güvenli IAM stratejisi?", opts: ["EC2 instance role'a full s3:* yetkisi", "S3'te bucket policy yerine tüm yetkiyi kullanıcılara ver", "Sadece gerekli aksiyonları (GetObject, PutObject, ListBucket) ve dynamodb:UpdateItem ile least privilege", "CLI profiline inline policy ile admin"], a: 2 },
+            { q: "Blue/Green deploy sırasında databasede schema değişikliği var. Downtime ve veri kaybını en aza indirmek için hangi yaklaşım doğru?", opts: ["Deploy öncesi eski versiyonu kapat", "Schema'yı geriye uyumlu olacak şekilde önce ekle, app'i sonra taşır, feature flag ile geçiş", "Yeni tabloyu oluşturup eskiyi sil", "Canary trafiği %100'e çıkar, sonra migration"], a: 1 },
+            { q: "Prometheus'ta yüksek cardinality'den kaçınmak için hangi label tasarımı doğru?", opts: ["request_path label'ında tam URL path'i tutmak", "user_id'yi label yapmak", "HTTP status kodunu label yapmak", "timestamp'i label yapmak"], a: 2 },
+            { q: "GitHub Actions runner'ında cache invalidation sık yaşanıyor. Hangi anahtar stratejisi daha tutarlı?", opts: ["Key olarak sadece 'linux-node' kullanmak", "Key'e checksum of lockfile eklemek, restore-keys ile prefix kullanmak", "Random UUID üretmek", "Her job için farklı key"], a: 1 },
+            { q: "EKS'te private cluster çalışırken kubectl erişimi için en pratik ve güvenli çözüm?", opts: ["Master public endpoint açıp 0.0.0.0/0 izin vermek", "Bastion host'tan kubectl proxy", "AWS IAM authenticator + SSM Session Manager tüneli veya VPN", "Kubeconfig'e basic auth user eklemek"], a: 2 },
+            { q: "CI pipeline'da gizli değişkenlerin log'a dökülmemesi için ne yapılmalı?", opts: ["Echo ile maskelemek", "Masked secrets özelliğini açmak ve gereksiz debug çıktısını kapatmak", "Secrets'i env yerine arg olarak geçmek", "Secrets'i plaintext repo'ya koymak"], a: 1 },
+            { q: "Docker multi-stage build'de production image boyutunu küçültmek için kritik adım?", opts: ["Tüm build'leri tek stage'de yapmak", "Final stage'e yalnızca runtime bağımlılıklarını ve artefactları kopyalamak", "apt-get update'i sonda çalıştırmak", "ENTRYPOINT kaldırmak"], a: 1 },
+            { q: "ArgoCD'de drift detection uyarıları sürekli 'outOfSync' veriyor. İlk kontrol?", opts: ["App of Apps modelini kapatmak", "Resource Customization için ignoreDifferences ayarlarını gözden geçirmek", "Git repo'yu public yapmak", "RBAC'i devre dışı bırakmak"], a: 1 },
+            { q: "SRE hata bütçesi (error budget) %50 tükendi. En doğru aksiyon?", opts: ["Daha hızlı deploy", "Yeni feature rollout'u yavaşlatıp istikrar iyileştirmelerine öncelik vermek", "Tüm alarmları kapatmak", "Status page'i gizlemek"], a: 1 },
+            { q: "AWS ALB + Target Group mimarisinde, health check başarısız oranı yüksekse en önce bakılması gereken?", opts: ["Route 53 policy", "Target group health check path/interval/timeout ve security group izinleri", "S3 bucket policy", "VPC endpoint"], a: 1 },
+            { q: "Vault kullanırken uygulama pod'una secret nasıl en güvenli taşınır?", opts: ["Secret'ı image içine bake etmek", "Env var olarak plaintext yazmak", "Vault Agent sidecar + Kubernetes auth method ile otomatik yenileme", "Secret'ı configmap'e yazmak"], a: 2 },
+            { q: "Production PostgreSQL için sürdürülebilir yedekleme stratejisi?", opts: ["Sadece haftalık dump", "pg_dump daily, WAL archiving ve periyodik restore testi", "Snapshot almamak", "Sadece read replica tutmak"], a: 1 },
+            { q: "Microservice'ler için log standardizasyonu yapılırken en iyi pratik?", opts: ["Her serviste farklı format", "Plain text random", "Structured JSON log, korelasyon ID eklemek, stdout'a yazmak", "Logları diske yazıp arşivlemek"], a: 2 },
+            { q: "Kubernetes'te PodSecurityStandards (baseline/restricted) gereksinimi var. Uygulama nasıl enforce edilir?", opts: ["kubectl apply -f pod.yaml", "PSA (Pod Security Admission) label'larını namespace'e eklemek veya OPA/Gatekeeper/PSP eşdeğeri policy kullanmak", "Toleration eklemek", "NodeSelector kaldırmak"], a: 1 },
+            { q: "CI/CD'de supply chain güvenliği için en etkili adım?", opts: ["Docker Hub'dan rastgele image çekmek", "SBOM üretmek, imaj imzalamak (Cosign/Sigstore) ve admission policy ile doğrulamak", "Root olarak çalıştırmak", "Cache'i kapatmak"], a: 1 }
+        ];
+
+        let index = 0;
+        let score = 0;
+        const totalEl = document.getElementById("total");
+        const currentEl = document.getElementById("current");
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const nextBtn = document.getElementById("next");
+        const progressEl = document.getElementById("progress");
+        const resultEl = document.getElementById("result");
+        const bodyEl = document.getElementById("quiz-body");
+        const scoreEl = document.getElementById("score");
+        const resultTitle = document.getElementById("result-title");
+        const resultDetail = document.getElementById("result-detail");
+
+        totalEl.textContent = questions.length;
+
+        function renderQuestion() {
+            const current = questions[index];
+            questionEl.textContent = `${index + 1}. ${current.q}`;
+            currentEl.textContent = index + 1;
+            progressEl.style.width = `${(index / questions.length) * 100}%`;
+            nextBtn.disabled = true;
+            optionsEl.innerHTML = "";
+            current.opts.forEach((opt, i) => {
+                const li = document.createElement("li");
+                li.className = "option";
+                li.textContent = opt;
+                li.onclick = () => checkAnswer(li, i, current.a);
+                optionsEl.appendChild(li);
+            });
+        }
+
+        function checkAnswer(el, chosen, answer) {
+            const opts = optionsEl.querySelectorAll(".option");
+            opts.forEach(o => o.classList.add("disabled"));
+            if (chosen === answer) {
+                el.classList.add("correct");
+                score++;
+            } else {
+                el.classList.add("wrong");
+                opts[answer].classList.add("correct");
+            }
+            nextBtn.disabled = false;
+        }
+
+        nextBtn.addEventListener("click", () => {
+            index++;
+            if (index < questions.length) {
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        });
+
+        function showResult() {
+            bodyEl.style.display = "none";
+            nextBtn.style.display = "none";
+            resultEl.style.display = "block";
+            progressEl.style.width = "100%";
+            const pct = Math.round((score / questions.length) * 100);
+            scoreEl.textContent = `${pct}%`;
+            if (pct >= 85) {
+                resultTitle.textContent = "Üst düzey! 🚀";
+                resultDetail.textContent = "Gerçek dünya senaryoları için hazırsın.";
+            } else if (pct >= 65) {
+                resultTitle.textContent = "İyi iş! 👏";
+                resultDetail.textContent = "Biraz daha pratikle uzmanlığa çok yakınsın.";
+            } else {
+                resultTitle.textContent = "Tekrar dene! 📚";
+                resultDetail.textContent = "Soruları gözden geçirip yeniden çöz.";
+            }
+        }
+
+        renderQuestion();
+    </script>
+</body>
+
+</html>
