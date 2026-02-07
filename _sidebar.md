@@ -48,10 +48,12 @@
   * [VPC Fundamentals](05-AWS/04-VPC-Fundamentals.md)
   * [Lambda Fundamentals](05-AWS/05-Lambda-Fundamentals.md)
 * 06-Kubernetes
+  * [Introduction](06-Kubernetes/00-Introduction.md)
   * [Deployments](06-Kubernetes/01-Deployments.md)
   * [Services & Networking](06-Kubernetes/02-Services-Networking.md)
   * [ConfigMaps & Secrets](06-Kubernetes/03-ConfigMaps-Secrets.md)
   * [Helm](06-Kubernetes/04-Helm.md)
+  * [Open Source Microservice on VPS](06-Kubernetes/05-Open-Source-Microservice-on-VPS.md)
 * 07-Terraform
   * [Introduction](07-Terraform/01-Introduction.md)
   * [Project Structure](07-Terraform/02-Project-Structure.md)
